@@ -9,5 +9,7 @@ dependencies = [
     "torch",
     "fastapi",
     "uvicorn",
-    "mlflow"
+    "mlflow",
+    "kagglehub",
+    "openpyxl"
 ]
