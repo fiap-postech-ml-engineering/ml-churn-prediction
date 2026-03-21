@@ -11,5 +11,6 @@ dependencies = [
     "uvicorn",
     "mlflow",
     "kagglehub",
-    "openpyxl"
+    "openpyxl",
+    "seaborn"
 ]
