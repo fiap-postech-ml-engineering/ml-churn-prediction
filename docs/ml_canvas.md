@@ -14,7 +14,7 @@ $$
 **Faturamento mensal.** Queremos diminuir o impacto dos cancelamentos no faturamento final trazendo mais previsibilidade para o negócio
 
 ## O que queremos atingir
-Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar clientes com maior risco de cancelamento esperamos reduzir o churn mensal em 10 p.p.
+Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar clientes com maior risco de cancelamento esperamos reduzir o churn do quarter em 10 p.p.
 - **Top 20:** Clientes com maior risco
 - **65%:** Percentual de churners reais capturados dentro desse Top 20% 
 
