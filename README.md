@@ -48,5 +48,14 @@ source .venv\Scripts\activate
 
 ## Instale as dependências
 ```
+pip install -e ".[dev]"
+```
+
+Esse comando instala as dependências do projeto e as de desenvolvimento
+necessárias para notebooks (incluindo ipykernel), evitando erro ao abrir
+ou selecionar kernel no VS Code/Jupyter.
+
+Se quiser instalar apenas as dependências mínimas de execução (sem notebook):
+```
 pip install -e .
 ```
