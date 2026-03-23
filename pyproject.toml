@@ -14,3 +14,9 @@ dependencies = [
     "openpyxl",
     "seaborn"
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel",
+    "jupyter"
+]
