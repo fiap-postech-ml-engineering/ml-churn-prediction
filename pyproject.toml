@@ -12,7 +12,8 @@ dependencies = [
     "mlflow",
     "kagglehub",
     "openpyxl",
-    "seaborn"
+    "seaborn",
+    "imblearn"
 ]
 
 [project.optional-dependencies]
