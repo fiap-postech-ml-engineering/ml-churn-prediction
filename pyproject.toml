@@ -6,6 +6,7 @@ dependencies = [
     "pandas",
     "numpy",
     "scikit-learn",
+    "skops",
     "torch",
     "fastapi",
     "uvicorn",
