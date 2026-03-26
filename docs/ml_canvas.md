@@ -9,19 +9,19 @@ Desacelerar a perda de clientes da empresa através de métricas que direcionem 
 ## Métrica que consideraremos para a resolução do problema
 
 - **Churn:** Quantidade de clientes que tiveram o cancelamento efetivado através de solicitação própria, comparado com a base total
-    $$
-    churn = \frac{clientes\ que\ cancelaram}{total\ de\ clientes}
-    $$
+  $
+  churn = \frac{clientes\ que\ cancelaram}{total\ de\ clientes}
+  $
 
 ## Qual a métrica de negócio esperamos ser afetada?
 
-**Faturamento mensal.** Queremos diminuir o impacto dos cancelamentos no faturamento final trazendo mais previsibilidade para o negócio
+**Faturamento do trimestre.** Queremos diminuir o impacto dos cancelamentos no faturamento final trazendo mais previsibilidade para o negócio
 
 ## O que queremos atingir
 
-Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar clientes com maior risco de cancelamento esperamos reduzir o churn do quarter em 10 p.p.
+Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar clientes com maior risco de cancelamento esperamos reduzir o churn do trimestre em **10 p.p**.
 
-- **Top 20:** Clientes com maior risco
+- **Top 20%:** Clientes com maior risco
 - **65%:** Percentual de churners reais capturados dentro desse Top 20%
 
 ## Recursos necessários
