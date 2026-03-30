@@ -1,0 +1,63 @@
+artifact_path: file:c:/Users/Patrick/Desktop/FIAP/Tech Challenge/ml-churn-prediction/notebooks/mlruns/2/models/m-5534dbe82ed24954a0cfbba5b506b353/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.12.8
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+is_signature_from_type_hint: false
+mlflow_version: 3.10.1
+model_id: m-5534dbe82ed24954a0cfbba5b506b353
+model_size_bytes: 24868
+model_uuid: m-5534dbe82ed24954a0cfbba5b506b353
+prompts: null
+run_id: dbf86809f55e4268a05f42f204b7986d
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "double", "name": "Latitude", "required": true}, {"type": "double",
+    "name": "Longitude", "required": true}, {"type": "long", "name": "Tenure Months",
+    "required": true}, {"type": "double", "name": "Monthly Charges", "required": true},
+    {"type": "double", "name": "Total Charges", "required": true}, {"type": "double",
+    "name": "avg_ticket", "required": true}, {"type": "double", "name": "Total Charges
+    Log", "required": true}, {"type": "double", "name": "avg_ticket_log", "required":
+    true}, {"type": "long", "name": "is_new_customer", "required": true}, {"type":
+    "long", "name": "Gender_Male", "required": true}, {"type": "long", "name": "Senior
+    Citizen_Yes", "required": true}, {"type": "long", "name": "Partner_Yes", "required":
+    true}, {"type": "long", "name": "Dependents_Yes", "required": true}, {"type":
+    "long", "name": "Phone Service_Yes", "required": true}, {"type": "long", "name":
+    "Multiple Lines_No phone service", "required": true}, {"type": "long", "name":
+    "Multiple Lines_Yes", "required": true}, {"type": "long", "name": "Internet Service_Fiber
+    optic", "required": true}, {"type": "long", "name": "Internet Service_No", "required":
+    true}, {"type": "long", "name": "Online Security_No internet service", "required":
+    true}, {"type": "long", "name": "Online Security_Yes", "required": true}, {"type":
+    "long", "name": "Online Backup_No internet service", "required": true}, {"type":
+    "long", "name": "Online Backup_Yes", "required": true}, {"type": "long", "name":
+    "Device Protection_No internet service", "required": true}, {"type": "long", "name":
+    "Device Protection_Yes", "required": true}, {"type": "long", "name": "Tech Support_No
+    internet service", "required": true}, {"type": "long", "name": "Tech Support_Yes",
+    "required": true}, {"type": "long", "name": "Streaming TV_No internet service",
+    "required": true}, {"type": "long", "name": "Streaming TV_Yes", "required": true},
+    {"type": "long", "name": "Streaming Movies_No internet service", "required": true},
+    {"type": "long", "name": "Streaming Movies_Yes", "required": true}, {"type": "long",
+    "name": "Contract_One year", "required": true}, {"type": "long", "name": "Contract_Two
+    year", "required": true}, {"type": "long", "name": "Paperless Billing_Yes", "required":
+    true}, {"type": "long", "name": "Payment Method_Credit card (automatic)", "required":
+    true}, {"type": "long", "name": "Payment Method_Electronic check", "required":
+    true}, {"type": "long", "name": "Payment Method_Mailed check", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2026-03-30 13:11:16.623611'
