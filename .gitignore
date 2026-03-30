@@ -2,4 +2,4 @@
 __pycache__/
 .env/
 .venv/ 
-data/mlflow_artifacts/
+./models/mlflow_artifacts/
