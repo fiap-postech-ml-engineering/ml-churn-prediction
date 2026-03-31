@@ -4,14 +4,6 @@ Tenure Months
 Monthly Charges
 Total Charges
 CLTV
-avg_ticket
-expected_total
-charge_ratio
-total_charges_log
-avg_ticket_log
-is_new_customer
-is_long_term
-num_services
 Gender_Male
 Senior Citizen_Yes
 Partner_Yes
@@ -39,3 +31,10 @@ Paperless Billing_Yes
 Payment Method_Credit card (automatic)
 Payment Method_Electronic check
 Payment Method_Mailed check
+avg_ticket
+expected_total
+charge_ratio
+total_charges_log
+avg_ticket_log
+is_new_customer
+is_long_term
