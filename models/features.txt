@@ -1,0 +1,41 @@
+Latitude
+Longitude
+Tenure Months
+Monthly Charges
+Total Charges
+CLTV
+avg_ticket
+expected_total
+charge_ratio
+total_charges_log
+avg_ticket_log
+is_new_customer
+is_long_term
+num_services
+Gender_Male
+Senior Citizen_Yes
+Partner_Yes
+Dependents_Yes
+Phone Service_Yes
+Multiple Lines_No phone service
+Multiple Lines_Yes
+Internet Service_Fiber optic
+Internet Service_No
+Online Security_No internet service
+Online Security_Yes
+Online Backup_No internet service
+Online Backup_Yes
+Device Protection_No internet service
+Device Protection_Yes
+Tech Support_No internet service
+Tech Support_Yes
+Streaming TV_No internet service
+Streaming TV_Yes
+Streaming Movies_No internet service
+Streaming Movies_Yes
+Contract_One year
+Contract_Two year
+Paperless Billing_Yes
+Payment Method_Credit card (automatic)
+Payment Method_Electronic check
+Payment Method_Mailed check
