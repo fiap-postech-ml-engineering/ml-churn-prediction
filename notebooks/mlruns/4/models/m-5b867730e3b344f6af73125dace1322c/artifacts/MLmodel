@@ -1,0 +1,23 @@
+artifact_path: file:c:/Users/Patrick/Desktop/FIAP/Tech Challenge/ml-churn-prediction/notebooks/mlruns/4/models/m-5b867730e3b344f6af73125dace1322c/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.8
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.10.1
+model_id: m-5b867730e3b344f6af73125dace1322c
+model_size_bytes: 4017827
+model_uuid: m-5b867730e3b344f6af73125dace1322c
+prompts: null
+run_id: 13f849fae23a425b820d50fa8e0e7656
+utc_time_created: '2026-04-01 01:14:16.302961'
