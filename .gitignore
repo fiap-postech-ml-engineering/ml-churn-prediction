@@ -1,7 +1,17 @@
-*.egg-info/
+# MLflow
+mlruns/
+mlflow.db
+notebooks/mlruns/
+notebooks/mlflow.db
+
+# Python cache
 __pycache__/
-.env/
-.venv/ 
-./models/mlflow_artifacts/
-.github
-.arquivos
+.ipynb_checkpoints/
+
+# Virtual env
+.venv/
+
+# Packaging metadata
+*.egg-info/
+src/*.egg-info/
+src/**/*.egg-info/
