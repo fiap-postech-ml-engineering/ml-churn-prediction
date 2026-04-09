@@ -1,17 +1,17 @@
 {
     "Model": "RandomForest Tuned",
-    "CV ROC AUC": 0.8550932694605706,
-    "ROC-AUC": 0.8455604639747863,
-    "Accuracy": 0.752306600425834,
-    "Precision": 0.5218150087260035,
+    "CV ROC AUC": 0.8549713106312449,
+    "ROC-AUC": 0.845778759461624,
+    "Accuracy": 0.7487579843860894,
+    "Precision": 0.5173010380622838,
     "Recall": 0.7994652406417112,
-    "F1-Score": 0.6314677930306231,
+    "F1-Score": 0.6281512605042017,
     "Params": {
         "model__class_weight": "balanced_subsample",
         "model__max_depth": 8,
         "model__max_features": "log2",
-        "model__min_samples_leaf": 8,
-        "model__min_samples_split": 19,
-        "model__n_estimators": 210
+        "model__min_samples_leaf": 9,
+        "model__min_samples_split": 3,
+        "model__n_estimators": 191
     }
 }
