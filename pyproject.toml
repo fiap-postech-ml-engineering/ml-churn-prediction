@@ -18,7 +18,6 @@ dependencies = [
     "openpyxl>=3.1.0",
     "seaborn>=0.13.0",
     "imbalanced-learn>=0.14.0",
-    "optuna>=3.0.0",
 ]
 
 [project.optional-dependencies]

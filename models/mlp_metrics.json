@@ -1,10 +1,10 @@
 {
     "Model": "MLP PyTorch",
-    "ROC-AUC": 0.8451367898938231,
-    "Accuracy": 0.7466288147622427,
-    "Precision": 0.5146299483648882,
-    "Recall": 0.7994652406417112,
-    "F1-Score": 0.6261780104712041,
-    "Best Val ROC-AUC": 0.8665802271662385,
-    "Epochs Trained": 42
+    "ROC-AUC": 0.8525975871244412,
+    "Accuracy": 0.7423704755145494,
+    "Precision": 0.5088566827697263,
+    "Recall": 0.8449197860962567,
+    "F1-Score": 0.6351758793969849,
+    "Best Val ROC-AUC": 0.866640815601118,
+    "Epochs Trained": 31
 }
