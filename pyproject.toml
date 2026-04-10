@@ -2,34 +2,47 @@
 name = "ml-churn-prediction"
 version = "0.1.0"
 description = "Machine learning model for customer churn prediction"
-requires-python = ">=3.13"
+requires-python = "~=3.13"
 license = {text = "MIT"}
 
 dependencies = [
-    "pandas>=2.3.0",
-    "numpy>=2.4.0",
-    "scikit-learn>=1.8.0",
-    "skops>=0.13.0",
-    "torch>=2.11.0",
-    "fastapi>=0.135.0",
-    "uvicorn>=0.42.0",
-    "mlflow>=3.10.0",
-    "kagglehub>=1.0.0",
-    "openpyxl>=3.1.0",
-    "seaborn>=0.13.0",
-    "imbalanced-learn>=0.14.0",
-    "ipykernel>=6.29.0",
-    "jupyter>=1.0.0",
+    "pandas==2.3.0",
+    "numpy==2.4.0",
+    "scikit-learn==1.8.0",
+    "skops==0.13.0",
+    "torch==2.11.0",
+    "fastapi==0.135.0",
+    "uvicorn==0.42.0",
+    "mlflow==3.10.0",
+    "kagglehub==1.0.0",
+    "openpyxl==3.1.0",
+    "seaborn==0.13.0",
+    "imbalanced-learn==0.14.0",
+    "ipykernel==6.29.0",
+    "jupyter==1.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=7.4.0",
-    "ruff>=0.15.10",
-    "pytest>=9.0.3",
-    "pytest-cov>=7.1.0",
-    "taskipy>=1.14.1",
+    "pytest==7.4.0",
+    "ruff==0.15.10",
+    "pytest==9.0.3",
+    "pytest-cov==7.1.0",
+    "taskipy==1.14.1",
 ]
 
 [project.urls]
-Repository = "https://github.com/seu-usuario/ml-churn-prediction"
+Repository = "https://github.com/fiap-postech-ml-engineering/ml-churn-prediction"
+
+[tool.ruff]
+line-length = 79 # PEP8 Definition
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "F", # Pyflakes
+    "I", # isort (import sorting)
+    "N", # pep8-naming
+    "W", # pycodestyle warnings
+]
