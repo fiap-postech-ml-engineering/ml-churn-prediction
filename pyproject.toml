@@ -43,6 +43,15 @@ packages = ["src"]
 [tool.ruff]
 line-length = 79 # PEP8 Definition
 target-version = "py313"
+src = ["src", "tests"]
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+]
 
 [tool.ruff.lint]
 select = [
@@ -53,13 +62,24 @@ select = [
     "W", # pycodestyle warnings
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F401"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-v --tb=short --cov=src --cov-report=html:tests/htmlcov --cov-report=term-missing" 
+addopts = "-v --tb=short --cov=src --cov-report=html:tests/htmlcov --cov-report=term-missing --strict-markers"
 minversion = "7.0"
-python_files = "test_*.py"
-python_classes = "Test*"
-python_functions = "test_*"
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 markers = [
     "unit: testes unitários (padrão)",
     "integration: testes de integração entre componentes",
@@ -70,8 +90,25 @@ markers = [
 
 [tool.coverage.run]
 source = ['src']
-omit = ['tests/*', '**/__init__.py']
+branch = true
+omit = ['tests/*', '**/__init__.py', "*/tests/*", "*/__pycache__/*"]
 
 [tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
 fail_under = 70
 show_missing = true
+
+[tool.taskipy.tasks]
+test         = "pytest tests/ -v"
+test-cov     = "pytest tests/ -v --cov=src --cov-report=html --cov-report=term"
+lint         = "ruff check src/ tests/"
+lint-fix     = "ruff check src/ tests/ --fix"
+format       = "ruff format src/ tests/"
+format-check = "ruff format src/ tests/ --check"
+check        = "task lint && task format-check && task test"
+clean        = "rm -rf .pytest_cache .coverage htmlcov __pycache__ .ruff_cache"
