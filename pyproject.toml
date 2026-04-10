@@ -22,9 +22,6 @@ dependencies = [
     "jupyter==1.0.0",
 ]
 
-[project.urls]
-Repository = "https://github.com/fiap-postech-ml-engineering/ml-churn-prediction"
-
 [project.optional-dependencies]
 dev = [
     "ruff==0.15.10",
@@ -32,6 +29,10 @@ dev = [
     "pytest-cov==7.1.0",
     "taskipy==1.14.1",
 ]
+
+[project.urls]
+Repository = "https://github.com/fiap-postech-ml-engineering/ml-churn-prediction"
+
 
 [build-system]
 requires = ["hatchling"]
