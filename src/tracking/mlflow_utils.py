@@ -57,16 +57,18 @@ def configure_mlflow_tracking(
 
     Args:
         experiment_name: Logical MLflow experiment name.
-        db_path: Filesystem path to the SQLite database used as backend store.
+        db_path: Filesystem path to the MLflow file store (backend_store_uri). 
+                 Uses file:// protocol for directory-based storage instead of SQLite.
         experiment_tags: Optional key-value tags to set on the experiment.
         artifact_root_path: Optional filesystem path for experiment artifacts.
 
     Returns:
         The tracking URI configured for MLflow in the current process.
     """
-    db_file_path = Path(db_path).resolve()
-    db_file_path.parent.mkdir(parents=True, exist_ok=True)
-    tracking_uri = f"sqlite:///{db_file_path.as_posix()}"
+    # Use file-based store (directory) instead of SQLite for better portability
+    store_path = Path(db_path)
+    store_path.mkdir(parents=True, exist_ok=True)
+    tracking_uri = store_path.as_posix()
 
     mlflow.set_tracking_uri(tracking_uri)
     client = MlflowClient()
@@ -75,7 +77,8 @@ def configure_mlflow_tracking(
     if experiment is None and artifact_root_path is not None:
         artifact_root_dir = Path(artifact_root_path).resolve()
         artifact_root_dir.mkdir(parents=True, exist_ok=True)
-        artifact_location = artifact_root_dir.as_uri()
+        # Store path as string for portability
+        artifact_location = str(artifact_root_path).replace("\\", "/")
         client.create_experiment(
             name=experiment_name,
             artifact_location=artifact_location,
@@ -83,12 +86,6 @@ def configure_mlflow_tracking(
         )
 
     mlflow.set_experiment(experiment_name)
-
-    if experiment_tags:
-        experiment = client.get_experiment_by_name(experiment_name)
-        if experiment is not None:
-            for key, value in experiment_tags.items():
-                client.set_experiment_tag(experiment.experiment_id, key, value)
 
     return tracking_uri
 
