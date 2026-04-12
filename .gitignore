@@ -1,6 +1,7 @@
 # MLflow
 mlruns/
 notebooks/mlruns/
+models/mlflow_artifacts/
 # notebooks/mlflow.db
 
 # Byte-compiled / optimized / DLL files
