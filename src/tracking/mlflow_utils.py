@@ -20,31 +20,16 @@ def _safe_git(cmd: list[str]) -> str:
         cmd: Command tokens to execute with subprocess.
 
     Returns:
-        The trimmed stdout value when the command succeeds; otherwise "unknown".
+        The trimmed stdout value when the command succeeds or "unknown".
     """
     try:
-        return subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
+        return (
+            subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
+            .decode()
+            .strip()
+            )
     except Exception:
         return "unknown"
-
-
-def get_owner() -> str:
-    """Resolve the run owner from common CI/local environment variables.
-
-    Priority order:
-    1. GITHUB_ACTOR (GitHub Actions)
-    2. USER
-    3. USERNAME
-
-    Returns:
-        Resolved owner identifier, or "unknown" when none is available.
-    """
-    return (
-        os.getenv("GITHUB_ACTOR")
-        or os.getenv("USER")
-        or os.getenv("USERNAME")
-        or "unknown"
-    )
 
 
 def configure_mlflow_tracking(
@@ -57,8 +42,8 @@ def configure_mlflow_tracking(
 
     Args:
         experiment_name: Logical MLflow experiment name.
-        db_path: Filesystem path to the MLflow file store (backend_store_uri). 
-                 Uses file:// protocol for directory-based storage instead of SQLite.
+        db_path: Filesystem path to the MLflow file store (backend_store_uri).
+        Uses file:// for directory-based storage instead of SQLite.
         experiment_tags: Optional key-value tags to set on the experiment.
         artifact_root_path: Optional filesystem path for experiment artifacts.
 
@@ -91,31 +76,22 @@ def configure_mlflow_tracking(
 
 
 def build_default_run_tags(
-    stage: str,
-    model_family: str,
-    sampling_strategy: str,
     extra_tags: dict[str, str] | None = None,
 ) -> dict[str, str]:
     """Create standardized run tags for reproducible experiment tracking.
 
     Args:
-        stage: Lifecycle stage such as baseline, modeling, or final.
-        model_family: Model category, for example logistic_regression or mlp.
-        sampling_strategy: Class balancing approach, e.g. none, smote, balanced.
         extra_tags: Optional extra tags to merge into the resulting payload.
 
     Returns:
         Dictionary of normalized tag values for MLflow runs.
     """
     is_ci = os.getenv("GITHUB_ACTIONS") == "true"
-    branch = os.getenv("GITHUB_REF_NAME") or _safe_git(["git", "rev-parse", "--abbrev-ref", "HEAD"])
+    branch = (os.getenv("GITHUB_REF_NAME") or
+              _safe_git(["git", "rev-parse", "--abbrev-ref", "HEAD"]))
     commit = os.getenv("GITHUB_SHA") or _safe_git(["git", "rev-parse", "HEAD"])
 
     tags = {
-        "owner": get_owner(),
-        "stage": stage,
-        "model_family": model_family,
-        "sampling_strategy": sampling_strategy,
         "runner": "github_actions" if is_ci else "local",
         "ci": str(is_ci).lower(),
         "git_branch": branch,
@@ -123,10 +99,12 @@ def build_default_run_tags(
         "python_version": sys.version.split()[0],
         "platform_os": platform.platform(),
         "host": socket.gethostname(),
-        "run_timestamp_utc": dt.datetime.now(dt.timezone.utc)
-        .replace(microsecond=0)
-        .isoformat()
-        .replace("+00:00", "Z"),
+        "run_timestamp_utc":(
+            dt.datetime
+            .now(dt.timezone.utc).replace(microsecond=0)
+            .isoformat()
+            .replace("+00:00", "Z")
+            )
     }
 
     if extra_tags:
