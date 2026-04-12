@@ -53,7 +53,7 @@ def configure_mlflow_tracking(
     # Use file-based store (directory) instead of SQLite for better portability
     store_path = Path(db_path)
     store_path.mkdir(parents=True, exist_ok=True)
-    tracking_uri = store_path.as_posix()
+    tracking_uri = f"file://{store_path.resolve().as_posix()}"
 
     mlflow.set_tracking_uri(tracking_uri)
     client = MlflowClient()
