@@ -20,7 +20,8 @@ dependencies = [
     "imbalanced-learn==0.12.3",
     "ipykernel==6.29.0",
     "jupyter==1.0.0",
-    "logging>=0.4.9.6",
+    "logging==0.4.9.6",
+    "dotenv==0.9.9",
 ]
 
 [project.optional-dependencies]
