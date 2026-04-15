@@ -1,4 +1,4 @@
-.PHONY: help test test-cov lint lint-fix format format-check check clean
+.PHONY: help test test-cov lint lint-fix format format-check format-diff format-verbose check clean
 
 help:
 	@echo "Comandos disponíveis:"
@@ -6,8 +6,11 @@ help:
 	@echo "  make test-cov        - Roda testes com cobertura (relatório HTML)"
 	@echo "  make lint            - Verifica estilo do código com Ruff"
 	@echo "  make lint-fix        - Corrige automaticamente issues de linting"
-	@echo "  make format          - Formata código com Ruff"
-	@echo "  make format-check    - Verifica formatação sem modificar"
+	@echo "  make lint-fix-unsafe - Corrige automaticamente issues com unsafe-fixes"
+	@echo "  make format          - Verifica formatação sem modificar (Black)"
+	@echo "  make format-fix      - Formata código com Black"
+	@echo "  make format-diff     - Mostra diferenças de formatação sem modificar"
+	@echo "  make format-verbose  - Formata código com output verboso"
 	@echo "  make check           - Executa lint, format-check e testes (sequencial)"
 	@echo "  make clean           - Remove arquivos temporários"
 
@@ -23,11 +26,20 @@ lint:
 lint-fix:
 	ruff check src/ tests/ --fix
 
-format:
-	ruff format src/ tests/
+lint-fix-unsafe:
+	ruff check src/ tests/ --fix --unsafe-fixes
 
-format-check:
-	ruff format src/ tests/ --check
+format:
+	black --check src/ tests/
+
+format-fix:
+	black src/ tests/
+
+format-diff:
+	black --diff src/ tests/
+
+format-verbose:
+	black -v src/ tests/
 
 check: lint format-check test
 	@echo "✓ Todos os checks passaram!"

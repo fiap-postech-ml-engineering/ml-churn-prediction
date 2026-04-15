@@ -30,6 +30,7 @@ dev = [
     "pytest==9.0.3",
     "pytest-cov==7.1.0",
     "taskipy==1.14.1",
+    "black==26.3.1",
 ]
 
 [project.urls]
@@ -44,7 +45,7 @@ build-backend = "hatchling.build"
 packages = ["src"]
 
 [tool.ruff]
-line-length = 79 # PEP8 Definition
+# line-length = 88
 target-version = "py313"
 src = ["src", "tests"]
 exclude = [
@@ -64,6 +65,10 @@ select = [
     "N", # pep8-naming
     "W", # pycodestyle warnings
 ]
+extend-ignore = [
+    "E203",  # Conflita com Black
+    "E501",  # Line too long (deixa pra Black)
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["F401"]
@@ -75,6 +80,12 @@ known-first-party = ["src"]
 quote-style = "double"
 indent-style = "space"
 line-ending = "auto"
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+skip-string-normalization = true
+include = ["src", "tests"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -107,11 +118,14 @@ fail_under = 70
 show_missing = true
 
 [tool.taskipy.tasks]
-test         = "pytest tests/ -v"
-test-cov     = "pytest tests/ -v --cov=src --cov-report=html --cov-report=term"
-lint         = "ruff check src/ tests/"
-lint-fix     = "ruff check src/ tests/ --fix"
-format       = "ruff format src/ tests/"
-format-check = "ruff format src/ tests/ --check"
-check        = "task lint && task format-check && task test"
-clean        = "rm -rf .pytest_cache .coverage htmlcov __pycache__ .ruff_cache"
+test             = "pytest tests/ -v --no-cov"
+test-cov         = "pytest tests/ -v --cov=src --cov-report=html --cov-report=term"
+lint             = "ruff check src/ tests/"
+lint-fix         = "ruff check src/ tests/ --fix"
+lint-fix-unsafe  = "ruff check src/ tests/ --fix --unsafe-fixes"
+format           = "black --check src/ tests/"
+format-fix       = "black src/ tests/"
+format-diff      = "black --diff src/ tests/"
+format-verbose   = "black -v src/ tests/"
+check            = "task lint && task format-check && task test"
+clean            = "rm -rf .pytest_cache .coverage htmlcov __pycache__ .ruff_cache"
