@@ -15,7 +15,7 @@ help:
 	@echo "  make clean           - Remove arquivos temporários"
 
 test:
-	pytest tests/ -v
+	pytest tests/ -v --no-cov
 
 test-cov:
 	pytest tests/ -v --cov=src --cov-report=html --cov-report=term
