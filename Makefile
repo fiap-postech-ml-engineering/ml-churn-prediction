@@ -15,16 +15,16 @@ help:
 	@echo "  make clean           - Remove arquivos temporários"
 
 test:
-	pytest tests/ -v
+	python -m pytest tests/ -v --no-cov
 
 test-cov:
-	pytest tests/ -v --cov=src --cov-report=html --cov-report=term
+	python -m pytest tests/ -v --cov=src --cov-report=html --cov-report=term
 
 lint:
-	ruff check src/ tests/
+	python -m ruff check src/ tests/
 
 lint-fix:
-	ruff check src/ tests/ --fix
+	python -m ruff check src/ tests/ --fix
 
 lint-fix-unsafe:
 	ruff check src/ tests/ --fix --unsafe-fixes

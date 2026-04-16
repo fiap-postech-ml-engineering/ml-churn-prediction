@@ -23,11 +23,7 @@ def _safe_git(cmd: list[str]) -> str:
         The trimmed stdout value when the command succeeds or "unknown".
     """
     try:
-        return (
-            subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
-            .decode()
-            .strip()
-            )
+        return subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
     except Exception:
         return "unknown"
 
@@ -87,8 +83,9 @@ def build_default_run_tags(
         Dictionary of normalized tag values for MLflow runs.
     """
     is_ci = os.getenv("GITHUB_ACTIONS") == "true"
-    branch = (os.getenv("GITHUB_REF_NAME") or
-              _safe_git(["git", "rev-parse", "--abbrev-ref", "HEAD"]))
+    branch = os.getenv("GITHUB_REF_NAME") or _safe_git(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"]
+    )
     commit = os.getenv("GITHUB_SHA") or _safe_git(["git", "rev-parse", "HEAD"])
 
     tags = {
@@ -99,12 +96,12 @@ def build_default_run_tags(
         "python_version": sys.version.split()[0],
         "platform_os": platform.platform(),
         "host": socket.gethostname(),
-        "run_timestamp_utc":(
-            dt.datetime
-            .now(dt.timezone.utc).replace(microsecond=0)
+        "run_timestamp_utc": (
+            dt.datetime.now(dt.timezone.utc)
+            .replace(microsecond=0)
             .isoformat()
             .replace("+00:00", "Z")
-            )
+        ),
     }
 
     if extra_tags:

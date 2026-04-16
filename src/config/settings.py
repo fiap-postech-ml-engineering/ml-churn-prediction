@@ -1,11 +1,14 @@
-"""application configs.."""
+"""Application configs.."""
 
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    pass
+else:
+    load_dotenv()
 
 # Base File Paths
 BASE_DIR = Path(__file__).parent.parent
