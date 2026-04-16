@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+from pathlib import Path
+
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-
 TARGET_SOURCE_COLUMN = "Churn Value"
 TARGET_COLUMN = "target"
 TOTAL_CHARGES_COLUMN = "Total Charges"
 COLUMNS_TO_DROP = ("Churn Score", "Count")
-
+DEFAULT_PREPROCESSING_PIPELINE_PATH = Path("models/preprocessing_pipeline.joblib")
 ProcessedArray = np.ndarray
 
 
@@ -257,3 +259,120 @@ def prepare_mlp_data(
         scaler,
         feature_names,
     )
+
+
+def build_preprocessing_artifact(
+    scaler: StandardScaler,
+    feature_names: list[str],
+    target_col: str = TARGET_COLUMN,
+    seed: int = 42,
+    test_size: float = 0.2,
+    val_size: float = 0.2,
+) -> dict:
+    """
+    Monta o artefato serializável de pré-processamento para treino/inferência.
+
+    Esse bundle representa o preprocessing fitado que será reutilizado pela API.
+    """
+    if not feature_names:
+        raise ValueError("feature_names cannot be empty.")
+
+    return {
+        "pipeline_type": "mlp_preprocessing",
+        "scaler": scaler,
+        "feature_names": feature_names,
+        "target_col": target_col,
+        "seed": seed,
+        "test_size": test_size,
+        "val_size": val_size,
+    }
+
+
+def save_preprocessing_pipeline(
+    scaler: StandardScaler,
+    feature_names: list[str],
+    output_path: Path | str = DEFAULT_PREPROCESSING_PIPELINE_PATH,
+    target_col: str = TARGET_COLUMN,
+    seed: int = 42,
+    test_size: float = 0.2,
+    val_size: float = 0.2,
+) -> Path:
+    """
+    Salva o bundle de pré-processamento fitado em joblib.
+
+    Salva apenas artefato já fitado, pronto para ser reutilizado na inferência.
+    """
+    artifact = build_preprocessing_artifact(
+        scaler=scaler,
+        feature_names=feature_names,
+        target_col=target_col,
+        seed=seed,
+        test_size=test_size,
+        val_size=val_size,
+    )
+
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    joblib.dump(artifact, output_path)
+
+    return output_path
+
+def load_preprocessing_pipeline(
+    input_path: Path | str = DEFAULT_PREPROCESSING_PIPELINE_PATH,
+) -> dict:
+    """
+    Carrega o bundle de pré-processamento salvo em joblib.
+    """
+    input_path = Path(input_path)
+
+    if not input_path.exists():
+        raise FileNotFoundError(
+            f"Preprocessing pipeline artifact not found at: {input_path}"
+        )
+
+    artifact = joblib.load(input_path)
+
+    if not isinstance(artifact, dict):
+        raise ValueError(
+            "Loaded preprocessing artifact is invalid. Expected a dictionary."
+        )
+
+    required_keys = {
+        "pipeline_type",
+        "scaler",
+        "feature_names",
+        "target_col",
+        "seed",
+        "test_size",
+        "val_size",
+    }
+
+    missing_keys = required_keys.difference(artifact.keys())
+    if missing_keys:
+        raise ValueError(
+            "Loaded preprocessing artifact is invalid. "
+            f"Missing keys: {sorted(missing_keys)}"
+        )
+
+    pipeline_type = artifact["pipeline_type"]
+    if pipeline_type != "mlp_preprocessing":
+        raise ValueError(
+            "Loaded preprocessing artifact is invalid. Unexpected pipeline_type."
+        )
+
+    feature_names = artifact["feature_names"]
+    if not isinstance(feature_names, list) or not feature_names:
+        raise ValueError(
+            "Loaded preprocessing artifact is invalid. "
+            "'feature_names' must be a non-empty list."
+        )
+
+    scaler = artifact["scaler"]
+    if not isinstance(scaler, StandardScaler):
+        raise ValueError(
+            "Loaded preprocessing artifact is invalid. "
+            "'scaler' must be a fitted StandardScaler."
+        )
+
+    return artifact
