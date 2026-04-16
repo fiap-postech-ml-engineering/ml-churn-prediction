@@ -102,3 +102,10 @@ class PredictResponse(BaseModel):
     sucesso: bool = Field(..., description="Indicador de sucesso da operação")
     predicao: ChurnPrediction = Field(..., description="Resultado da predição")
     entrada_recebida: dict = Field(..., description="Echo das features recebidas")
+
+
+# ==================== ALIASES PARA COMPATIBILIDADE ====================
+
+# Aliases para manter compatibilidade com código legado
+ChurnRequest = PredictRequest
+ChurnResponse = PredictResponse
