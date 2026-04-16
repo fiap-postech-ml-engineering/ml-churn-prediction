@@ -2,7 +2,7 @@
 name = "ml-churn-prediction"
 version = "0.1.0"
 description = "Machine learning model for customer churn prediction"
-requires-python = "~=3.13.0"
+requires-python = ">=3.12,<3.13"
 license = {text = "MIT"}
 
 dependencies = [
@@ -10,7 +10,8 @@ dependencies = [
     "numpy==2.4.4",
     "scikit-learn==1.5.2",
     "skops==0.13.0",
-    "torch==2.11.0",
+    "torch==2.2.2; sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "torch==2.11.0; sys_platform == 'win32' or sys_platform == 'linux' or (sys_platform == 'darwin' and platform_machine == 'arm64')",
     "fastapi==0.135.0",
     "uvicorn==0.42.0",
     "mlflow==3.10.0",
@@ -129,3 +130,11 @@ format-diff      = "black --diff src/ tests/"
 format-verbose   = "black -v src/ tests/"
 check            = "task lint && task format-check && task test"
 clean            = "rm -rf .pytest_cache .coverage htmlcov __pycache__ .ruff_cache"
+
+[tool.uv]
+environments = [
+    "sys_platform == 'darwin' and platform_machine == 'x86_64'",
+    "sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+    "sys_platform == 'win32' and platform_machine == 'AMD64'",
+]
