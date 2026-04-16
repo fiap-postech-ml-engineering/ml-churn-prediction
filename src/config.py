@@ -1,8 +1,9 @@
 """application configs.."""
 
 import os
-from dotenv import load_dotenv
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -18,7 +19,7 @@ MODELS_DIR.mkdir(exist_ok=True)
 DATA_DIR.mkdir(exist_ok=True)
 
 # Configurações do modelo
-RANDOM_SEED=42
+RANDOM_SEED = 42
 APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.6"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
 
