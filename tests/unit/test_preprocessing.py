@@ -25,9 +25,9 @@ def test_prepare_mlp_data_returns_consistent_shapes() -> None:
     df = make_valid_dataframe()
 
     (
-        X_train,
-        X_val,
-        X_test,
+        x_train,
+        x_val,
+        x_test,
         y_train,
         y_val,
         y_test,
@@ -35,12 +35,12 @@ def test_prepare_mlp_data_returns_consistent_shapes() -> None:
         feature_names,
     ) = prepare_mlp_data(df, seed=42)
 
-    assert X_train.shape[1] == X_val.shape[1] == X_test.shape[1]
-    assert X_train.shape[1] == len(feature_names)
+    assert x_train.shape[1] == x_val.shape[1] == x_test.shape[1]
+    assert x_train.shape[1] == len(feature_names)
 
-    assert len(y_train) == X_train.shape[0]
-    assert len(y_val) == X_val.shape[0]
-    assert len(y_test) == X_test.shape[0]
+    assert len(y_train) == x_train.shape[0]
+    assert len(y_val) == x_val.shape[0]
+    assert len(y_test) == x_test.shape[0]
 
     assert isinstance(scaler, StandardScaler)
 
@@ -51,12 +51,16 @@ def test_prepare_mlp_data_is_deterministic_with_same_seed() -> None:
     result_1 = prepare_mlp_data(df, seed=42)
     result_2 = prepare_mlp_data(df, seed=42)
 
-    X_train_1, X_val_1, X_test_1, y_train_1, y_val_1, y_test_1, _, feature_names_1 = result_1
-    X_train_2, X_val_2, X_test_2, y_train_2, y_val_2, y_test_2, _, feature_names_2 = result_2
+    x_train_1, x_val_1, x_test_1, y_train_1, y_val_1, y_test_1, _, feature_names_1 = (
+        result_1
+    )
+    x_train_2, x_val_2, x_test_2, y_train_2, y_val_2, y_test_2, _, feature_names_2 = (
+        result_2
+    )
 
-    np.testing.assert_allclose(X_train_1, X_train_2)
-    np.testing.assert_allclose(X_val_1, X_val_2)
-    np.testing.assert_allclose(X_test_1, X_test_2)
+    np.testing.assert_allclose(x_train_1, x_train_2)
+    np.testing.assert_allclose(x_val_1, x_val_2)
+    np.testing.assert_allclose(x_test_1, x_test_2)
 
     assert y_train_1.tolist() == y_train_2.tolist()
     assert y_val_1.tolist() == y_val_2.tolist()
@@ -116,9 +120,9 @@ def test_save_and_load_preprocessing_pipeline_allows_transform(tmp_path) -> None
     df = make_valid_dataframe()
 
     (
-        X_train,
-        _X_val,
-        _X_test,
+        x_train,
+        _x_val,
+        _x_test,
         _y_train,
         _y_val,
         _y_test,
@@ -126,7 +130,7 @@ def test_save_and_load_preprocessing_pipeline_allows_transform(tmp_path) -> None
         feature_names,
     ) = prepare_mlp_data(df, seed=42)
 
-    output_path = tmp_path / "preprocessing_pipeline.joblib"
+    output_path = tmp_path / "preprocessing/churn_preprocessing_pipeline_v1.joblib"
 
     saved_path = save_preprocessing_pipeline(
         scaler=scaler,
@@ -140,11 +144,11 @@ def test_save_and_load_preprocessing_pipeline_allows_transform(tmp_path) -> None
     assert artifact["feature_names"] == feature_names
     assert isinstance(artifact["scaler"], StandardScaler)
 
-    X_batch = df[feature_names].iloc[:2]
-    X_batch_transformed = artifact["scaler"].transform(X_batch)
+    x_batch = df[feature_names].iloc[:2]
+    x_batch_transformed = artifact["scaler"].transform(x_batch)
 
-    assert X_batch_transformed.shape == (2, len(feature_names))
-    assert X_train.shape[1] == len(feature_names)
+    assert x_batch_transformed.shape == (2, len(feature_names))
+    assert x_train.shape[1] == len(feature_names)
 
 
 def test_load_preprocessing_pipeline_raises_for_missing_file(tmp_path) -> None:

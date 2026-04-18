@@ -1,21 +1,21 @@
 # ==================== MODELOS PYDANTIC (Schemas de Requisição/Resposta) ====================
 
+
 from pydantic import BaseModel, Field
-from typing import Dict
 
 
 class PredictRequest(BaseModel):
     """
     Modelo de Entrada para Requisição de Predição.
-    
-    Representa os dados RAW de um cliente de telecom. As features derived 
+
+    Representa os dados RAW de um cliente de telecom. As features derived
     (calculadas) serão geradas automaticamente pela API.
-    
+
     Atributos:
         features: Dicionário com features RAW do cliente (dados originais do dataset).
-                  As features calculadas (avg_ticket, is_new_customer, etc) 
+                  As features calculadas (avg_ticket, is_new_customer, etc)
                   são automaticamente derivadas pela API.
-                  
+
     Features RAW esperadas (25 no total):
         - Latitude, Longitude (localização)
         - Tenure Months, Monthly Charges, Total Charges (financeiro)
@@ -32,6 +32,7 @@ class PredictRequest(BaseModel):
         - Paperless Billing_Yes
         - Payment Method_Credit card (automatic), Payment Method_Electronic check, Payment Method_Mailed check
     """
+
     features: dict = Field(
         ...,
         description="Dicionário com features RAW do cliente (derivadas são calculadas automaticamente)",
@@ -69,36 +70,40 @@ class PredictRequest(BaseModel):
                 "Paperless Billing_Yes": 1.0,
                 "Payment Method_Credit card (automatic)": 1.0,
                 "Payment Method_Electronic check": 0.0,
-                "Payment Method_Mailed check": 0.0
+                "Payment Method_Mailed check": 0.0,
             }
-        }
+        },
     )
 
 
 class ChurnPrediction(BaseModel):
     """
     Resultado da Classificação de Churn.
-    
+
     Atributos:
         classe: Classe predita (0 = Sem Churn, 1 = Churn)
         classe_descricao: Descrição legível da predição
         probabilidade_churn: Confiança da predição (0 a 1)
                             - Valores > 0.5 indicam tendência a churn
     """
+
     classe: int = Field(..., description="Classe predita (0=Sem Churn, 1=Churn)")
     classe_descricao: str = Field(..., description="Descrição da classe")
-    probabilidade_churn: float = Field(..., description="Probabilidade de Churn (0 a 1)")
+    probabilidade_churn: float = Field(
+        ..., description="Probabilidade de Churn (0 a 1)"
+    )
 
 
 class PredictResponse(BaseModel):
     """
     Resposta Completa da API para Predições.
-    
+
     Atributos:
         sucesso: Indicador de sucesso da predição
         predicao: Objeto com classe e probabilidades
         entrada_recebida: Dicionário das features enviadas (echo dos dados)
     """
+
     sucesso: bool = Field(..., description="Indicador de sucesso da operação")
     predicao: ChurnPrediction = Field(..., description="Resultado da predição")
     entrada_recebida: dict = Field(..., description="Echo das features recebidas")

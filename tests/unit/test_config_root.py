@@ -1,7 +1,6 @@
 import runpy
 from pathlib import Path
 
-
 CONFIG_FILE = Path("src/config.py")
 
 
@@ -10,6 +9,7 @@ def run_config_module() -> dict:
 
 
 def test_config_uses_default_values(monkeypatch) -> None:
+    monkeypatch.setenv("PYTHON_DOTENV_DISABLED", "1")
     monkeypatch.delenv("APPROVAL_THRESHOLD", raising=False)
     monkeypatch.delenv("MODEL_VERSION", raising=False)
     monkeypatch.delenv("LOG_LEVEL", raising=False)
@@ -30,6 +30,7 @@ def test_config_uses_default_values(monkeypatch) -> None:
 
 
 def test_config_respects_environment_variables(monkeypatch) -> None:
+    monkeypatch.setenv("PYTHON_DOTENV_DISABLED", "1")
     monkeypatch.setenv("APPROVAL_THRESHOLD", "0.85")
     monkeypatch.setenv("MODEL_VERSION", "2.1.3")
     monkeypatch.setenv("LOG_LEVEL", "DEBUG")
@@ -44,7 +45,8 @@ def test_config_respects_environment_variables(monkeypatch) -> None:
     assert result["DEBUG"] is False
 
 
-def test_config_creates_expected_paths() -> None:
+def test_config_creates_expected_paths(monkeypatch) -> None:
+    monkeypatch.setenv("PYTHON_DOTENV_DISABLED", "1")
     result = run_config_module()
 
     base_dir = result["BASE_DIR"]

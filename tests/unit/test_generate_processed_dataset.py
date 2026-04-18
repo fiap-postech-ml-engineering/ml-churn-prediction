@@ -61,7 +61,9 @@ def test_main_generates_processed_outputs(tmp_path, monkeypatch, capsys) -> None
     assert (output_data_dir / "y_train.csv").exists()
     assert (output_data_dir / "y_val.csv").exists()
     assert (output_data_dir / "y_test.csv").exists()
-    assert (output_model_dir / "preprocessing_pipeline.joblib").exists()
+    assert (
+        output_model_dir / "preprocessing/churn_preprocessing_pipeline_v1.joblib"
+    ).exists()
 
     captured = capsys.readouterr()
     assert "[START] Generating processed dataset artifacts..." in captured.out

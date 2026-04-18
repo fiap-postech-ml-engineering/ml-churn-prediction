@@ -2,16 +2,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from src.data.load_data import load_csv_data
 from src.data.preprocessing import (
-    prepare_mlp_data,
-    save_preprocessing_pipeline,
     TARGET_COLUMN,
     TARGET_SOURCE_COLUMN,
+    prepare_mlp_data,
+    save_preprocessing_pipeline,
 )
-
 
 INPUT_DATASET_PATH = Path(
     "data/processed/telco_customer_churn_eda_pre-processed_encoded.csv"
@@ -35,8 +35,8 @@ def load_encoded_dataset(input_path: Path) -> pd.DataFrame:
         return df
 
     print(
-    "[INFO] Target column not found with project loader. "
-    "Trying fallback CSV read with default comma separator..."
+        "[INFO] Target column not found with project loader. "
+        "Trying fallback CSV read with default comma separator..."
     )
     df_fallback = pd.read_csv(input_path)
 
@@ -107,7 +107,8 @@ def main() -> None:
     pipeline_path = save_preprocessing_pipeline(
         scaler=scaler,
         feature_names=feature_names,
-        output_path=OUTPUT_MODEL_DIR / "preprocessing_pipeline.joblib",
+        output_path=OUTPUT_MODEL_DIR
+        / "preprocessing/churn_preprocessing_pipeline_v1.joblib",
     )
 
     print("[DONE] Processed datasets generated successfully.")
