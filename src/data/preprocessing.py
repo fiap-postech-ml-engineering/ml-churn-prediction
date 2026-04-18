@@ -12,7 +12,9 @@ TARGET_SOURCE_COLUMN = "Churn Value"
 TARGET_COLUMN = "target"
 TOTAL_CHARGES_COLUMN = "Total Charges"
 COLUMNS_TO_DROP = ("Churn Score", "Count")
-DEFAULT_PREPROCESSING_PIPELINE_PATH = Path("models/preprocessing_pipeline.joblib")
+DEFAULT_PREPROCESSING_PIPELINE_PATH = Path(
+    "models/preprocessing/churn_preprocessing_pipeline_v1.joblib"
+)
 ProcessedArray = np.ndarray
 
 
@@ -53,18 +55,18 @@ def split_features_target(
     if target_col not in df.columns:
         raise ValueError(f"Target column '{target_col}' not found in dataframe.")
 
-    X = df.drop(columns=[target_col]).copy()
+    x = df.drop(columns=[target_col]).copy()
     y = df[target_col].copy()
 
-    return X, y
+    return x, y
 
 
-def validate_numeric_features(X: pd.DataFrame) -> None:
+def validate_numeric_features(x: pd.DataFrame) -> None:
     """
     Garante que todas as features estejam numéricas.
     O pipeline do MLP parte de um dataset já codificado.
     """
-    non_numeric_cols = X.select_dtypes(exclude=["number", "bool"]).columns.tolist()
+    non_numeric_cols = x.select_dtypes(exclude=["number", "bool"]).columns.tolist()
 
     if non_numeric_cols:
         raise ValueError(
@@ -109,7 +111,7 @@ def validate_split_sizes(test_size: float, val_size: float) -> None:
 
 
 def split_train_val_test(
-    X: pd.DataFrame,
+    x: pd.DataFrame,
     y: pd.Series,
     test_size: float = 0.2,
     val_size: float = 0.2,
@@ -136,8 +138,8 @@ def split_train_val_test(
 
     validate_target_for_stratification(y)
 
-    X_train_full, X_test, y_train_full, y_test = train_test_split(
-        X,
+    x_train_full, x_test, y_train_full, y_test = train_test_split(
+        x,
         y,
         test_size=test_size,
         stratify=y,
@@ -148,40 +150,40 @@ def split_train_val_test(
 
     val_relative_size = val_size / (1.0 - test_size)
 
-    X_train, X_val, y_train, y_val = train_test_split(
-        X_train_full,
+    x_train, x_val, y_train, y_val = train_test_split(
+        x_train_full,
         y_train_full,
         test_size=val_relative_size,
         stratify=y_train_full,
         random_state=seed,
     )
 
-    return X_train, X_val, X_test, y_train, y_val, y_test
+    return x_train, x_val, x_test, y_train, y_val, y_test
 
 
-def fit_scaler(X_train: pd.DataFrame) -> StandardScaler:
+def fit_scaler(x_train: pd.DataFrame) -> StandardScaler:
     """
     Ajusta o scaler somente nos dados de treino.
     """
     scaler = StandardScaler()
-    scaler.fit(X_train)
+    scaler.fit(x_train)
     return scaler
 
 
 def transform_features(
     scaler: StandardScaler,
-    X_train: pd.DataFrame,
-    X_val: pd.DataFrame,
-    X_test: pd.DataFrame,
+    x_train: pd.DataFrame,
+    x_val: pd.DataFrame,
+    x_test: pd.DataFrame,
 ) -> tuple[ProcessedArray, ProcessedArray, ProcessedArray]:
     """
     Aplica o scaler já ajustado em treino, validação e teste.
     """
-    X_train_scaled = scaler.transform(X_train)
-    X_val_scaled = scaler.transform(X_val)
-    X_test_scaled = scaler.transform(X_test)
+    x_train_scaled = scaler.transform(x_train)
+    x_val_scaled = scaler.transform(x_val)
+    x_test_scaled = scaler.transform(x_test)
 
-    return X_train_scaled, X_val_scaled, X_test_scaled
+    return x_train_scaled, x_val_scaled, x_test_scaled
 
 
 def prepare_mlp_data(
@@ -226,33 +228,33 @@ def prepare_mlp_data(
     """
     df = clean_dataframe_for_modeling(df)
 
-    X, y = split_features_target(df=df, target_col=target_col)
+    x, y = split_features_target(df=df, target_col=target_col)
 
-    validate_numeric_features(X)
+    validate_numeric_features(x)
 
-    feature_names = X.columns.tolist()
+    feature_names = x.columns.tolist()
 
-    X_train, X_val, X_test, y_train, y_val, y_test = split_train_val_test(
-        X=X,
+    x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(
+        x=x,
         y=y,
         test_size=test_size,
         val_size=val_size,
         seed=seed,
     )
 
-    scaler = fit_scaler(X_train)
+    scaler = fit_scaler(x_train)
 
-    X_train_scaled, X_val_scaled, X_test_scaled = transform_features(
+    x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
         scaler=scaler,
-        X_train=X_train,
-        X_val=X_val,
-        X_test=X_test,
+        x_train=x_train,
+        x_val=x_val,
+        x_test=x_test,
     )
 
     return (
-        X_train_scaled,
-        X_val_scaled,
-        X_test_scaled,
+        x_train_scaled,
+        x_val_scaled,
+        x_test_scaled,
         y_train,
         y_val,
         y_test,
@@ -317,6 +319,7 @@ def save_preprocessing_pipeline(
     joblib.dump(artifact, output_path)
 
     return output_path
+
 
 def load_preprocessing_pipeline(
     input_path: Path | str = DEFAULT_PREPROCESSING_PIPELINE_PATH,
