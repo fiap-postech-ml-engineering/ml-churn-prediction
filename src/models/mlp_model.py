@@ -25,6 +25,9 @@ class MLPNetworkChurn(nn.Module):
     ):
         super(MLPNetworkChurn, self).__init__()
 
+        if len(hidden_dims) != len(dropout_rates):
+            raise ValueError("hidden_dims and dropout_rates must have the same length.")
+
         self.input_size = input_size
         self.hidden_dims = hidden_dims
         self.dropout_rates = dropout_rates
