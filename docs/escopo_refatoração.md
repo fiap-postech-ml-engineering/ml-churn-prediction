@@ -1,7 +1,10 @@
 ## 1. Carregar o CSV
+### **`src.data.load_data.load_csv_data()`**
+
 - Verifica shape para validar carregamento correto
 
 ## 2. Selecionar features
+### **`src.data.preprocessing.clean_dataframe_for_modeling()`**
 
 - Dependents
 - Tenure Months
@@ -22,6 +25,7 @@
 - Churn Value -> [TARGET]
      
 ## 3. Tipar features
+### **`src.data.preprocessing.clean_dataframe_for_modeling()`**
 
 | Feature | Tipo |
 |---------|------|
@@ -45,9 +49,11 @@
 | Total Charges | string |
 
 ## 4. One Hot Encoding
+### **`SEM FUNÇÃO DEFINIDA`**
   - Aplicar no dataset com as features já selecionadas 
 
 ## 5. Feature Engineering
+### **`src.features.feature_engineering.apply_feature_engineering()`**
 
 ### 5.1. Ajuste de Tenure
 - Replace: 0 → 1 (Evita divisão por 0)
@@ -94,23 +100,28 @@
 | 12 | Device Protection_No internet service | int64 |
 
 ## 7. Separar dataset em treino, teste e validação (ESTRATIFICADO)
-
+### **`src.data.split_features_target()`**
 - Primeira divisão: 80% treino_full | 20% teste
 - Segunda divisão: 60% treino | 20% validação (do treino_full)
 - Calcula `pos_weight` para usar com loss function (BCEWithLogitsLoss)
 
 ## 8. Normalizar dados com StandardScaler
+### **`src.data.preprocessing.fit_scaler()`**
 - Fit somente no `x_train`
 - Transform no `x_val` e `x_test`
 
 ## 9. Tensorizar dados com o pytorch
+### **`SEM FUNÇÃO DEFINIDA`**
 - Todos os subsets de dados, depois do scaler
 
 ## 10. Cria os dataloaders
+### **`SEM FUNÇÃO DEFINIDA`**
 - Cria o TensorDataset com os subsets x e y
 - Cria os dataloaders com o batch definido no settings.py e shuffle = True no subset de treino
 
 ## 11. Carrega arquitetura do MLP
+### **`SEM FUNÇÃO DEFINIDA`**
+`classe MLPNetworkChurn em src.models.mlp_model.py`
 
 ```
 INPUT (12 features)
