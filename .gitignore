@@ -2,7 +2,8 @@
 mlruns/
 notebooks/mlruns/
 models/mlflow_artifacts/
-# notebooks/mlflow.db
+
+*.pid
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -50,3 +50,16 @@ clean:
 	find . -type f -name "*.pyc" -delete
 
 .DEFAULT_GOAL := help
+
+init:
+	@mkdir -p logs
+	@nohup uvicorn main:app --reload --host 0.0.0.0 --port 8000 > logs/api.log 2>&1 & echo $$! > .uvicorn.pid
+	@nohup mlflow ui --port 8001 > logs/mlflow.log 2>&1 & echo $$! > .mlflow.pid
+	@echo "API em background na porta 8000 <localhost:8000> (PID $$(cat .uvicorn.pid))"
+	@echo "MLflow em background na porta 8001 <localhost:8001> (PID $$(cat .mlflow.pid))"
+
+stop:
+	@kill $$(cat .uvicorn.pid) 2>/dev/null || true
+	@kill $$(cat .mlflow.pid) 2>/dev/null || true
+	@rm -f .uvicorn.pid .mlflow.pid
+	@echo "Servicos finalizados"
