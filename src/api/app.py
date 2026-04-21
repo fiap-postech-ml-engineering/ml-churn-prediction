@@ -8,10 +8,10 @@ import numpy as np
 import torch
 from fastapi import FastAPI, HTTPException
 
-from ..config.settings import API_DESCRIPTION, API_TITLE, API_VERSION
-from ..features.feature_engineering import apply_feature_engineering
-from ..inference.predict import load_model_artifacts
-from .schemas import ChurnPrediction, ChurnRequest, ChurnResponse
+from src.config.settings import API_DESCRIPTION, API_TITLE, API_VERSION
+from src.features.feature_engineering import apply_feature_engineering
+from src.inference.predict import load_model_artifacts
+from src.api.schemas import ChurnPrediction, ChurnRequest, ChurnResponse
 
 # ==================== CONFIGURAÇÃO DE LOGGING ====================
 logger = logging.getLogger(__name__)

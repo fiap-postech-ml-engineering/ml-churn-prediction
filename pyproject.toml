@@ -131,6 +131,21 @@ format-verbose   = "black -v src/ tests/"
 check            = "task lint && task format-check && task test"
 clean            = "rm -rf .pytest_cache .coverage htmlcov __pycache__ .ruff_cache"
 
+init = """
+mkdir -p logs &&
+nohup uvicorn main:app --reload --host 0.0.0.0 --port 8000 > logs/api.log 2>&1 & echo $! > .uvicorn.pid &&
+nohup mlflow ui --host 0.0.0.0 --port 8001 > logs/mlflow.log 2>&1 & echo $! > .mlflow.pid &&
+echo "API em background: http://0.0.0.0:8000 (PID $(cat .uvicorn.pid))" &&
+echo "MLflow em background: http://0.0.0.0:8001 (PID $(cat .mlflow.pid))"
+"""
+
+stop = """
+kill $(cat .uvicorn.pid) 2>/dev/null || true &&
+kill $(cat .mlflow.pid) 2>/dev/null || true &&
+rm -f .uvicorn.pid .mlflow.pid &&
+echo "Servicos finalizados"
+"""
+
 [tool.uv]
 environments = [
     "sys_platform == 'darwin' and platform_machine == 'x86_64'",
