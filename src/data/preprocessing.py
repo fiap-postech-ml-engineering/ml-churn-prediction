@@ -8,6 +8,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+from src.config.settings import RANDOM_SEED
+
 TARGET_SOURCE_COLUMN = "Churn Value"
 TARGET_COLUMN = "target"
 TOTAL_CHARGES_COLUMN = "Total Charges"
@@ -115,7 +117,7 @@ def split_train_val_test(
     y: pd.Series,
     test_size: float = 0.2,
     val_size: float = 0.2,
-    seed: int = 42,
+    seed: int = RANDOM_SEED,
 ) -> tuple[
     pd.DataFrame,
     pd.DataFrame,

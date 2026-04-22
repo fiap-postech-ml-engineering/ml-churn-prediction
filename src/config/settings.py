@@ -44,12 +44,23 @@ BATCH_SIZE = int(os.getenv("BATCH_SIZE", "32"))
 MAX_EPOCHS = int(os.getenv("MAX_EPOCHS", "200"))
 TARGET_COLUMN = "Churn Value"
 SELECTED_FEATURES = [
-        "Dependents", "Tenure Months", "Phone Service",
-        "Multiple Lines", "Internet Service", "Online Security",
-        "Online Backup", "Device Protection", "Tech Support",
-        "Streaming TV", "Streaming Movies", "Contract",
-        "Paperless Billing", "Payment Method", "Monthly Charge",
-        "Total Charges", "Churn Value"
+    "Dependents",
+    "Tenure Months",
+    "Phone Service",
+    "Multiple Lines",
+    "Internet Service",
+    "Online Security",
+    "Online Backup",
+    "Device Protection",
+    "Tech Support",
+    "Streaming TV",
+    "Streaming Movies",
+    "Contract",
+    "Paperless Billing",
+    "Payment Method",
+    "Monthly Charge",
+    "Total Charges",
+    "Churn Value",
 ]
 APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.6"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
