@@ -11,7 +11,7 @@ else:
     load_dotenv()
 
 # Base File Paths
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent
 LOGS_DIR = BASE_DIR / "logs"
 MODELS_DIR = BASE_DIR / "models"
 DATA_DIR = BASE_DIR / "data"
