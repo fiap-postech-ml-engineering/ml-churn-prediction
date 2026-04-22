@@ -30,7 +30,9 @@ def test_compute_classification_metrics_threshold_changes_predictions() -> None:
     y_true = np.array([0, 1, 1, 0])
     y_pred_proba = np.array([0.4, 0.6, 0.45, 0.3])
 
-    metrics_default = compute_classification_metrics(y_true, y_pred_proba, threshold=0.5)
+    metrics_default = compute_classification_metrics(
+        y_true, y_pred_proba, threshold=0.5
+    )
     metrics_strict = compute_classification_metrics(y_true, y_pred_proba, threshold=0.7)
 
     assert metrics_default["recall"] >= metrics_strict["recall"]

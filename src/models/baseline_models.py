@@ -40,20 +40,20 @@ def build_logistic_regression(
 
 def train_and_evaluate_baseline(
     model: Any,
-    X_train,
+    x_train,
     y_train,
-    X_test,
+    x_test,
     y_test,
 ) -> dict[str, float]:
     """
     Treina um baseline e retorna métricas no test set.
     """
-    model.fit(X_train, y_train)
+    model.fit(x_train, y_train)
 
     if hasattr(model, "predict_proba"):
-        y_pred_proba = model.predict_proba(X_test)[:, 1]
+        y_pred_proba = model.predict_proba(x_test)[:, 1]
     else:
-        y_pred_proba = model.predict(X_test)
+        y_pred_proba = model.predict(x_test)
 
     return compute_classification_metrics(
         y_true=np.asarray(y_test),

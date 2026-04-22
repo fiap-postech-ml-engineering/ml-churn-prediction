@@ -106,7 +106,9 @@ def test_build_default_run_tags_uses_safe_git_when_env_is_missing(monkeypatch) -
     assert tags["git_commit"] == "commit123"
 
 
-def test_configure_mlflow_tracking_creates_experiment_when_missing(tmp_path, monkeypatch) -> None:
+def test_configure_mlflow_tracking_creates_experiment_when_missing(
+    tmp_path, monkeypatch
+) -> None:
     calls = {
         "set_tracking_uri": None,
         "set_experiment": None,
@@ -164,7 +166,9 @@ def test_configure_mlflow_tracking_creates_experiment_when_missing(tmp_path, mon
     assert calls["create_experiment"]["tags"] == {"stage": "dev"}
 
 
-def test_configure_mlflow_tracking_does_not_create_experiment_when_it_exists(tmp_path, monkeypatch) -> None:
+def test_configure_mlflow_tracking_does_not_create_experiment_when_it_exists(
+    tmp_path, monkeypatch
+) -> None:
     calls = {
         "set_tracking_uri": None,
         "set_experiment": None,

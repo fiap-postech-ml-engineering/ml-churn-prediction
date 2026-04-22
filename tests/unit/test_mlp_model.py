@@ -39,7 +39,9 @@ def test_mlp_network_churn_custom_architecture() -> None:
     assert output.shape == (3, 1)
 
 
-def test_mlp_network_churn_raises_for_mismatched_hidden_dims_and_dropout_rates() -> None:
+def test_mlp_network_churn_raises_for_mismatched_hidden_dims_and_dropout_rates() -> (
+    None
+):
     with pytest.raises(ValueError, match="same length"):
         MLPNetworkChurn(
             input_size=10,

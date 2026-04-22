@@ -4,7 +4,7 @@
 - Verifica shape para validar carregamento correto
 
 ## 2. Selecionar features
-### **`src.data.preprocessing.clean_dataframe_for_modeling()`**
+### **`SEM FUNÇÃO DEFINIDA`**
 
 - Dependents
 - Tenure Months
@@ -25,13 +25,14 @@
 - Churn Value -> [TARGET]
      
 ## 3. Tipar features
-### **`src.data.preprocessing.clean_dataframe_for_modeling()`**
+### **`SEM FUNÇÃO DEFINIDA`**
 
 | Feature | Tipo |
 |---------|------|
 | Churn Value [TARGET] | int64 |
 | Tenure Months | int64 |
 | Monthly Charge | float64 |
+| Total Charges | float64 |
 |- |- | 
 | Dependents | string |
 | Phone Service | string |
@@ -46,7 +47,6 @@
 | Contract | string |
 | Paperless Billing | string |
 | Payment Method | string |
-| Total Charges | string |
 
 ## 4. One Hot Encoding
 ### **`SEM FUNÇÃO DEFINIDA`**
@@ -81,6 +81,7 @@
 - Nova feature: `is_new_customer` (Tenure Months < 6)
 
 ## 6. Selecionar 30% das features (ANOVA F-Value) (12 no notebook)
+## NÃO VAMOS APLICAR NO MLP, PODE DESCONSIDERAR
 
 > ⚠️ Critério: Poder discriminativo entre churners e não-churners
 
@@ -100,13 +101,13 @@
 | 12 | Device Protection_No internet service | int64 |
 
 ## 7. Separar dataset em treino, teste e validação (ESTRATIFICADO)
-### **`src.data.split_features_target()`**
+### **`SEM FUNÇÃO DEFINIDA`**
 - Primeira divisão: 80% treino_full | 20% teste
 - Segunda divisão: 60% treino | 20% validação (do treino_full)
 - Calcula `pos_weight` para usar com loss function (BCEWithLogitsLoss)
 
 ## 8. Normalizar dados com StandardScaler
-### **`src.data.preprocessing.fit_scaler()`**
+### **`SEM FUNÇÃO DEFINIDA`**
 - Fit somente no `x_train`
 - Transform no `x_val` e `x_test`
 
@@ -119,7 +120,15 @@
 - Cria o TensorDataset com os subsets x e y
 - Cria os dataloaders com o batch definido no settings.py e shuffle = True no subset de treino
 
-## 11. Carrega arquitetura do MLP
+## 11. Predict
+### **`SEM FUNÇÃO DEFINIDA`**
+- Colocar o modelo em modo de inferência
+- Inferir sem gradiente com `with torch.no_grad():`
+- Fazer foward pass nos dados
+- Converter logit em probabilidade com sigmoid `probs = torch.sigmoid(logits).cpu().numpy()`
+
+## 12. Carrega arquitetura do MLP
+## SOMENTE PARA REFERENCIA, NÃO PRECISAMOS IMPLEMENTAR NA API
 ### **`SEM FUNÇÃO DEFINIDA`**
 `classe MLPNetworkChurn em src.models.mlp_model.py`
 
