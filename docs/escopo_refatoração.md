@@ -4,7 +4,7 @@
 - Verifica shape para validar carregamento correto
 
 ## 2. Selecionar features
-### **`SEM FUNÇÃO DEFINIDA`**
+### **`src.config.select_features.py`**
 
 - Dependents
 - Tenure Months
@@ -25,7 +25,7 @@
 - Churn Value -> [TARGET]
      
 ## 3. Tipar features
-### **`SEM FUNÇÃO DEFINIDA`**
+### **`src.config.type_features.py`**
 
 | Feature | Tipo |
 |---------|------|
