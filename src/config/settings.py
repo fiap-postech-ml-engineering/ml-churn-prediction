@@ -39,10 +39,24 @@ EXPERIMENT_TAGS = {
 # Configurações do modelo
 RANDOM_SEED = int(os.getenv("RANDOM_SEED", "42"))
 TEST_SIZE = float(os.getenv("TEST_SIZE", "0.2"))
-VALUATION_SIZE = float(os.getenv("VALUATION_SIZE", "0.2"))
+VALIDATION_SIZE = float(
+    os.getenv("VALIDATION_SIZE", os.getenv("VALUATION_SIZE", "0.2"))
+)
+# Backward compatibility for legacy misspelled setting.
+VALUATION_SIZE = VALIDATION_SIZE
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "32"))
 MAX_EPOCHS = int(os.getenv("MAX_EPOCHS", "200"))
-TARGET_COLUMN = "Churn Value"
+TARGET_COLUMN = os.getenv("TARGET_COLUMN", "Churn Value")
+PREPROCESSING_TARGET_COLUMN = os.getenv("PREPROCESSING_TARGET_COLUMN", "target")
+TOTAL_CHARGES_COLUMN = os.getenv("TOTAL_CHARGES_COLUMN", "Total Charges")
+PREPROCESSING_COLUMNS_TO_DROP = tuple(
+    col.strip()
+    for col in os.getenv("PREPROCESSING_COLUMNS_TO_DROP", "Churn Score,Count").split(",")
+    if col.strip()
+)
+PREPROCESSING_PIPELINE_PATH = (
+    MODELS_DIR / "preprocessing" / "churn_preprocessing_pipeline_v1.joblib"
+)
 SELECTED_FEATURES = [
     "Dependents",
     "Tenure Months",
@@ -62,6 +76,31 @@ SELECTED_FEATURES = [
     "Total Charges",
     "Churn Value",
 ]
+# Schema de features RAW (etapas 2 e 3 do escopo de refatoracao)
+RAW_INT_FEATURES = [
+    "Tenure Months",
+    "Churn Value",
+]
+RAW_FLOAT_FEATURES = [
+    "Monthly Charge",
+    "Total Charges",
+]
+RAW_CATEGORICAL_FEATURES = [
+    "Dependents",
+    "Phone Service",
+    "Multiple Lines",
+    "Internet Service",
+    "Online Security",
+    "Online Backup",
+    "Device Protection",
+    "Tech Support",
+    "Streaming TV",
+    "Streaming Movies",
+    "Contract",
+    "Paperless Billing",
+    "Payment Method",
+]
+FEATURE_TYPE_STRICT = os.getenv("FEATURE_TYPE_STRICT", "true").lower() == "true"
 APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.6"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
 
