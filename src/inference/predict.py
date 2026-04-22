@@ -8,8 +8,8 @@ import logging
 import joblib
 import torch
 
-from ..config.settings import MODELS_DIR
-from ..models.mlp_model import MLPNetworkChurn
+from src.config.settings import MODELS_DIR
+from src.models.mlp_model import MLPNetworkChurn
 
 logger = logging.getLogger(__name__)
 
