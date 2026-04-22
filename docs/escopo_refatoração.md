@@ -127,8 +127,6 @@
 - Fazer foward pass nos dados
 - Converter logit em probabilidade com sigmoid `probs = torch.sigmoid(logits).cpu().numpy()`
 
-
-
 ## 12. Carrega arquitetura do MLP
 ## SOMENTE PARA REFERENCIA, NÃO PRECISAMOS IMPLEMENTAR NA API
 ### **`SEM FUNÇÃO DEFINIDA`**
