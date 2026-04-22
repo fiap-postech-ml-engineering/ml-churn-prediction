@@ -12,7 +12,7 @@ from src.models.baseline_models import (
 
 
 def make_classification_data():
-    X_train = np.array(
+    x_train = np.array(
         [
             [0.0, 1.0],
             [1.0, 0.0],
@@ -24,7 +24,7 @@ def make_classification_data():
     )
     y_train = np.array([0, 1, 0, 1, 0, 1])
 
-    X_test = np.array(
+    x_test = np.array(
         [
             [0.05, 0.95],
             [0.95, 0.05],
@@ -34,7 +34,7 @@ def make_classification_data():
     )
     y_test = np.array([0, 1, 0, 1])
 
-    return X_train, y_train, X_test, y_test
+    return x_train, y_train, x_test, y_test
 
 
 def test_build_dummy_classifier_returns_dummy_classifier() -> None:
@@ -61,14 +61,14 @@ def test_build_logistic_regression_with_balanced_class_weight() -> None:
 
 
 def test_train_and_evaluate_baseline_returns_expected_metrics() -> None:
-    X_train, y_train, X_test, y_test = make_classification_data()
+    x_train, y_train, x_test, y_test = make_classification_data()
     model = build_logistic_regression()
 
     metrics = train_and_evaluate_baseline(
         model=model,
-        X_train=X_train,
+        x_train=x_train,
         y_train=y_train,
-        X_test=X_test,
+        x_test=x_test,
         y_test=y_test,
     )
 
@@ -81,14 +81,14 @@ def test_train_and_evaluate_baseline_returns_expected_metrics() -> None:
 
 
 def test_train_and_evaluate_baseline_with_dummy_classifier() -> None:
-    X_train, y_train, X_test, y_test = make_classification_data()
+    x_train, y_train, x_test, y_test = make_classification_data()
     model = build_dummy_classifier()
 
     metrics = train_and_evaluate_baseline(
         model=model,
-        X_train=X_train,
+        x_train=x_train,
         y_train=y_train,
-        X_test=X_test,
+        x_test=x_test,
         y_test=y_test,
     )
 

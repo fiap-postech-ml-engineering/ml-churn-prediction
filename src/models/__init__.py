@@ -19,4 +19,3 @@ __all__ = [
     "train_and_evaluate_baseline",
     "log_baseline_run_to_mlflow",
 ]
-

@@ -26,11 +26,11 @@ def train_one_epoch(
     train_loss_total = 0.0
     train_samples = 0
 
-    for X_batch, y_batch in train_loader:
-        X_batch = X_batch.to(device)
+    for x_batch, y_batch in train_loader:
+        x_batch = x_batch.to(device)
         y_batch = y_batch.to(device)
 
-        logits = model(X_batch)
+        logits = model(x_batch)
         loss = criterion(logits, y_batch.unsqueeze(1))
 
         optimizer.zero_grad()
@@ -58,11 +58,11 @@ def evaluate_one_epoch(
     targets_all = []
 
     with torch.no_grad():
-        for X_batch, y_batch in data_loader:
-            X_batch = X_batch.to(device)
+        for x_batch, y_batch in data_loader:
+            x_batch = x_batch.to(device)
             y_batch = y_batch.to(device)
 
-            logits = model(X_batch)
+            logits = model(x_batch)
             probs = torch.sigmoid(logits).cpu().numpy()
 
             preds_all.append(probs.flatten())

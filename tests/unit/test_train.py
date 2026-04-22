@@ -15,9 +15,9 @@ def make_dataloader(
     input_size: int = 4,
     batch_size: int = 4,
 ):
-    X = torch.randn(n_samples, input_size)
+    x = torch.randn(n_samples, input_size)
     y = torch.tensor([0, 1] * (n_samples // 2), dtype=torch.float32)
-    dataset = TensorDataset(X, y)
+    dataset = TensorDataset(x, y)
     return DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
 
