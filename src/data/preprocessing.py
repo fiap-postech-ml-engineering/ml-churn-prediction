@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 
 import joblib
@@ -8,39 +9,60 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from src.config.settings import RANDOM_SEED
+from src.config import settings
 
-TARGET_SOURCE_COLUMN = "Churn Value"
-TARGET_COLUMN = "target"
-TOTAL_CHARGES_COLUMN = "Total Charges"
-COLUMNS_TO_DROP = ("Churn Score", "Count")
-DEFAULT_PREPROCESSING_PIPELINE_PATH = Path(
-    "models/preprocessing/churn_preprocessing_pipeline_v1.joblib"
-)
+
+@dataclass(frozen=True)
+class PreprocessingConfig:
+    """Configuração de preprocessing com defaults vindos de settings."""
+
+    target_source_column: str = settings.TARGET_COLUMN
+    target_column: str = settings.PREPROCESSING_TARGET_COLUMN
+    total_charges_column: str = settings.TOTAL_CHARGES_COLUMN
+    columns_to_drop: tuple[str, ...] = settings.PREPROCESSING_COLUMNS_TO_DROP
+    pipeline_path: Path = settings.PREPROCESSING_PIPELINE_PATH
+    random_seed: int = settings.RANDOM_SEED
+    test_size: float = settings.TEST_SIZE
+    val_size: float = settings.VALIDATION_SIZE
+
+
+DEFAULT_PREPROCESSING_CONFIG = PreprocessingConfig()
+
+# Backward compatibility for modules importing these constants directly.
+TARGET_SOURCE_COLUMN = DEFAULT_PREPROCESSING_CONFIG.target_source_column
+TARGET_COLUMN = DEFAULT_PREPROCESSING_CONFIG.target_column
+TOTAL_CHARGES_COLUMN = DEFAULT_PREPROCESSING_CONFIG.total_charges_column
+COLUMNS_TO_DROP = DEFAULT_PREPROCESSING_CONFIG.columns_to_drop
+DEFAULT_PREPROCESSING_PIPELINE_PATH = DEFAULT_PREPROCESSING_CONFIG.pipeline_path
 ProcessedArray = np.ndarray
 
 
-def clean_dataframe_for_modeling(df: pd.DataFrame) -> pd.DataFrame:
+def clean_dataframe_for_modeling(
+    df: pd.DataFrame,
+    config: PreprocessingConfig | None = None,
+) -> pd.DataFrame:
     """
     Aplica limpeza mínima antes da preparação final para o MLP.
 
     Espera-se que o dataframe já esteja processado/codificado.
     Esta função apenas protege contra pequenas inconsistências.
     """
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+
     df = df.copy()
 
-    existing_cols_to_drop = [col for col in COLUMNS_TO_DROP if col in df.columns]
+    existing_cols_to_drop = [col for col in cfg.columns_to_drop if col in df.columns]
     if existing_cols_to_drop:
         df = df.drop(columns=existing_cols_to_drop)
 
-    if TARGET_SOURCE_COLUMN in df.columns and TARGET_COLUMN not in df.columns:
-        df = df.rename(columns={TARGET_SOURCE_COLUMN: TARGET_COLUMN})
-    elif TARGET_SOURCE_COLUMN in df.columns and TARGET_COLUMN in df.columns:
-        df = df.drop(columns=[TARGET_SOURCE_COLUMN])
+    if cfg.target_source_column in df.columns and cfg.target_column not in df.columns:
+        df = df.rename(columns={cfg.target_source_column: cfg.target_column})
+    elif cfg.target_source_column in df.columns and cfg.target_column in df.columns:
+        df = df.drop(columns=[cfg.target_source_column])
 
-    if TOTAL_CHARGES_COLUMN in df.columns:
-        df[TOTAL_CHARGES_COLUMN] = pd.to_numeric(
-            df[TOTAL_CHARGES_COLUMN],
+    if cfg.total_charges_column in df.columns:
+        df[cfg.total_charges_column] = pd.to_numeric(
+            df[cfg.total_charges_column],
             errors="coerce",
         )
 
@@ -115,9 +137,10 @@ def validate_split_sizes(test_size: float, val_size: float) -> None:
 def split_train_val_test(
     x: pd.DataFrame,
     y: pd.Series,
-    test_size: float = 0.2,
-    val_size: float = 0.2,
-    seed: int = RANDOM_SEED,
+    test_size: float | None = None,
+    val_size: float | None = None,
+    seed: int | None = None,
+    config: PreprocessingConfig | None = None,
 ) -> tuple[
     pd.DataFrame,
     pd.DataFrame,
@@ -136,6 +159,11 @@ def split_train_val_test(
     1. separa teste
     2. separa validação a partir do treino restante
     """
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+    test_size = cfg.test_size if test_size is None else test_size
+    val_size = cfg.val_size if val_size is None else val_size
+    seed = cfg.random_seed if seed is None else seed
+
     validate_split_sizes(test_size=test_size, val_size=val_size)
 
     validate_target_for_stratification(y)
@@ -190,10 +218,11 @@ def transform_features(
 
 def prepare_mlp_data(
     df: pd.DataFrame,
-    target_col: str = TARGET_COLUMN,
-    test_size: float = 0.2,
-    val_size: float = 0.2,
-    seed: int = 42,
+    target_col: str | None = None,
+    test_size: float | None = None,
+    val_size: float | None = None,
+    seed: int | None = None,
+    config: PreprocessingConfig | None = None,
 ) -> tuple[
     ProcessedArray,
     ProcessedArray,
@@ -228,7 +257,13 @@ def prepare_mlp_data(
             feature_names,
         )
     """
-    df = clean_dataframe_for_modeling(df)
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+    target_col = cfg.target_column if target_col is None else target_col
+    test_size = cfg.test_size if test_size is None else test_size
+    val_size = cfg.val_size if val_size is None else val_size
+    seed = cfg.random_seed if seed is None else seed
+
+    df = clean_dataframe_for_modeling(df, config=cfg)
 
     x, y = split_features_target(df=df, target_col=target_col)
 
@@ -242,6 +277,7 @@ def prepare_mlp_data(
         test_size=test_size,
         val_size=val_size,
         seed=seed,
+        config=cfg,
     )
 
     scaler = fit_scaler(x_train)
@@ -268,16 +304,23 @@ def prepare_mlp_data(
 def build_preprocessing_artifact(
     scaler: StandardScaler,
     feature_names: list[str],
-    target_col: str = TARGET_COLUMN,
-    seed: int = 42,
-    test_size: float = 0.2,
-    val_size: float = 0.2,
+    target_col: str | None = None,
+    seed: int | None = None,
+    test_size: float | None = None,
+    val_size: float | None = None,
+    config: PreprocessingConfig | None = None,
 ) -> dict:
     """
     Monta o artefato serializável de pré-processamento para treino/inferência.
 
     Esse bundle representa o preprocessing fitado que será reutilizado pela API.
     """
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+    target_col = cfg.target_column if target_col is None else target_col
+    seed = cfg.random_seed if seed is None else seed
+    test_size = cfg.test_size if test_size is None else test_size
+    val_size = cfg.val_size if val_size is None else val_size
+
     if not feature_names:
         raise ValueError("feature_names cannot be empty.")
 
@@ -295,17 +338,21 @@ def build_preprocessing_artifact(
 def save_preprocessing_pipeline(
     scaler: StandardScaler,
     feature_names: list[str],
-    output_path: Path | str = DEFAULT_PREPROCESSING_PIPELINE_PATH,
-    target_col: str = TARGET_COLUMN,
-    seed: int = 42,
-    test_size: float = 0.2,
-    val_size: float = 0.2,
+    output_path: Path | str | None = None,
+    target_col: str | None = None,
+    seed: int | None = None,
+    test_size: float | None = None,
+    val_size: float | None = None,
+    config: PreprocessingConfig | None = None,
 ) -> Path:
     """
     Salva o bundle de pré-processamento fitado em joblib.
 
     Salva apenas artefato já fitado, pronto para ser reutilizado na inferência.
     """
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+    output_path = cfg.pipeline_path if output_path is None else Path(output_path)
+
     artifact = build_preprocessing_artifact(
         scaler=scaler,
         feature_names=feature_names,
@@ -313,9 +360,9 @@ def save_preprocessing_pipeline(
         seed=seed,
         test_size=test_size,
         val_size=val_size,
+        config=cfg,
     )
 
-    output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     joblib.dump(artifact, output_path)
@@ -324,12 +371,14 @@ def save_preprocessing_pipeline(
 
 
 def load_preprocessing_pipeline(
-    input_path: Path | str = DEFAULT_PREPROCESSING_PIPELINE_PATH,
+    input_path: Path | str | None = None,
+    config: PreprocessingConfig | None = None,
 ) -> dict:
     """
     Carrega o bundle de pré-processamento salvo em joblib.
     """
-    input_path = Path(input_path)
+    cfg = config or DEFAULT_PREPROCESSING_CONFIG
+    input_path = cfg.pipeline_path if input_path is None else Path(input_path)
 
     if not input_path.exists():
         raise FileNotFoundError(
