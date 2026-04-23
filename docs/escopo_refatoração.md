@@ -48,17 +48,23 @@
 | Paperless Billing | string |
 | Payment Method | string |
 
-## 4. One Hot Encoding
+## 4. Tratamento de Missing Values
 ### **`SEM FUNÇÃO DEFINIDA`**
-  - Aplicar no dataset com as features já selecionadas 
 
-## 5. Feature Engineering
+- Padronizar valores faltantes
+
+## 5. One Hot Encoding
+### **`SEM FUNÇÃO DEFINIDA`**
+
+- Aplicar no dataset com as features já selecionadas
+
+## 6. Feature Engineering
 ### **`src.features.feature_engineering.apply_feature_engineering()`**
 
-### 5.1. Ajuste de Tenure
+### 6.1. Ajuste de Tenure
 - Replace: 0 → 1 (Evita divisão por 0)
 
-### 5.2. Stickiness (Total de serviços ativos)
+### 6.2. Stickiness (Total de serviços ativos)
 - Nova feature: `total_services`
 - Contagem das colunas de serviço:
   - Online Security
@@ -68,19 +74,19 @@
   - Streaming TV
   - Streaming Movies
 
-### 5.3. Interação Fibra vs. Preço
+### 6.3. Interação Fibra vs. Preço
 - Nova feature: `fiber_price_impact`
 - Multiplicação: Internet Service Fiber Optic × Monthly Charge
 
-### 5.4. Métricas Financeiras
+### 6.4. Métricas Financeiras
 - Nova feature: `avg_ticket` (Ticket médio)
 - Normalização com log na Total Charges
 - Normalização com log na Monthly Charges
 
-### 5.5. Segmentação de Clientes
+### 6.5. Segmentação de Clientes
 - Nova feature: `is_new_customer` (Tenure Months < 6)
 
-## 6. Selecionar 30% das features (ANOVA F-Value) (12 no notebook)
+## 7. Selecionar 30% das features (ANOVA F-Value) (12 no notebook)
 ## NÃO VAMOS APLICAR NO MLP, PODE DESCONSIDERAR
 
 > ⚠️ Critério: Poder discriminativo entre churners e não-churners
@@ -100,34 +106,34 @@
 | 11 | Online Backup_No internet service | int64 |
 | 12 | Device Protection_No internet service | int64 |
 
-## 7. Separar dataset em treino, teste e validação (ESTRATIFICADO)
+## 8. Separar dataset em treino, teste e validação (ESTRATIFICADO)
 ### **`SEM FUNÇÃO DEFINIDA`**
 - Primeira divisão: 80% treino_full | 20% teste
 - Segunda divisão: 60% treino | 20% validação (do treino_full)
 - Calcula `pos_weight` para usar com loss function (BCEWithLogitsLoss)
 
-## 8. Normalizar dados com StandardScaler
+## 9. Normalizar dados com StandardScaler
 ### **`SEM FUNÇÃO DEFINIDA`**
 - Fit somente no `x_train`
 - Transform no `x_val` e `x_test`
 
-## 9. Tensorizar dados com o pytorch
+## 10. Tensorizar dados com o pytorch
 ### **`SEM FUNÇÃO DEFINIDA`**
 - Todos os subsets de dados, depois do scaler
 
-## 10. Cria os dataloaders
+## 11. Cria os dataloaders
 ### **`SEM FUNÇÃO DEFINIDA`**
 - Cria o TensorDataset com os subsets x e y
 - Cria os dataloaders com o batch definido no settings.py e shuffle = True no subset de treino
 
-## 11. Predict
+## 12. Predict
 ### **`SEM FUNÇÃO DEFINIDA`**
 - Colocar o modelo em modo de inferência
 - Inferir sem gradiente com `with torch.no_grad():`
 - Fazer foward pass nos dados
 - Converter logit em probabilidade com sigmoid `probs = torch.sigmoid(logits).cpu().numpy()`
 
-## 12. Carrega arquitetura do MLP
+## 13. Carrega arquitetura do MLP
 ## SOMENTE PARA REFERENCIA, NÃO PRECISAMOS IMPLEMENTAR NA API
 ### **`SEM FUNÇÃO DEFINIDA`**
 `classe MLPNetworkChurn em src.models.mlp_model.py`
