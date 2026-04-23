@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.data.missing_values import clean_missing_values
+from src.features.missing_values import clean_missing_values
 
 
 def make_input_df() -> pd.DataFrame:
