@@ -4,7 +4,7 @@
 - Verifica shape para validar carregamento correto
 
 ## 2. Selecionar features
-### **`src.config.select_features.py`**
+### **`src.features.select_features.select_model_features()`**
 
 - Dependents
 - Tenure Months
@@ -25,7 +25,7 @@
 - Churn Value -> [TARGET]
      
 ## 3. Tipar features
-### **`src.config.type_features.py`**
+### **`src.features.type_features.cast_feature_types()`**
 
 | Feature | Tipo |
 |---------|------|
@@ -49,12 +49,12 @@
 | Payment Method | string |
 
 ## 4. Tratamento de Missing Values
-### **`src.data.missing_values.py`**
+### **`src.features.missing_values.clean_missing_values()`**
 
 - Padronizar valores faltantes
 
 ## 5. One Hot Encoding
-### **`SEM FUNÇÃO DEFINIDA`**
+### **`src.features.apply_one_hot_encoding.apply_one_hot_encoding()`**
 
 - Aplicar no dataset com as features já selecionadas
 
@@ -87,7 +87,7 @@
 - Nova feature: `is_new_customer` (Tenure Months < 6)
 
 ## 7. Selecionar 30% das features (ANOVA F-Value) (12 no notebook)
-## NÃO VAMOS APLICAR NO MLP, PODE DESCONSIDERAR
+### NÃO VAMOS APLICAR NO MLP, PODE DESCONSIDERAR
 
 > ⚠️ Critério: Poder discriminativo entre churners e não-churners
 
@@ -107,7 +107,7 @@
 | 12 | Device Protection_No internet service | int64 |
 
 ## 8. Separar dataset em treino, teste e validação (ESTRATIFICADO)
-### **`SEM FUNÇÃO DEFINIDA`**
+### NÃO PRECISAMOS PARA A PREDIÇÃO
 - Primeira divisão: 80% treino_full | 20% teste
 - Segunda divisão: 60% treino | 20% validação (do treino_full)
 - Calcula `pos_weight` para usar com loss function (BCEWithLogitsLoss)

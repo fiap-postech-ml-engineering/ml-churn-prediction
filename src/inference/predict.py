@@ -115,3 +115,4 @@ def load_model_artifacts() -> ModelArtifacts:
         model_metrics=model_metrics,
         device=device,
     )
+
