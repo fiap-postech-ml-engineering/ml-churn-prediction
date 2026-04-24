@@ -1,11 +1,18 @@
 import logging
 
-import numpy as np
-import torch
+import pandas as pd
 from fastapi import APIRouter, HTTPException
 
 from src.api.schemas import ChurnPrediction, ChurnRequest, ChurnResponse
+
+from src.config.settings import APPROVAL_THRESHOLD
+
+from src.features.select_features import select_model_features
+from src.features.type_features import cast_feature_types
+from src.features.missing_values import clean_missing_values
+from src.features.apply_one_hot_encoding import apply_one_hot_encoding
 from src.features.feature_engineering import apply_feature_engineering
+
 from src.inference.predict import load_model_artifacts
 
 logger = logging.getLogger(__name__)
@@ -48,51 +55,24 @@ def predict(request: ChurnRequest):
         )
 
     try:
-        # Aplicar Feature Engineering (calcula features derived)
-        features_with_eng = apply_feature_engineering(request.features)
+        
+        df = pd.DataFrame([request.features])
 
-        # Validar se todas as features esperadas estão presentes (RAW + DERIVED)
-        missing_features = set(feature_names) - set(features_with_eng.keys())
-        extra_features = set(features_with_eng.keys()) - set(feature_names)
+        df_selected_features = select_model_features(df)
+        df_typed_features = cast_feature_types(df_selected_features)
+        df_no_missing_values = clean_missing_values(df_typed_features)
+        df_ohe = apply_one_hot_encoding(df_no_missing_values)
+        df_feat_eng = apply_feature_engineering(df_ohe)
 
-        if missing_features:
-            logger.error(f"❌ Features faltando: {missing_features}")
-            raise HTTPException(
-                status_code=400,
-                detail=f"Features faltando na requisição: {list(missing_features)}",
-            )
-
-        if extra_features:
-            logger.warning(f"⚠️ Features extras (serão ignoradas): {extra_features}")
-
-        # Reordenar features na ordem correta (conforme o treinamento)
-        features_ordered = np.array(
-            [features_with_eng[fname] for fname in feature_names], dtype=np.float32
-        ).reshape(1, -1)
-
-        # Normalizar usando o scaler treinado
-        features_scaled = scaler.transform(features_ordered)
-
-        # Converter para tensor PyTorch
-        features_tensor = torch.from_numpy(features_scaled).float().to(device)
-
-        # Realizar predição (disable gradientes para inference)
-        with torch.no_grad():
-            logits = model(features_tensor)
-            probabilidade_churn = float(torch.sigmoid(logits).cpu().numpy()[0, 0])
-
-        # Determinar classe (threshold = 0.5)
-        classe = 1 if probabilidade_churn >= 0.5 else 0
-        classe_descricao = "Churn Detectado" if classe == 1 else "Sem Churn"
-
-        # Log da predição
-        logger.info(
-            f"✓ Predição realizada: Classe={classe}, Prob={probabilidade_churn:.4f}"
-        )
+        # df_dataloaders = xxxxxxxxx(df_feat_eng)
+        # probabilidade_churn = xxxxxxxxx(df_dataloaders) -> RESPOSTA DO MODELO 
+        #
+        # classe = 1 if probabilidade_churn >= APPROVAL_THRESHOLD else 0
+        # classe_descricao = "Churn" if classe == 1 else "Não Churn"
 
         # Construir resposta
         predicao = ChurnPrediction(
-            classe=classe,
+            classe=classe, # Churn ou não
             classe_descricao=classe_descricao,
             probabilidade_churn=probabilidade_churn,
         )
@@ -100,7 +80,7 @@ def predict(request: ChurnRequest):
         resposta = ChurnResponse(
             sucesso=True,
             predicao=predicao,
-            entrada_recebida=features_with_eng,  # Echo com features derivadas também
+            entrada_recebida=df,  # Echo com features derivadas também
         )
 
         return resposta

@@ -46,14 +46,14 @@ VALIDATION_SIZE = float(
 VALUATION_SIZE = VALIDATION_SIZE
 BATCH_SIZE = int(os.getenv("BATCH_SIZE", "32"))
 MAX_EPOCHS = int(os.getenv("MAX_EPOCHS", "200"))
+LEARNING_RATE = float(os.getenv("LEARNING_RATE", "0.0001"))
+EARLY_STOPPING_PATIENCE = int(os.getenv("EARLY_STOPPING_PATIENCE", "20"))
+MLP_HIDDEN_DIMS = [256, 128, 64, 32]
+MLP_DROPOUT_RATES = [0.3, 0.3, 0.2, 0.1]
+PREPROCESSING_COLUMNS_TO_DROP = ["Churn Score", "Count"]
 TARGET_COLUMN = os.getenv("TARGET_COLUMN", "Churn Value")
 PREPROCESSING_TARGET_COLUMN = os.getenv("PREPROCESSING_TARGET_COLUMN", "target")
 TOTAL_CHARGES_COLUMN = os.getenv("TOTAL_CHARGES_COLUMN", "Total Charges")
-PREPROCESSING_COLUMNS_TO_DROP = tuple(
-    col.strip()
-    for col in os.getenv("PREPROCESSING_COLUMNS_TO_DROP", "Churn Score,Count").split(",")
-    if col.strip()
-)
 PREPROCESSING_PIPELINE_PATH = (
     MODELS_DIR / "preprocessing" / "churn_preprocessing_pipeline_v1.joblib"
 )
