@@ -14,6 +14,7 @@ from src.features.apply_one_hot_encoding import apply_one_hot_encoding
 from src.features.feature_engineering import apply_feature_engineering
 
 from src.inference.predict import load_model_artifacts
+from src.inference.prepare_inference_data import prepare_inference_batch, run_inference
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +47,13 @@ def predict(request: ChurnRequest):
         HTTPException: Se modelo não está carregado ou features inválidas
     """
 
+    def _run_step(step_name: str, func, *args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as exc:
+            logger.exception(f"❌ Falha no passo '{step_name}'")
+            raise RuntimeError(f"Erro em '{step_name}': {exc}") from exc
+
     # Validar se modelo foi carregado
     if model is None:
         logger.error("❌ ERRO: Modelo não foi carregado")
@@ -55,24 +63,36 @@ def predict(request: ChurnRequest):
         )
 
     try:
-        
         df = pd.DataFrame([request.features])
 
-        df_selected_features = select_model_features(df)
-        df_typed_features = cast_feature_types(df_selected_features)
-        df_no_missing_values = clean_missing_values(df_typed_features)
-        df_ohe = apply_one_hot_encoding(df_no_missing_values)
-        df_feat_eng = apply_feature_engineering(df_ohe)
+        df_selected_features = _run_step("select_model_features", select_model_features, df)
+        df_typed_features = _run_step("cast_feature_types", cast_feature_types, df_selected_features)
+        df_no_missing_values = _run_step("clean_missing_values", clean_missing_values, df_typed_features)
+        df_ohe = _run_step("apply_one_hot_encoding", apply_one_hot_encoding, df_no_missing_values)
+        df_feat_eng = _run_step("apply_feature_engineering", apply_feature_engineering, df_ohe)
 
-        # df_dataloaders = xxxxxxxxx(df_feat_eng)
-        # probabilidade_churn = xxxxxxxxx(df_dataloaders) -> RESPOSTA DO MODELO 
-        #
-        # classe = 1 if probabilidade_churn >= APPROVAL_THRESHOLD else 0
-        # classe_descricao = "Churn" if classe == 1 else "Não Churn"
+        inference_loader = _run_step(
+            "prepare_inference_batch",
+            prepare_inference_batch,
+            df_features=df_feat_eng,
+            scaler=scaler,
+            device=device,
+        )
 
-        # Construir resposta
+        probabilidades_churn, classes = _run_step(
+            "run_inference",
+            run_inference,
+            inference_loader=inference_loader,
+            model=model,
+            device=device,
+            approval_threshold=APPROVAL_THRESHOLD,
+        )
+
+        probabilidade_churn = float(probabilidades_churn[0])
+        classe = int(classes[0])
+        classe_descricao = "Churn" if classe == 1 else "Não Churn"
         predicao = ChurnPrediction(
-            classe=classe, # Churn ou não
+            classe=classe,
             classe_descricao=classe_descricao,
             probabilidade_churn=probabilidade_churn,
         )
@@ -80,7 +100,7 @@ def predict(request: ChurnRequest):
         resposta = ChurnResponse(
             sucesso=True,
             predicao=predicao,
-            entrada_recebida=df,  # Echo com features derivadas também
+            entrada_recebida=df,
         )
 
         return resposta
