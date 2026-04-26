@@ -3,22 +3,24 @@ import logging
 import numpy as np
 from fastapi import APIRouter
 
+from src.inference.predict import load_model_artifacts
+
 # ==================== CONFIGURAÇÃO DE LOGGING ====================
 logger = logging.getLogger(__name__)
 
 # ==================== IMPORT DO MODELO (global) ====================
 # Esses imports virão de app.py como modelo compartilhado
 
-router = APIRouter(prefix="/health", tags=["health"])
+model_artifacts = load_model_artifacts()
+model = model_artifacts.model
+scaler = model_artifacts.scaler
+feature_names = model_artifacts.feature_names
+device = model_artifacts.device
 
+router = APIRouter()
 
-@router.get("", tags=["health"])
-def health_check(
-    model: object = None,
-    scaler: object = None,
-    feature_names: list = None,
-    device: object = None,
-):
+@router.get("/health")
+def health_check():
     """
     Verifica a Saúde da API e Disponibilidade do Modelo.
 
