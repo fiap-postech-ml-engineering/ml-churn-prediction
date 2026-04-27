@@ -72,7 +72,7 @@ SELECTED_FEATURES = [
     "Contract",
     "Paperless Billing",
     "Payment Method",
-    "Monthly Charge",
+    "Monthly Charges",
     "Total Charges",
     "Churn Value",
 ]
@@ -82,7 +82,7 @@ RAW_INT_FEATURES = [
     "Churn Value",
 ]
 RAW_FLOAT_FEATURES = [
-    "Monthly Charge",
+    "Monthly Charges",
     "Total Charges",
 ]
 RAW_CATEGORICAL_FEATURES = [
