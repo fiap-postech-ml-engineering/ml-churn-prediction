@@ -10,9 +10,20 @@ from src.api.schemas import (
 def test_predict_request_accepts_features_dict() -> None:
     payload = {
         "features": {
-            "Latitude": 47.0,
-            "Longitude": -122.0,
-            "Tenure Months": 12.0,
+            "Dependents": "No",
+            "Tenure Months": 12,
+            "Phone Service": "Yes",
+            "Multiple Lines": "Yes",
+            "Internet Service": "Fiber optic",
+            "Online Security": "No",
+            "Online Backup": "Yes",
+            "Device Protection": "No",
+            "Tech Support": "No",
+            "Streaming TV": "No",
+            "Streaming Movies": "No",
+            "Contract": "Two year",
+            "Paperless Billing": "Yes",
+            "Payment Method": "Credit card (automatic)",
             "Monthly Charges": 65.0,
             "Total Charges": 780.0,
         }
@@ -21,8 +32,8 @@ def test_predict_request_accepts_features_dict() -> None:
     request = PredictRequest(**payload)
 
     assert isinstance(request.features, dict)
-    assert request.features["Latitude"] == 47.0
-    assert request.features["Tenure Months"] == 12.0
+    assert request.features["Dependents"] == "No"
+    assert request.features["Tenure Months"] == 12
 
 
 def test_churn_prediction_model_builds_correctly() -> None:

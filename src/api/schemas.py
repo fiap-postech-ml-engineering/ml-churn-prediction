@@ -16,21 +16,11 @@ class PredictRequest(BaseModel):
                   As features calculadas (avg_ticket, is_new_customer, etc)
                   são automaticamente derivadas pela API.
 
-    Features RAW esperadas (25 no total):
-        - Latitude, Longitude (localização)
-        - Tenure Months, Monthly Charges, Total Charges (financeiro)
-        - Gender_Male, Senior Citizen_Yes, Partner_Yes, Dependents_Yes (demográfico)
-        - Phone Service_Yes, Multiple Lines_Yes, Multiple Lines_No phone service
-        - Internet Service_Fiber optic, Internet Service_No
-        - Online Security_Yes, Online Security_No internet service
-        - Online Backup_Yes, Online Backup_No internet service
-        - Device Protection_Yes, Device Protection_No internet service
-        - Tech Support_Yes, Tech Support_No internet service
-        - Streaming TV_Yes, Streaming TV_No internet service
-        - Streaming Movies_Yes, Streaming Movies_No internet service
-        - Contract_One year, Contract_Two year
-        - Paperless Billing_Yes
-        - Payment Method_Credit card (automatic), Payment Method_Electronic check, Payment Method_Mailed check
+    Features RAW esperadas (16 no total):
+        - Dependents, Phone Service, Multiple Lines, Internet Service
+        - Online Security, Online Backup, Device Protection, Tech Support
+        - Streaming TV, Streaming Movies, Contract, Paperless Billing
+        - Payment Method, Tenure Months, Monthly Charges, Total Charges
     """
 
     features: dict = Field(
@@ -38,39 +28,22 @@ class PredictRequest(BaseModel):
         description="Dicionário com features RAW do cliente (derivadas são calculadas automaticamente)",
         json_schema_extra={
             "example": {
-                "Latitude": 47.0,
-                "Longitude": -122.0,
-                "Tenure Months": 12.0,
+                "Dependents": "No",
+                "Tenure Months": 12,
+                "Phone Service": "Yes",
+                "Multiple Lines": "Yes",
+                "Internet Service": "Fiber optic",
+                "Online Security": "No",
+                "Online Backup": "Yes",
+                "Device Protection": "No",
+                "Tech Support": "No",
+                "Streaming TV": "No",
+                "Streaming Movies": "No",
+                "Contract": "Two year",
+                "Paperless Billing": "Yes",
+                "Payment Method": "Credit card (automatic)",
                 "Monthly Charges": 65.0,
                 "Total Charges": 780.0,
-                "CLTV": 600.0,
-                "Gender_Male": 1.0,
-                "Senior Citizen_Yes": 0.0,
-                "Partner_Yes": 1.0,
-                "Dependents_Yes": 0.0,
-                "Phone Service_Yes": 1.0,
-                "Multiple Lines_No phone service": 0.0,
-                "Multiple Lines_Yes": 1.0,
-                "Internet Service_Fiber optic": 1.0,
-                "Internet Service_No": 0.0,
-                "Online Security_No internet service": 0.0,
-                "Online Security_Yes": 1.0,
-                "Online Backup_No internet service": 0.0,
-                "Online Backup_Yes": 1.0,
-                "Device Protection_No internet service": 0.0,
-                "Device Protection_Yes": 0.0,
-                "Tech Support_No internet service": 0.0,
-                "Tech Support_Yes": 0.0,
-                "Streaming TV_No internet service": 0.0,
-                "Streaming TV_Yes": 0.0,
-                "Streaming Movies_No internet service": 0.0,
-                "Streaming Movies_Yes": 0.0,
-                "Contract_One year": 0.0,
-                "Contract_Two year": 1.0,
-                "Paperless Billing_Yes": 1.0,
-                "Payment Method_Credit card (automatic)": 1.0,
-                "Payment Method_Electronic check": 0.0,
-                "Payment Method_Mailed check": 0.0,
             }
         },
     )
