@@ -66,3 +66,54 @@ def ensure_feature_engineering_columns(
         ).astype(int)
 
     return output_df
+
+def ensure_model_one_hot_columns(
+    df_encoded: pd.DataFrame,
+    df_raw_features: pd.DataFrame,
+    model_feature_names: Sequence[str],
+    categorical_features: Sequence[str],
+) -> pd.DataFrame:
+    """
+    Reconstrói colunas one-hot esperadas pelo modelo a partir das features RAW.
+
+    Necessário para inferência com um único registro, porque
+    pd.get_dummies(..., drop_first=True) pode não criar colunas categóricas
+    quando existe apenas uma categoria presente no batch.
+
+    Exemplo:
+    RAW:
+        Paperless Billing = Yes
+
+    Feature esperada pelo modelo:
+        Paperless Billing_Yes = 1
+    """
+    output_df = df_encoded.copy()
+
+    for model_feature in model_feature_names:
+        if model_feature in output_df.columns:
+            continue
+
+        for raw_column in categorical_features:
+            prefix = f"{raw_column}_"
+
+            if not model_feature.startswith(prefix):
+                continue
+
+            if raw_column not in df_raw_features.columns:
+                output_df[model_feature] = 0
+                break
+
+            expected_category = model_feature.removeprefix(prefix)
+
+            output_df[model_feature] = (
+                df_raw_features[raw_column]
+                .astype("string")
+                .str.strip()
+                .str.lower()
+                .eq(str(expected_category).strip().lower())
+                .astype(int)
+            )
+
+            break
+
+    return output_df

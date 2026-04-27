@@ -21,6 +21,7 @@ from src.inference.feature_contract import (
     align_to_model_feature_contract,
     build_raw_inference_feature_names,
     ensure_feature_engineering_columns,
+    ensure_model_one_hot_columns,
 )
 from src.inference.predict import load_model_artifacts
 from src.inference.prepare_inference_data import prepare_inference_batch, run_inference
@@ -105,21 +106,23 @@ def predict(request: ChurnRequest):
             float_features=RAW_FLOAT_FEATURES,
             categorical_features=RAW_CATEGORICAL_FEATURES,
         )
-        df_ohe = _run_step("apply_one_hot_encoding", apply_one_hot_encoding, df_no_missing_values)
-        df_ohe_ready_for_feat_eng = _run_step(
-            "ensure_feature_engineering_columns",
-            ensure_feature_engineering_columns,
+        df_ohe = apply_one_hot_encoding(df_no_missing_values)
+
+        df_ohe_with_model_columns = ensure_model_one_hot_columns(
             df_encoded=df_ohe,
             df_raw_features=df_no_missing_values,
+            model_feature_names=feature_names,
+            categorical_features=RAW_CATEGORICAL_FEATURES,
         )
-        df_feat_eng = _run_step(
-            "apply_feature_engineering",
-            apply_feature_engineering,
-            df_ohe_ready_for_feat_eng,
+
+        df_ohe_ready_for_feat_eng = ensure_feature_engineering_columns(
+            df_encoded=df_ohe_with_model_columns,
+            df_raw_features=df_no_missing_values,
         )
-        df_model_ready = _run_step(
-            "align_to_model_feature_contract",
-            align_to_model_feature_contract,
+
+        df_feat_eng = apply_feature_engineering(df_ohe_ready_for_feat_eng)
+
+        df_model_ready = align_to_model_feature_contract(
             df_feat_eng,
             model_feature_names=feature_names,
         )

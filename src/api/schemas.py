@@ -8,20 +8,17 @@ class PredictRequest(BaseModel):
     """
     Modelo de Entrada para Requisição de Predição.
 
-    Representa os dados RAW de um cliente de telecom. As features derived
-    (calculadas) serão geradas automaticamente pela API.
+    Representa os dados RAW de um cliente de telecom. A API recebe os nomes
+    originais das colunas do dataset, não features já transformadas em one-hot.
 
-    Atributos:
-        features: Dicionário com features RAW do cliente (dados originais do dataset).
-                  As features calculadas (avg_ticket, is_new_customer, etc)
-                  são automaticamente derivadas pela API.
+    As features derivadas, como avg_ticket, is_new_customer, total_services e
+    fiber_price_impact, são geradas automaticamente pela API.
 
-    Features RAW esperadas (16 no total):
-        - Dependents, Phone Service, Multiple Lines, Internet Service
-        - Online Security, Online Backup, Device Protection, Tech Support
-        - Streaming TV, Streaming Movies, Contract, Paperless Billing
-        - Payment Method, Tenure Months, Monthly Charges, Total Charges
-    """
+    Não enviar:
+        - Churn Value
+        - Churn Label
+        - colunas one-hot como Contract_Two year ou Payment Method_Electronic check
+"""
 
     features: dict = Field(
         ...,
