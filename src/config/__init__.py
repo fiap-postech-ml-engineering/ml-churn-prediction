@@ -9,7 +9,11 @@ from .settings import (
     DEBUG,
     DRIFT_LOG_PATH,
     ENVIRONMENT,
+    LATENCY_WARN_MS,
     LOG_LEVEL,
+    LOG_FORMAT,
+    REQUEST_ID_HEADER,
+    SERVICE_NAME,
     LOGS_DIR,
     MODEL_VERSION,
     MODELS_DIR,
@@ -29,6 +33,10 @@ __all__ = [
     'MODEL_VERSION',
     # Logging
     'LOG_LEVEL',
+    'LOG_FORMAT',
+    'SERVICE_NAME',
+    'REQUEST_ID_HEADER',
+    'LATENCY_WARN_MS',
     'setup_logging',
     # API
     'API_TITLE',
