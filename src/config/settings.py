@@ -106,6 +106,10 @@ MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
 
 # Configurações de logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_FORMAT = os.getenv("LOG_FORMAT", "json")
+SERVICE_NAME = os.getenv("SERVICE_NAME", "ml-churn-api")
+REQUEST_ID_HEADER = os.getenv("REQUEST_ID_HEADER", "X-Request-ID")
+LATENCY_WARN_MS = float(os.getenv("LATENCY_WARN_MS", "500"))
 DRIFT_LOG_PATH = LOGS_DIR / "input_samples.jsonl"
 
 # Configurações da API
