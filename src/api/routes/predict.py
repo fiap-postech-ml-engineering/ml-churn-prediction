@@ -4,15 +4,24 @@ import pandas as pd
 from fastapi import APIRouter, HTTPException
 
 from src.api.schemas import ChurnPrediction, ChurnRequest, ChurnResponse
-
-from src.config.settings import APPROVAL_THRESHOLD
-
-from src.features.select_features import select_model_features
-from src.features.type_features import cast_feature_types
-from src.features.missing_values import clean_missing_values
+from src.config.settings import (
+    APPROVAL_THRESHOLD,
+    RAW_CATEGORICAL_FEATURES,
+    RAW_FLOAT_FEATURES,
+    RAW_INT_FEATURES,
+    SELECTED_FEATURES,
+    TARGET_COLUMN,
+)
 from src.features.apply_one_hot_encoding import apply_one_hot_encoding
 from src.features.feature_engineering import apply_feature_engineering
-
+from src.features.missing_values import clean_missing_values
+from src.features.select_features import select_model_features
+from src.features.type_features import cast_feature_types
+from src.inference.feature_contract import (
+    align_to_model_feature_contract,
+    build_raw_inference_feature_names,
+    ensure_feature_engineering_columns,
+)
 from src.inference.predict import load_model_artifacts
 from src.inference.prepare_inference_data import prepare_inference_batch, run_inference
 
@@ -27,6 +36,14 @@ scaler = model_artifacts.scaler
 feature_names = model_artifacts.feature_names
 model_metrics = model_artifacts.model_metrics
 device = model_artifacts.device
+
+RAW_INFERENCE_FEATURES = build_raw_inference_feature_names(
+    selected_features=SELECTED_FEATURES,
+    target_column=TARGET_COLUMN,
+)
+RAW_INFERENCE_INT_FEATURES = [
+    feature for feature in RAW_INT_FEATURES if feature != TARGET_COLUMN
+]
 
 
 @router.post("/predict", response_model=ChurnResponse)
@@ -65,16 +82,52 @@ def predict(request: ChurnRequest):
     try:
         df = pd.DataFrame([request.features])
 
-        df_selected_features = _run_step("select_model_features", select_model_features, df)
-        df_typed_features = _run_step("cast_feature_types", cast_feature_types, df_selected_features)
-        df_no_missing_values = _run_step("clean_missing_values", clean_missing_values, df_typed_features)
+        df_selected_features = _run_step(
+            "select_model_features",
+            select_model_features,
+            df,
+            selected_features=RAW_INFERENCE_FEATURES,
+        )
+        df_typed_features = _run_step(
+            "cast_feature_types",
+            cast_feature_types,
+            df_selected_features,
+            int_features=RAW_INFERENCE_INT_FEATURES,
+            float_features=RAW_FLOAT_FEATURES,
+            categorical_features=RAW_CATEGORICAL_FEATURES,
+        )
+        df_no_missing_values = _run_step(
+            "clean_missing_values",
+            clean_missing_values,
+            df_typed_features,
+            selected_features=RAW_INFERENCE_FEATURES,
+            int_features=RAW_INFERENCE_INT_FEATURES,
+            float_features=RAW_FLOAT_FEATURES,
+            categorical_features=RAW_CATEGORICAL_FEATURES,
+        )
         df_ohe = _run_step("apply_one_hot_encoding", apply_one_hot_encoding, df_no_missing_values)
-        df_feat_eng = _run_step("apply_feature_engineering", apply_feature_engineering, df_ohe)
+        df_ohe_ready_for_feat_eng = _run_step(
+            "ensure_feature_engineering_columns",
+            ensure_feature_engineering_columns,
+            df_encoded=df_ohe,
+            df_raw_features=df_no_missing_values,
+        )
+        df_feat_eng = _run_step(
+            "apply_feature_engineering",
+            apply_feature_engineering,
+            df_ohe_ready_for_feat_eng,
+        )
+        df_model_ready = _run_step(
+            "align_to_model_feature_contract",
+            align_to_model_feature_contract,
+            df_feat_eng,
+            model_feature_names=feature_names,
+        )
 
         inference_loader = _run_step(
             "prepare_inference_batch",
             prepare_inference_batch,
-            df_features=df_feat_eng,
+            df_features=df_model_ready,
             scaler=scaler,
             device=device,
         )
@@ -100,7 +153,7 @@ def predict(request: ChurnRequest):
         resposta = ChurnResponse(
             sucesso=True,
             predicao=predicao,
-            entrada_recebida=df,
+            entrada_recebida=request.features,
         )
 
         return resposta
