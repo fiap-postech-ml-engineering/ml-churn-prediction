@@ -5,6 +5,7 @@ from src.inference.feature_contract import (
     align_to_model_feature_contract,
     build_raw_inference_feature_names,
     ensure_feature_engineering_columns,
+    ensure_model_one_hot_columns,
 )
 
 
@@ -78,3 +79,60 @@ def test_ensure_feature_engineering_columns_from_raw_values() -> None:
     assert result.loc[0, "Tech Support_Yes"] == 0
     assert result.loc[0, "Streaming TV_Yes"] == 1
     assert result.loc[0, "Streaming Movies_Yes"] == 0
+
+def test_ensure_model_one_hot_columns_rebuilds_model_columns_from_raw_values() -> None:
+    raw_df = pd.DataFrame(
+        [
+            {
+                "Phone Service": "Yes",
+                "Paperless Billing": "Yes",
+                "Contract": "Month-to-month",
+                "Payment Method": "Electronic check",
+                "Internet Service": "Fiber optic",
+                "Online Backup": "Yes",
+            }
+        ]
+    )
+    encoded_df = pd.DataFrame(
+        [
+            {
+                "Tenure Months": 1,
+                "Monthly Charges": 105.0,
+                "Total Charges": 105.0,
+            }
+        ]
+    )
+
+    result = ensure_model_one_hot_columns(
+        df_encoded=encoded_df,
+        df_raw_features=raw_df,
+        model_feature_names=[
+            "Phone Service_Yes",
+            "Paperless Billing_Yes",
+            "Contract_One year",
+            "Contract_Two year",
+            "Payment Method_Credit card (automatic)",
+            "Payment Method_Electronic check",
+            "Payment Method_Mailed check",
+            "Internet Service_Fiber optic",
+            "Online Backup_Yes",
+        ],
+        categorical_features=[
+            "Phone Service",
+            "Paperless Billing",
+            "Contract",
+            "Payment Method",
+            "Internet Service",
+            "Online Backup",
+        ],
+    )
+
+    assert result.loc[0, "Phone Service_Yes"] == 1
+    assert result.loc[0, "Paperless Billing_Yes"] == 1
+    assert result.loc[0, "Contract_One year"] == 0
+    assert result.loc[0, "Contract_Two year"] == 0
+    assert result.loc[0, "Payment Method_Credit card (automatic)"] == 0
+    assert result.loc[0, "Payment Method_Electronic check"] == 1
+    assert result.loc[0, "Payment Method_Mailed check"] == 0
+    assert result.loc[0, "Internet Service_Fiber optic"] == 1
+    assert result.loc[0, "Online Backup_Yes"] == 1
