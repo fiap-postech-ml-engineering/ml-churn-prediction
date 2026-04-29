@@ -3,9 +3,11 @@ import pytest
 
 from src.inference.feature_contract import (
     align_to_model_feature_contract,
+    build_model_ready_inference_features,
     build_raw_inference_feature_names,
     ensure_feature_engineering_columns,
     ensure_model_one_hot_columns,
+    validate_critical_raw_inference_features,
 )
 
 
@@ -136,3 +138,88 @@ def test_ensure_model_one_hot_columns_rebuilds_model_columns_from_raw_values() -
     assert result.loc[0, "Payment Method_Mailed check"] == 0
     assert result.loc[0, "Internet Service_Fiber optic"] == 1
     assert result.loc[0, "Online Backup_Yes"] == 1
+
+
+def test_validate_critical_raw_inference_features_requires_columns() -> None:
+    raw_df = pd.DataFrame([
+        {
+            "Tenure Months": 12,
+            "Monthly Charges": 50.0,
+            "Total Charges": 600.0,
+            "Internet Service": "Fiber optic",
+        }
+    ])
+
+    with pytest.raises(ValueError, match="Missing critical raw inference features"):
+        validate_critical_raw_inference_features(raw_df)
+
+
+def test_build_model_ready_inference_features_aligns_contract() -> None:
+    raw_df = pd.DataFrame(
+        [
+            {
+                "Dependents": "No",
+                "Tenure Months": 12,
+                "Phone Service": "Yes",
+                "Multiple Lines": "No",
+                "Internet Service": "Fiber optic",
+                "Online Security": "Yes",
+                "Online Backup": "No",
+                "Device Protection": "Yes",
+                "Tech Support": "No",
+                "Streaming TV": "Yes",
+                "Streaming Movies": "No",
+                "Contract": "Month-to-month",
+                "Paperless Billing": "Yes",
+                "Payment Method": "Electronic check",
+                "Monthly Charges": 85.0,
+                "Total Charges": 1020.0,
+            }
+        ]
+    )
+
+    model_feature_names = [
+        "Tenure Months",
+        "Monthly Charges",
+        "Total Charges",
+        "Internet Service_Fiber optic",
+        "Online Security_Yes",
+        "Online Backup_Yes",
+        "Device Protection_Yes",
+        "Tech Support_Yes",
+        "Streaming TV_Yes",
+        "Streaming Movies_Yes",
+        "total_services",
+        "fiber_price_impact",
+        "avg_ticket",
+        "Monthly Charges_log",
+        "is_new_customer",
+    ]
+
+    result = build_model_ready_inference_features(
+        df_raw_features=raw_df,
+        model_feature_names=model_feature_names,
+        selected_raw_features=[column for column in raw_df.columns],
+        raw_int_features=["Tenure Months"],
+        raw_float_features=["Monthly Charges", "Total Charges"],
+        raw_categorical_features=[
+            "Dependents",
+            "Phone Service",
+            "Multiple Lines",
+            "Internet Service",
+            "Online Security",
+            "Online Backup",
+            "Device Protection",
+            "Tech Support",
+            "Streaming TV",
+            "Streaming Movies",
+            "Contract",
+            "Paperless Billing",
+            "Payment Method",
+        ],
+    )
+
+    assert list(result.columns) == model_feature_names
+    assert result.loc[0, "Internet Service_Fiber optic"] == 1.0
+    assert result.loc[0, "Online Backup_Yes"] == 0.0
+    assert result.loc[0, "total_services"] == 3.0

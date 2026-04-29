@@ -7,6 +7,7 @@ from src.data.preprocessing import (
     load_preprocessing_pipeline,
     prepare_mlp_data,
     save_preprocessing_pipeline,
+    try_load_preprocessing_pipeline,
 )
 
 
@@ -159,6 +160,14 @@ def test_load_preprocessing_pipeline_raises_for_missing_file(tmp_path) -> None:
         match="Preprocessing pipeline artifact not found",
     ):
         load_preprocessing_pipeline(missing_path)
+
+
+def test_try_load_preprocessing_pipeline_returns_none_for_missing_file(tmp_path) -> None:
+    missing_path = tmp_path / "missing.joblib"
+
+    artifact = try_load_preprocessing_pipeline(missing_path)
+
+    assert artifact is None
 
 
 def test_load_preprocessing_pipeline_raises_for_invalid_object(tmp_path) -> None:
