@@ -54,10 +54,18 @@ def prepare_inference_batch(
     try:
         logger.info(f"📊 Preparando batch para inferência: {df_features.shape}")
 
-        # 1. Normalizar dados com StandardScaler
+        # 1. Transformar dados usando o pipeline de preprocessing fitado
         X_scaled = scaler.transform(df_features)
+        if hasattr(X_scaled, "toarray"):
+            X_scaled = X_scaled.toarray()
+        zero_ratio = float((X_scaled == 0).sum().sum()) / float(X_scaled.size)
+        if zero_ratio > 0.8:
+            logger.warning(
+                "⚠️ Alta proporção de zeros nas features pós-preprocessing: %.2f%%",
+                zero_ratio * 100,
+            )
         logger.info(
-            f"✓ Dados normalizados | mean={X_scaled.mean():.4f}, std={X_scaled.std():.4f}"
+            f"✓ Dados transformados | mean={X_scaled.mean():.4f}, std={X_scaled.std():.4f}"
         )
 
         # 2. Converter para tensor PyTorch

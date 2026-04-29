@@ -9,6 +9,11 @@ import joblib
 import torch
 
 from src.config.settings import MODELS_DIR
+from src.config.settings import TABULAR_MLP_MODEL_PATH
+from src.data.preprocessing import (
+    try_load_preprocessing_pipeline,
+    try_load_tabular_preprocessing_pipeline,
+)
 from src.models.mlp_model import MLPNetworkChurn
 
 logger = logging.getLogger(__name__)
@@ -45,7 +50,7 @@ def load_model_artifacts() -> ModelArtifacts:
     logger.info("Iniciando carregamento do modelo MLP...")
 
     # Definir caminhos
-    model_path = MODELS_DIR / "mlp/churn_mlp_best_state_dict_v1.pth"
+    model_path = TABULAR_MLP_MODEL_PATH
     scaler_path = MODELS_DIR / "mlp/churn_mlp_input_scaler_v1.joblib"
     features_path = MODELS_DIR / "mlp/churn_mlp_input_features_v1.joblib"
     metrics_path = MODELS_DIR / "mlp/churn_mlp_metrics_v1.json"
@@ -57,19 +62,32 @@ def load_model_artifacts() -> ModelArtifacts:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     try:
-        # Carregar scaler
-        if scaler_path.exists():
-            scaler = joblib.load(scaler_path)
-            logger.info(f"✓ Scaler carregado de: {scaler_path}")
-        else:
-            raise FileNotFoundError(f"Scaler não encontrado em: {scaler_path}")
-
-        # Carregar nomes de features
-        if features_path.exists():
-            feature_names = joblib.load(features_path)
+        preprocessing_artifact = try_load_tabular_preprocessing_pipeline()
+        if preprocessing_artifact is not None:
+            scaler = preprocessing_artifact["preprocessing_pipeline"]
+            feature_names = preprocessing_artifact["feature_names"]
+            logger.info("✓ Tabular preprocessing pipeline carregado do bundle de treino")
             logger.info(f"✓ Features carregadas: {len(feature_names)} features")
         else:
-            raise FileNotFoundError(f"Features não encontradas em: {features_path}")
+            preprocessing_artifact = try_load_preprocessing_pipeline()
+            if preprocessing_artifact is not None:
+                scaler = preprocessing_artifact["scaler"]
+                feature_names = preprocessing_artifact["feature_names"]
+                logger.info("✓ Preprocessing legado carregado do bundle anterior")
+                logger.info(f"✓ Features carregadas: {len(feature_names)} features")
+            else:
+                # Fallback para artefatos legados separados.
+                if scaler_path.exists():
+                    scaler = joblib.load(scaler_path)
+                    logger.info(f"✓ Scaler carregado de: {scaler_path}")
+                else:
+                    raise FileNotFoundError(f"Scaler não encontrado em: {scaler_path}")
+
+                if features_path.exists():
+                    feature_names = joblib.load(features_path)
+                    logger.info(f"✓ Features carregadas: {len(feature_names)} features")
+                else:
+                    raise FileNotFoundError(f"Features não encontradas em: {features_path}")
 
         # Carregar métricas do modelo
         if metrics_path.exists():
@@ -91,7 +109,17 @@ def load_model_artifacts() -> ModelArtifacts:
             logger.info(f"  Device: {device}")
             logger.info("  Modo: Avaliação (inference mode)")
         else:
-            raise FileNotFoundError(f"Modelo não encontrado em: {model_path}")
+            legacy_model_path = MODELS_DIR / "mlp/churn_mlp_best_state_dict_v1.pth"
+            if legacy_model_path.exists():
+                model = MLPNetworkChurn(input_size=len(feature_names))
+                model.load_state_dict(torch.load(legacy_model_path, map_location=device))
+                model.to(device)
+                model.eval()
+                logger.info(f"✓ Modelo MLP legado carregado de: {legacy_model_path}")
+                logger.info(f"  Device: {device}")
+                logger.info("  Modo: Avaliação (inference mode)")
+            else:
+                raise FileNotFoundError(f"Modelo não encontrado em: {model_path}")
 
         logger.info("=" * 70)
         logger.info("✅ MODELO CARREGADO COM SUCESSO")
