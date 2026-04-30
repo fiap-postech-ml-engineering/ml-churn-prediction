@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException
 
-from src.config.settings import SELECTED_FEATURES
+from src.api.schemas import FeaturesResponse
+from src.config.settings import TABULAR_RAW_FEATURES
 
 router = APIRouter()
 
 
-@router.get("/features")
+@router.get("/features", response_model=FeaturesResponse)
 def get_features():
     """
     Retorna Lista de Todas as Features Esperadas para Predição.
@@ -17,14 +18,14 @@ def get_features():
         dict: Informações sobre as features (nomes, ordem, quantidade)
     """
 
-    if SELECTED_FEATURES is None:
+    if TABULAR_RAW_FEATURES is None:
         raise HTTPException(
             status_code=503,
             detail="Features não estão disponíveis. Modelo não foi carregado corretamente.",
         )
 
-    return {
-        "total_features": len(SELECTED_FEATURES),
-        "feature_names": SELECTED_FEATURES,
-        "descricao": "Use essas chaves exatamente como aparecem aqui no dicionário de features do endpoint /predict",
-    }
+    return FeaturesResponse(
+        total_features=len(TABULAR_RAW_FEATURES),
+        feature_names=list(TABULAR_RAW_FEATURES),
+        descricao="Use essas chaves exatamente como aparecem no dicionário raw enviado ao endpoint /predict",
+    )

@@ -5,6 +5,8 @@ from src.api.schemas import (
     PredictRequest,
     PredictResponse,
 )
+from src.api.app import app
+from src.config.settings import TABULAR_RAW_FEATURES
 
 
 def test_predict_request_accepts_features_dict() -> None:
@@ -69,3 +71,32 @@ def test_predict_response_builds_correctly() -> None:
 def test_aliases_keep_compatibility() -> None:
     assert ChurnRequest is PredictRequest
     assert ChurnResponse is PredictResponse
+
+
+def test_predict_openapi_example_uses_full_raw_contract() -> None:
+    openapi_schema = app.openapi()
+    request_body = openapi_schema["paths"]["/predict"]["post"]["requestBody"]
+    content = request_body["content"]["application/json"]
+    examples = content.get("examples", {})
+
+    assert examples
+
+    example_payload = next(iter(examples.values()))["value"]
+    assert "features" in example_payload
+    assert set(example_payload["features"].keys()) == set(TABULAR_RAW_FEATURES)
+
+    forbidden_columns = {
+        "Churn Value",
+        "Churn Label",
+        "Churn Score",
+        "Churn Reason",
+        "CustomerID",
+        "Count",
+        "Country",
+        "State",
+        "City",
+        "Zip Code",
+        "Lat Long",
+    }
+
+    assert forbidden_columns.isdisjoint(example_payload["features"])

@@ -144,6 +144,31 @@ def test_api_contract_is_narrower_than_model_feature_space() -> None:
     assert "Partner" not in api_raw_features
 
 
+def test_features_route_returns_official_tabular_raw_contract() -> None:
+    response = CLIENT.get("/features")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["total_features"] == len(TABULAR_RAW_FEATURES)
+    assert body["feature_names"] == TABULAR_RAW_FEATURES
+
+    forbidden_columns = {
+        "Churn Value",
+        "Churn Label",
+        "Churn Score",
+        "Churn Reason",
+        "CustomerID",
+        "Count",
+        "Country",
+        "State",
+        "City",
+        "Zip Code",
+        "Lat Long",
+    }
+
+    assert forbidden_columns.isdisjoint(body["feature_names"])
+
+
 def _json_safe_features(row: pd.Series) -> dict:
     return {
         key: (None if isinstance(value, float) and math.isnan(value) else value)

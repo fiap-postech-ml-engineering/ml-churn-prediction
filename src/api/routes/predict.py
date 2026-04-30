@@ -1,9 +1,14 @@
 import logging
 
 import pandas as pd
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Body, HTTPException
 
-from src.api.schemas import ChurnPrediction, ChurnRequest, ChurnResponse
+from src.api.schemas import (
+    ChurnPrediction,
+    ChurnRequest,
+    ChurnResponse,
+    PREDICT_REQUEST_OPENAPI_EXAMPLE,
+)
 from src.config.settings import APPROVAL_THRESHOLD
 from src.data.preprocessing import select_tabular_raw_features
 from src.inference.predict import load_model_artifacts
@@ -23,7 +28,17 @@ device = model_artifacts.device
 
 
 @router.post("/predict", response_model=ChurnResponse)
-def predict(request: ChurnRequest):
+def predict(
+    request: ChurnRequest = Body(
+        ...,
+        openapi_examples={
+            "payload_v2": {
+                "summary": "Payload RAW oficial v2",
+                "value": PREDICT_REQUEST_OPENAPI_EXAMPLE,
+            }
+        },
+    )
+):
     """
     Realiza Predição de Churn para um Cliente.
 
