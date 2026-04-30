@@ -212,3 +212,16 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Scripts locais de validação manual
+manual_case_buckets.py
+manual_metrics_check.py
+manual_offline_vs_api.py
+manual_predict_test.py
+
+# Logs locais de rerun/validação
+logs/pytest_critical_v2.txt
+logs/train_v2_rerun.txt
+
+# VS Code local
+.vscode/tasks.json
