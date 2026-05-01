@@ -101,7 +101,7 @@ RAW_CATEGORICAL_FEATURES = [
     "Payment Method",
 ]
 FEATURE_TYPE_STRICT = os.getenv("FEATURE_TYPE_STRICT", "true").lower() == "true"
-APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.6"))
+APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.5"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
 
 # Configurações de logging

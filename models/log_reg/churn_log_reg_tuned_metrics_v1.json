@@ -1,0 +1,19 @@
+{
+    "model": "cv_best_log_reg_threshold_0.3",
+    "pr_auc": 0.6580317317577301,
+    "cv_pr_auc": 0.6648118275052304,
+    "roc_auc": 0.8469270712237464,
+    "accuracy": 0.8041163946061036,
+    "precision": 0.6611842105263158,
+    "recall": 0.5374331550802139,
+    "f1_score": 0.5929203539823009,
+    "f2_score": 0.5583333333333333,
+    "weighted_recall": 0.5055369391067596,
+    "params": {
+        "model__solver": "lbfgs",
+        "model__penalty": "l2",
+        "model__max_iter": 2000,
+        "model__class_weight": null,
+        "model__C": 0.1668100537200059
+    }
+}
