@@ -1,3 +1,8 @@
+manual_case_buckets.py
+manual_metrics_check.py
+manual_offline_vs_api.py
+manual_predict_test.py
+
 # MLflow
 mlruns/
 notebooks/mlruns/

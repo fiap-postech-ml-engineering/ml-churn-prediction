@@ -1,4 +1,4 @@
-.PHONY: help test test-cov lint lint-fix format format-check format-diff format-verbose check clean run train mlflow-ui init stop
+.PHONY: help test test-cov lint lint-fix format format-check format-diff format-verbose check clean
 
 help:
 	@echo "Comandos disponíveis:"
@@ -8,13 +8,9 @@ help:
 	@echo "  make lint-fix        - Corrige automaticamente issues de linting"
 	@echo "  make lint-fix-unsafe - Corrige automaticamente issues com unsafe-fixes"
 	@echo "  make format          - Verifica formatação sem modificar (Black)"
-	@echo "  make format-check    - Alias de format"
 	@echo "  make format-fix      - Formata código com Black"
 	@echo "  make format-diff     - Mostra diferenças de formatação sem modificar"
 	@echo "  make format-verbose  - Formata código com output verboso"
-	@echo "  make train           - Executa o treino reproduzível v2"
-	@echo "  make run             - Sobe a API FastAPI local"
-	@echo "  make mlflow-ui       - Sobe o MLflow UI local"
 	@echo "  make check           - Executa lint, format-check e testes (sequencial)"
 	@echo "  make clean           - Remove arquivos temporários"
 
@@ -35,17 +31,6 @@ lint-fix-unsafe:
 
 format:
 	black --check src/ tests/
-
-format-check: format
-
-run:
-	python main.py
-
-train:
-	python -m src.training.train_model
-
-mlflow-ui:
-	mlflow ui --port 8001
 
 format-fix:
 	black src/ tests/
