@@ -1,5 +1,121 @@
-import pandas as pd
+from __future__ import annotations
+
 import numpy as np
+import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
+
+from src.config.settings import (
+    TABULAR_DERIVED_FEATURES,
+    TABULAR_RAW_CATEGORICAL_FEATURES,
+    TABULAR_RAW_NUMERIC_FEATURES,
+)
+
+SERVICE_COLUMNS = [
+    "Online Security",
+    "Online Backup",
+    "Device Protection",
+    "Tech Support",
+    "Streaming TV",
+    "Streaming Movies",
+]
+
+REQUIRED_BASE_COLUMNS = (
+    "Tenure Months",
+    "Total Charges",
+    "Monthly Charges",
+    "Internet Service_Fiber optic",
+)
+
+SERVICE_BINARY_COLUMNS = (
+    "Online Security_Yes",
+    "Online Backup_Yes",
+    "Device Protection_Yes",
+    "Tech Support_Yes",
+    "Streaming TV_Yes",
+    "Streaming Movies_Yes",
+)
+
+
+def _safe_log1p(series: pd.Series) -> pd.Series:
+    numeric_series = pd.to_numeric(series, errors="coerce")
+    positive_series = numeric_series.where(numeric_series.isna() | (numeric_series >= 0))
+    return np.log1p(positive_series)
+
+
+class TabularFeatureEngineer(BaseEstimator, TransformerMixin):
+    """Cria as features derivadas oficiais usadas no pipeline final."""
+
+    def __init__(
+        self,
+        numeric_features: list[str] | None = None,
+        categorical_features: list[str] | None = None,
+    ) -> None:
+        self.numeric_features = numeric_features or list(TABULAR_RAW_NUMERIC_FEATURES)
+        self.categorical_features = categorical_features or list(
+            TABULAR_RAW_CATEGORICAL_FEATURES
+        )
+
+    def fit(self, x: pd.DataFrame, y=None):
+        self.feature_names_in_ = list(x.columns)
+        self.output_feature_names_ = (
+            list(TABULAR_RAW_NUMERIC_FEATURES)
+            + list(TABULAR_RAW_CATEGORICAL_FEATURES)
+            + list(TABULAR_DERIVED_FEATURES)
+        )
+        return self
+
+    def transform(self, x: pd.DataFrame) -> pd.DataFrame:
+        if not isinstance(x, pd.DataFrame):
+            x = pd.DataFrame(x, columns=self.feature_names_in_)
+
+        df = x.copy()
+
+        missing_columns = [
+            column
+            for column in list(TABULAR_RAW_NUMERIC_FEATURES)
+            + list(TABULAR_RAW_CATEGORICAL_FEATURES)
+            if column not in df.columns
+        ]
+        if missing_columns:
+            raise ValueError(
+                "Missing required raw columns for feature engineering: "
+                f"{sorted(missing_columns)}"
+            )
+
+        tenure_months = pd.to_numeric(df["Tenure Months"], errors="coerce")
+        total_charges = pd.to_numeric(df["Total Charges"], errors="coerce")
+        monthly_charges = pd.to_numeric(df["Monthly Charges"], errors="coerce")
+        df["Latitude"] = pd.to_numeric(df["Latitude"], errors="coerce")
+        df["Longitude"] = pd.to_numeric(df["Longitude"], errors="coerce")
+        df["Tenure Months"] = tenure_months
+        df["Monthly Charges"] = monthly_charges
+        df["Total Charges"] = total_charges
+        df["CLTV"] = pd.to_numeric(df["CLTV"], errors="coerce")
+
+        service_flags = []
+        for column in SERVICE_COLUMNS:
+            service_flags.append(
+                df[column].astype("string").str.strip().str.lower().eq("yes").fillna(False).astype(int)
+            )
+
+        df["total_services"] = sum(service_flags)
+        fiber_flag = (
+            df["Internet Service"].astype("string").str.strip().str.lower().eq("fiber optic").fillna(False).astype(int)
+        )
+        df["fiber_price_impact"] = fiber_flag * monthly_charges
+
+        tenure_safe = tenure_months.replace(0, 1)
+        avg_ticket = total_charges / tenure_safe
+        df["avg_ticket"] = avg_ticket
+        df["Total Charges Log"] = _safe_log1p(total_charges)
+        df["avg_ticket_log"] = _safe_log1p(avg_ticket)
+        df["is_new_customer"] = tenure_months.lt(6).fillna(False).astype(int)
+
+        return df[
+            list(TABULAR_RAW_NUMERIC_FEATURES)
+            + list(TABULAR_RAW_CATEGORICAL_FEATURES)
+            + list(TABULAR_DERIVED_FEATURES)
+        ].copy()
 
 def apply_feature_engineering(
         df : pd.DataFrame,
@@ -30,11 +146,8 @@ def apply_feature_engineering(
     - A função modifica o DataFrame recebido (in-place) antes de retorná-lo.
     """
 
-    needed_cols = ["Tenure Months", "Total Charges", "Monthly Charges", "Internet Service_Fiber optic"]
-    service_cols = [
-        'Online Security_Yes', 'Online Backup_Yes', 'Device Protection_Yes',
-        'Tech Support_Yes', 'Streaming TV_Yes', 'Streaming Movies_Yes'
-    ]
+    needed_cols = list(REQUIRED_BASE_COLUMNS)
+    service_cols = list(SERVICE_BINARY_COLUMNS)
     numeric_cols = ["Tenure Months", "Total Charges", "Monthly Charges"]
 
     missing_needed = [c for c in needed_cols if c not in df.columns]

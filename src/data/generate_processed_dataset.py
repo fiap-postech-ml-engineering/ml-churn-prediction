@@ -4,23 +4,24 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
+from src.config.settings import TARGET_COLUMN
 from src.data.load_data import load_csv_data
 from src.data.preprocessing import (
-    TARGET_COLUMN,
-    TARGET_SOURCE_COLUMN,
-    prepare_mlp_data,
-    save_preprocessing_pipeline,
+    fit_tabular_preprocessing_pipeline,
+    save_tabular_preprocessing_pipeline,
+    select_tabular_raw_features,
+    split_tabular_features_target,
+    transform_tabular_features,
 )
 
-INPUT_DATASET_PATH = Path(
-    "data/processed/telco_customer_churn_eda_pre-processed_encoded.csv"
-)
+INPUT_DATASET_PATH = Path("data/raw/telco_customer_churn.csv")
 OUTPUT_DATA_DIR = Path("data/processed")
 OUTPUT_MODEL_DIR = Path("models")
 
 
-def load_encoded_dataset(input_path: Path) -> pd.DataFrame:
+def load_raw_dataset(input_path: Path) -> pd.DataFrame:
     """
     Carrega dataset codificado usando o loader padrão do projeto.
 
@@ -31,26 +32,10 @@ def load_encoded_dataset(input_path: Path) -> pd.DataFrame:
     if df is None:
         raise ValueError(f"Failed to load dataset from: {input_path}")
 
-    if TARGET_COLUMN in df.columns or TARGET_SOURCE_COLUMN in df.columns:
-        return df
+    if TARGET_COLUMN not in df.columns:
+        raise ValueError(f"Target column not found: {TARGET_COLUMN}")
 
-    print(
-        "[INFO] Target column not found with project loader. "
-        "Trying fallback CSV read with default comma separator..."
-    )
-    df_fallback = pd.read_csv(input_path)
-
-    if (
-        TARGET_COLUMN not in df_fallback.columns
-        and TARGET_SOURCE_COLUMN not in df_fallback.columns
-    ):
-        raise ValueError(
-            "Target column not found after loading dataset. "
-            f"Expected '{TARGET_COLUMN}' or '{TARGET_SOURCE_COLUMN}'."
-        )
-
-    print(f"[INFO] Fallback load succeeded. Dataframe shape: {df_fallback.shape}")
-    return df_fallback
+    return df
 
 
 def save_array_as_dataframe(
@@ -71,18 +56,30 @@ def save_target(y: pd.Series, output_path: Path) -> None:
 def main() -> None:
     print("[START] Generating processed dataset artifacts...")
 
-    df = load_encoded_dataset(INPUT_DATASET_PATH)
+    df = load_raw_dataset(INPUT_DATASET_PATH)
+    df = select_tabular_raw_features(df, require_target=True)
 
-    (
-        x_train,
-        x_val,
-        x_test,
-        y_train,
-        y_val,
-        y_test,
-        scaler,
-        feature_names,
-    ) = prepare_mlp_data(df)
+    x, y = split_tabular_features_target(df)
+    x_train, x_temp, y_train, y_temp = train_test_split(
+        x,
+        y,
+        test_size=0.4,
+        stratify=y,
+        random_state=42,
+    )
+    x_val, x_test, y_val, y_test = train_test_split(
+        x_temp,
+        y_temp,
+        test_size=0.5,
+        stratify=y_temp,
+        random_state=42,
+    )
+
+    preprocessing_pipeline, feature_names = fit_tabular_preprocessing_pipeline(x_train)
+
+    x_train = transform_tabular_features(preprocessing_pipeline, x_train)
+    x_val = transform_tabular_features(preprocessing_pipeline, x_val)
+    x_test = transform_tabular_features(preprocessing_pipeline, x_test)
 
     save_array_as_dataframe(
         x_train,
@@ -104,11 +101,11 @@ def main() -> None:
     save_target(y_val, OUTPUT_DATA_DIR / "y_val.csv")
     save_target(y_test, OUTPUT_DATA_DIR / "y_test.csv")
 
-    pipeline_path = save_preprocessing_pipeline(
-        scaler=scaler,
+    pipeline_path = save_tabular_preprocessing_pipeline(
+        preprocessing_pipeline=preprocessing_pipeline,
         feature_names=feature_names,
         output_path=OUTPUT_MODEL_DIR
-        / "preprocessing/churn_preprocessing_pipeline_v1.joblib",
+        / "preprocessing/churn_tabular_preprocessing_pipeline_v2.joblib",
     )
 
     print("[DONE] Processed datasets generated successfully.")

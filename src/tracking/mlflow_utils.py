@@ -49,7 +49,7 @@ def configure_mlflow_tracking(
     # Use file-based store (directory) instead of SQLite for better portability
     store_path = Path(db_path)
     store_path.mkdir(parents=True, exist_ok=True)
-    tracking_uri = f"file://{store_path.resolve().as_posix()}"
+    tracking_uri = store_path.resolve().as_uri()
 
     mlflow.set_tracking_uri(tracking_uri)
     client = MlflowClient()
@@ -59,7 +59,7 @@ def configure_mlflow_tracking(
         artifact_root_dir = Path(artifact_root_path).resolve()
         artifact_root_dir.mkdir(parents=True, exist_ok=True)
         # Store path as string for portability
-        artifact_location = str(artifact_root_path).replace("\\", "/")
+        artifact_location = Path(artifact_root_path).resolve().as_uri()
         client.create_experiment(
             name=experiment_name,
             artifact_location=artifact_location,
