@@ -30,8 +30,12 @@ def build_tabular_preprocessing_pipeline(
     categorical_features: list[str] | None = None,
 ) -> Pipeline:
     """Cria o pipeline sklearn único para treino e inferência."""
-    resolved_numeric_features = numeric_features or list(settings.TABULAR_RAW_NUMERIC_FEATURES) + list(settings.TABULAR_DERIVED_FEATURES)
-    resolved_categorical_features = categorical_features or list(settings.TABULAR_RAW_CATEGORICAL_FEATURES)
+    resolved_numeric_features = numeric_features or list(
+        settings.TABULAR_RAW_NUMERIC_FEATURES
+    ) + list(settings.TABULAR_DERIVED_FEATURES)
+    resolved_categorical_features = categorical_features or list(
+        settings.TABULAR_RAW_CATEGORICAL_FEATURES
+    )
 
     numeric_pipeline = Pipeline(
         steps=[

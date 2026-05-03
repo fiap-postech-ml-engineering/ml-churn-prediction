@@ -17,8 +17,12 @@ from src.data.preprocessing_config import TARGET_COLUMN, PreprocessingConfig
 def sample_processed_df():
     """Cria um dataframe processado e pronto para MLP."""
     n_rows = 100
-    numeric_values = {col: np.random.randn(n_rows) for col in TABULAR_RAW_NUMERIC_FEATURES}
-    categorical_values = {col: [0, 1] * (n_rows // 2) for col in TABULAR_RAW_CATEGORICAL_FEATURES}
+    numeric_values = {
+        col: np.random.randn(n_rows) for col in TABULAR_RAW_NUMERIC_FEATURES
+    }
+    categorical_values = {
+        col: [0, 1] * (n_rows // 2) for col in TABULAR_RAW_CATEGORICAL_FEATURES
+    }
 
     df = pd.DataFrame({**numeric_values, **categorical_values})
     df[TARGET_COLUMN] = np.random.randint(0, 2, n_rows)
@@ -37,8 +41,8 @@ class TestPrepareMlpData:
 
     def test_prepare_mlp_data_returns_correct_types(self, sample_processed_df):
         """Verifica se os tipos de retorno estão corretos."""
-        (x_train, x_val, x_test, y_train, y_val, y_test, scaler, feature_names) = prepare_mlp_data(
-            sample_processed_df
+        x_train, x_val, x_test, y_train, y_val, y_test, scaler, feature_names = (
+            prepare_mlp_data(sample_processed_df)
         )
 
         assert isinstance(x_train, np.ndarray)
@@ -52,7 +56,7 @@ class TestPrepareMlpData:
 
     def test_prepare_mlp_data_preserves_total_rows(self, sample_processed_df):
         """Verifica se o número total de linhas é preservado."""
-        (x_train, x_val, x_test, y_train, y_val, y_test, _, _) = prepare_mlp_data(
+        x_train, x_val, x_test, y_train, y_val, y_test, _, _ = prepare_mlp_data(
             sample_processed_df
         )
 
@@ -61,9 +65,7 @@ class TestPrepareMlpData:
 
     def test_prepare_mlp_data_returns_scaled_features(self, sample_processed_df):
         """Verifica se as features são escaladas."""
-        (x_train, x_val, x_test, _, _, _, _, _) = prepare_mlp_data(
-            sample_processed_df
-        )
+        x_train, x_val, x_test, _, _, _, _, _ = prepare_mlp_data(sample_processed_df)
 
         # Treino deve estar normalizado
         assert np.allclose(x_train.mean(axis=0), 0, atol=1e-1)
@@ -71,16 +73,14 @@ class TestPrepareMlpData:
 
     def test_prepare_mlp_data_returns_feature_names(self, sample_processed_df):
         """Verifica se os nomes das features são retornados."""
-        _, _, _, _, _, _, _, feature_names = prepare_mlp_data(
-            sample_processed_df
-        )
+        _, _, _, _, _, _, _, feature_names = prepare_mlp_data(sample_processed_df)
 
         assert len(feature_names) > 0
         assert all(isinstance(name, str) for name in feature_names)
 
     def test_prepare_mlp_data_preserves_class_distribution(self, sample_processed_df):
         """Verifica se a distribuição de classes é similar entre splits."""
-        (x_train, x_val, x_test, y_train, y_val, y_test, _, _) = prepare_mlp_data(
+        x_train, x_val, x_test, y_train, y_val, y_test, _, _ = prepare_mlp_data(
             sample_processed_df
         )
 
@@ -90,12 +90,11 @@ class TestPrepareMlpData:
 
     def test_prepare_mlp_data_with_custom_target_col(self, sample_processed_df):
         """Verifica se funciona com coluna target customizada."""
-        sample_processed_df = sample_processed_df.rename(columns={TARGET_COLUMN: "custom_target"})
-
-        result = prepare_mlp_data(
-            sample_processed_df,
-            target_col="custom_target"
+        sample_processed_df = sample_processed_df.rename(
+            columns={TARGET_COLUMN: "custom_target"}
         )
+
+        result = prepare_mlp_data(sample_processed_df, target_col="custom_target")
 
         assert len(result) == 8
 
@@ -104,10 +103,8 @@ class TestPrepareMlpData:
         test_size = 0.15
         val_size = 0.1
 
-        (x_train, x_val, x_test, y_train, y_val, y_test, _, _) = prepare_mlp_data(
-            sample_processed_df,
-            test_size=test_size,
-            val_size=val_size
+        x_train, x_val, x_test, y_train, y_val, y_test, _, _ = prepare_mlp_data(
+            sample_processed_df, test_size=test_size, val_size=val_size
         )
 
         expected_test = int(len(sample_processed_df) * test_size)
@@ -125,16 +122,13 @@ class TestPrepareMlpData:
         """Verifica se funciona com configuração customizada."""
         custom_config = PreprocessingConfig(test_size=0.1, val_size=0.1)
 
-        result = prepare_mlp_data(
-            sample_processed_df,
-            config=custom_config
-        )
+        result = prepare_mlp_data(sample_processed_df, config=custom_config)
 
         assert len(result) == 8
 
     def test_prepare_mlp_data_feature_count_consistency(self, sample_processed_df):
         """Verifica se o número de features é consistente."""
-        (x_train, x_val, x_test, _, _, _, _, feature_names) = prepare_mlp_data(
+        x_train, x_val, x_test, _, _, _, _, feature_names = prepare_mlp_data(
             sample_processed_df
         )
 
@@ -146,12 +140,17 @@ class TestPrepareMlpData:
         """Verifica se funciona com dataset pequeno mas viável para estratificação."""
         # Precisa de pelo menos 4 amostras por classe para split estratificado
         n_samples = 10
-        df = pd.DataFrame({
-            col: list(range(n_samples)) for col in TABULAR_RAW_NUMERIC_FEATURES
-        })
-        df.update(pd.DataFrame({
-            col: [i % 2 for i in range(n_samples)] for col in TABULAR_RAW_CATEGORICAL_FEATURES
-        }))
+        df = pd.DataFrame(
+            {col: list(range(n_samples)) for col in TABULAR_RAW_NUMERIC_FEATURES}
+        )
+        df.update(
+            pd.DataFrame(
+                {
+                    col: [i % 2 for i in range(n_samples)]
+                    for col in TABULAR_RAW_CATEGORICAL_FEATURES
+                }
+            )
+        )
         df[TARGET_COLUMN] = [i % 2 for i in range(n_samples)]
 
         result = prepare_mlp_data(df)

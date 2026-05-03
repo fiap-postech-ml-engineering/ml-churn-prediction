@@ -22,7 +22,9 @@ from src.data.tabular_pipeline import (
 def sample_raw_df():
     """Cria um dataframe bruto com features numéricas e categóricas."""
     numeric_values = {col: [1.0, 2.0] for col in TABULAR_RAW_NUMERIC_FEATURES}
-    categorical_values = {col: ["cat_a", "cat_b"] for col in TABULAR_RAW_CATEGORICAL_FEATURES}
+    categorical_values = {
+        col: ["cat_a", "cat_b"] for col in TABULAR_RAW_CATEGORICAL_FEATURES
+    }
 
     return pd.DataFrame({**numeric_values, **categorical_values})
 
@@ -45,9 +47,7 @@ class TestBuildTabularPreprocessingPipeline:
     def test_build_pipeline_with_custom_numeric_features(self):
         """Verifica se funciona com features numéricas customizadas."""
         custom_numeric = ["feat1", "feat2"]
-        pipeline = build_tabular_preprocessing_pipeline(
-            numeric_features=custom_numeric
-        )
+        pipeline = build_tabular_preprocessing_pipeline(numeric_features=custom_numeric)
 
         assert isinstance(pipeline, Pipeline)
 
@@ -66,8 +66,7 @@ class TestBuildTabularPreprocessingPipeline:
         custom_categorical = ["cat1", "cat2"]
 
         pipeline = build_tabular_preprocessing_pipeline(
-            numeric_features=custom_numeric,
-            categorical_features=custom_categorical
+            numeric_features=custom_numeric, categorical_features=custom_categorical
         )
 
         assert isinstance(pipeline, Pipeline)
@@ -104,7 +103,7 @@ class TestFitTabularPreprocessingPipeline:
         pipeline, feature_names = fit_tabular_preprocessing_pipeline(
             sample_raw_df,
             numeric_features=custom_numeric,
-            categorical_features=custom_categorical
+            categorical_features=custom_categorical,
         )
 
         assert isinstance(pipeline, Pipeline)
@@ -145,8 +144,7 @@ class TestBuildTabularPreprocessingArtifact:
         pipeline, feature_names = fit_tabular_preprocessing_pipeline(sample_raw_df)
 
         artifact = build_tabular_preprocessing_artifact(
-            preprocessing_pipeline=pipeline,
-            feature_names=feature_names
+            preprocessing_pipeline=pipeline, feature_names=feature_names
         )
 
         assert isinstance(artifact, dict)
@@ -156,8 +154,7 @@ class TestBuildTabularPreprocessingArtifact:
         pipeline, feature_names = fit_tabular_preprocessing_pipeline(sample_raw_df)
 
         artifact = build_tabular_preprocessing_artifact(
-            preprocessing_pipeline=pipeline,
-            feature_names=feature_names
+            preprocessing_pipeline=pipeline, feature_names=feature_names
         )
 
         required_keys = {
@@ -175,8 +172,7 @@ class TestBuildTabularPreprocessingArtifact:
         pipeline, feature_names = fit_tabular_preprocessing_pipeline(sample_raw_df)
 
         artifact = build_tabular_preprocessing_artifact(
-            preprocessing_pipeline=pipeline,
-            feature_names=feature_names
+            preprocessing_pipeline=pipeline, feature_names=feature_names
         )
 
         assert artifact["pipeline_type"] == TABULAR_PIPELINE_TYPE
@@ -186,8 +182,7 @@ class TestBuildTabularPreprocessingArtifact:
         pipeline, feature_names = fit_tabular_preprocessing_pipeline(sample_raw_df)
 
         artifact = build_tabular_preprocessing_artifact(
-            preprocessing_pipeline=pipeline,
-            feature_names=feature_names
+            preprocessing_pipeline=pipeline, feature_names=feature_names
         )
 
         assert artifact["feature_names"] == feature_names
@@ -198,8 +193,7 @@ class TestBuildTabularPreprocessingArtifact:
 
         with pytest.raises(ValueError, match="feature_names cannot be empty"):
             build_tabular_preprocessing_artifact(
-                preprocessing_pipeline=pipeline,
-                feature_names=[]
+                preprocessing_pipeline=pipeline, feature_names=[]
             )
 
     def test_build_artifact_with_custom_features(self, sample_raw_df):
@@ -213,7 +207,7 @@ class TestBuildTabularPreprocessingArtifact:
             preprocessing_pipeline=pipeline,
             feature_names=feature_names,
             numeric_features=custom_numeric,
-            categorical_features=custom_categorical
+            categorical_features=custom_categorical,
         )
 
         assert artifact["numeric_features"] == custom_numeric

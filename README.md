@@ -59,6 +59,12 @@ O fluxo do projeto é:
 - `docs/`: Model Card, plano de monitoramento e demais documentos finais
 - `notebooks/`: exploração e validação histórica do projeto
 
+## Documentações importantes
+- [ML Canvas](docs/ml_canvas.md) — visão de negócio, métricas, objetivos e plano de ação a partir do modelo
+- [Model Card](docs/model_card.md) — detalhes técnicos do modelo, métricas, arquitetura e limitações
+- [Arquitetura de Deploy](docs/deploy_architecture.md) — detalhes da implementação da API, configuração e limitações atuais
+- [Plano de Monitoramento](docs/monitoring_plan.md) — métricas, alertas e playbook para monitoramento em produção
+
 ## Executar a API
 
 ```bash

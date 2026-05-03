@@ -16,11 +16,13 @@ class TestSplitFeaturesTarget:
     @pytest.fixture
     def sample_df(self):
         """Cria um dataframe de exemplo."""
-        return pd.DataFrame({
-            "feature1": [1.0, 2.0, 3.0, 4.0],
-            "feature2": [5.0, 6.0, 7.0, 8.0],
-            "Churn Value": [0, 1, 0, 1]
-        })
+        return pd.DataFrame(
+            {
+                "feature1": [1.0, 2.0, 3.0, 4.0],
+                "feature2": [5.0, 6.0, 7.0, 8.0],
+                "Churn Value": [0, 1, 0, 1],
+            }
+        )
 
     def test_split_features_target_returns_tuple(self, sample_df):
         """Verifica se a função retorna uma tupla."""
@@ -75,11 +77,13 @@ class TestSplitTrainValTest:
     def sample_data(self):
         """Cria dados de exemplo para split."""
         n_samples = 100
-        return pd.DataFrame({
-            "feature1": range(n_samples),
-            "feature2": range(n_samples, 2 * n_samples),
-            "Churn Value": [0, 1] * (n_samples // 2),
-        }), pd.Series([0, 1] * (n_samples // 2))
+        return pd.DataFrame(
+            {
+                "feature1": range(n_samples),
+                "feature2": range(n_samples, 2 * n_samples),
+                "Churn Value": [0, 1] * (n_samples // 2),
+            }
+        ), pd.Series([0, 1] * (n_samples // 2))
 
     def test_split_returns_six_arrays(self, sample_data):
         """Verifica se a função retorna 6 arrays."""

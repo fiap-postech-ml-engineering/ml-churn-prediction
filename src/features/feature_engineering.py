@@ -38,7 +38,9 @@ SERVICE_BINARY_COLUMNS = (
 
 def _safe_log1p(series: pd.Series) -> pd.Series:
     numeric_series = pd.to_numeric(series, errors="coerce")
-    positive_series = numeric_series.where(numeric_series.isna() | (numeric_series >= 0))
+    positive_series = numeric_series.where(
+        numeric_series.isna() | (numeric_series >= 0)
+    )
     return np.log1p(positive_series)
 
 
@@ -95,12 +97,24 @@ class TabularFeatureEngineer(BaseEstimator, TransformerMixin):
         service_flags = []
         for column in SERVICE_COLUMNS:
             service_flags.append(
-                df[column].astype("string").str.strip().str.lower().eq("yes").fillna(False).astype(int)
+                df[column]
+                .astype("string")
+                .str.strip()
+                .str.lower()
+                .eq("yes")
+                .fillna(False)
+                .astype(int)
             )
 
         df["total_services"] = sum(service_flags)
         fiber_flag = (
-            df["Internet Service"].astype("string").str.strip().str.lower().eq("fiber optic").fillna(False).astype(int)
+            df["Internet Service"]
+            .astype("string")
+            .str.strip()
+            .str.lower()
+            .eq("fiber optic")
+            .fillna(False)
+            .astype(int)
         )
         df["fiber_price_impact"] = fiber_flag * monthly_charges
 
@@ -117,9 +131,10 @@ class TabularFeatureEngineer(BaseEstimator, TransformerMixin):
             + list(TABULAR_DERIVED_FEATURES)
         ].copy()
 
+
 def apply_feature_engineering(
-        df : pd.DataFrame,
-    ) -> pd.DataFrame:
+    df: pd.DataFrame,
+) -> pd.DataFrame:
     """
     Aplica engenharia de atributos sobre o DataFrame e retorna o mesmo DataFrame com novas colunas.
 
@@ -152,13 +167,21 @@ def apply_feature_engineering(
 
     missing_needed = [c for c in needed_cols if c not in df.columns]
     missing_service = [c for c in service_cols if c not in df.columns]
-    not_numeric = [c for c in numeric_cols if c in df.columns and not pd.api.types.is_numeric_dtype(df[c])]
+    not_numeric = [
+        c
+        for c in numeric_cols
+        if c in df.columns and not pd.api.types.is_numeric_dtype(df[c])
+    ]
 
     if missing_needed or missing_service:
-       raise KeyError(f"O Dataframe precisa desssas colunas para o tratamento: {needed_cols + service_cols}")
+        raise KeyError(
+            f"O Dataframe precisa desssas colunas para o tratamento: {needed_cols + service_cols}"
+        )
 
     if not_numeric:
-        raise TypeError(f"As seguintes colunas precisam ser numéricas para as operações matemáticas: {not_numeric}")
+        raise TypeError(
+            f"As seguintes colunas precisam ser numéricas para as operações matemáticas: {not_numeric}"
+        )
 
     # 1. Ajuste de Tenure (evitar divisão por zero)
     # HACK O ideal seria criar uma coluna auxiliar para calcular o avg_ticket,
@@ -170,7 +193,9 @@ def apply_feature_engineering(
     df["total_services"] = df[existing_services].sum(axis=1)
 
     # 3. Interação Fibra x Preço
-    df["fiber_price_impact"] = df["Internet Service_Fiber optic"] * df["Monthly Charges"]
+    df["fiber_price_impact"] = (
+        df["Internet Service_Fiber optic"] * df["Monthly Charges"]
+    )
 
     # 4. Métricas Financeiras e Log para Normalização
     df["avg_ticket"] = df["Total Charges"] / df["Tenure Months"]

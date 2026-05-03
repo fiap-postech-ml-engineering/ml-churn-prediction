@@ -52,7 +52,7 @@ class PredictRequest(BaseModel):
         - Churn Value
         - Churn Label
         - colunas one-hot como Contract_Two year ou Payment Method_Electronic check
-"""
+    """
 
     features: dict = Field(
         ...,

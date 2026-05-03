@@ -48,7 +48,8 @@ def test_middleware_logs_latency_fields(caplog) -> None:
     records = [
         record
         for record in caplog.records
-        if record.name == "src.api.middleware" and record.getMessage() == "request.completed"
+        if record.name == "src.api.middleware"
+        and record.getMessage() == "request.completed"
     ]
 
     assert records

@@ -119,7 +119,9 @@ class TestPredictRoute:
 
         assert exc_info.value.status_code == 500
         assert "Erro ao processar predição" in exc_info.value.detail
-        mock_logger.exception.assert_called_with("❌ Falha no passo 'select_tabular_raw_features'")
+        mock_logger.exception.assert_called_with(
+            "❌ Falha no passo 'select_tabular_raw_features'"
+        )
 
     @patch("src.api.routes.predict.model")
     @patch("src.api.routes.predict.scaler")
@@ -151,7 +153,9 @@ class TestPredictRoute:
 
         assert exc_info.value.status_code == 500
         assert "Erro ao processar predição" in exc_info.value.detail
-        mock_logger.exception.assert_called_with("❌ Falha no passo 'prepare_inference_batch'")
+        mock_logger.exception.assert_called_with(
+            "❌ Falha no passo 'prepare_inference_batch'"
+        )
 
     @patch("src.api.routes.predict.model")
     @patch("src.api.routes.predict.scaler")
@@ -225,7 +229,9 @@ class TestPredictRoute:
 
         assert exc_info.value.status_code == 422
         assert "Invalid input data" in exc_info.value.detail
-        mock_logger.warning.assert_called_with("⚠️ Payload inválido para inferência: Invalid input data")
+        mock_logger.warning.assert_called_with(
+            "⚠️ Payload inválido para inferência: Invalid input data"
+        )
 
     @patch("src.api.routes.predict.model")
     @patch("src.api.routes.predict.scaler")
@@ -333,7 +339,10 @@ class TestPredictRoute:
         mock_prepare_batch.return_value = mock_dataloader
 
         # Probabilidade exatamente 0.5
-        mock_run_inference.return_value = ([0.5], [1])  # Classe 1 por padrão no threshold 0.5
+        mock_run_inference.return_value = (
+            [0.5],
+            [1],
+        )  # Classe 1 por padrão no threshold 0.5
 
         response = predict(sample_request)
 

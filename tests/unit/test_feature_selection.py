@@ -59,7 +59,9 @@ class TestSelectTabularRawFeatures:
         with pytest.raises(ValueError, match="Missing critical raw inference features"):
             select_tabular_raw_features(df_incompleto)
 
-    def test_select_features_raises_error_when_target_required_but_missing(self, sample_df):
+    def test_select_features_raises_error_when_target_required_but_missing(
+        self, sample_df
+    ):
         """Verifica se levanta erro quando target é obrigatório mas não existe."""
         df_sem_target = sample_df.drop(columns=["Churn Value"])
 
