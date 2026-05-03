@@ -41,11 +41,10 @@ from src.config.settings import (
 )
 from src.data.business_metrics import weighted_recall
 from src.data.data_cleaning import clean_dataframe_for_modeling
-from src.data.data_split import split_train_val_test
+from src.data.data_split import split_features_target, split_train_val_test
 from src.data.feature_selection import select_tabular_raw_features
 from src.data.tabular_pipeline import (
     load_tabular_preprocessing_pipeline,
-    split_tabular_features_target,
     transform_tabular_features,
 )
 from src.models.mlp_model import MLPNetworkChurn
@@ -64,10 +63,10 @@ def _set_seeds(seed: int) -> None:
 
 
 def _load_and_prepare_data() -> tuple[pd.DataFrame, pd.Series]:
-    df = pd.read_csv(RAW_DATA_PATH)
+    df = pd.read_csv(RAW_DATA_PATH, sep=";")
     df = select_tabular_raw_features(df, require_target=True)
     df = clean_dataframe_for_modeling(df)
-    return split_tabular_features_target(df)
+    return split_features_target(df)
 
 
 def _extract_cltv(x: pd.DataFrame) -> pd.Series:
@@ -105,7 +104,7 @@ def _make_loaders(
     test_ds = TensorDataset(_to_tensor(x_test), _to_tensor(y_test))
 
     return (
-        DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True),
+        DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True, drop_last=True),
         DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False),
         DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False),
     )

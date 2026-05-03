@@ -4,7 +4,8 @@ import pandas as pd
 from fastapi import APIRouter, Body, HTTPException
 
 from src.api.schemas import (
-    PREDICT_REQUEST_OPENAPI_EXAMPLE,
+    TABULAR_RAW_FEATURES_EXAMPLE_CHURNER,
+    TABULAR_RAW_FEATURES_EXAMPLE_NON_CHURNER,
     ChurnPrediction,
     ChurnRequest,
     ChurnResponse,
@@ -32,10 +33,14 @@ def predict(
     request: ChurnRequest = Body(
         ...,
         openapi_examples={
-            "payload_v2": {
-                "summary": "Payload RAW oficial v2",
-                "value": PREDICT_REQUEST_OPENAPI_EXAMPLE,
-            }
+            "payload churner": {
+                "summary": "Exemplo de Payload (Churner)",
+                "value": {"features": TABULAR_RAW_FEATURES_EXAMPLE_CHURNER},
+            },
+            "payload não churner": {
+                "summary": "Exemplo de Payload (Não Churner)",
+                "value": {"features": TABULAR_RAW_FEATURES_EXAMPLE_NON_CHURNER},
+            },
         },
     )
 ):
