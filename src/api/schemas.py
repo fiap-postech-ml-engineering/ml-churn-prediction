@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 from src.config.settings import TABULAR_RAW_FEATURES
 
-TABULAR_RAW_FEATURES_EXAMPLE = {
+TABULAR_RAW_FEATURES_EXAMPLE_CHURNER = {
     "Latitude": 34.425581,
     "Longitude": -119.813765,
     "Gender": "Female",
@@ -27,10 +27,34 @@ TABULAR_RAW_FEATURES_EXAMPLE = {
     "Payment Method": "Credit card (automatic)",
     "Monthly Charges": 79.65,
     "Total Charges": 95.4,
-    "CLTV": 5432,
+    "CLTV": 5432
 }
 
-PREDICT_REQUEST_OPENAPI_EXAMPLE = {"features": TABULAR_RAW_FEATURES_EXAMPLE}
+TABULAR_RAW_FEATURES_EXAMPLE_NON_CHURNER = {
+    "Latitude": 34.027337,
+    "Longitude": -118.285150,
+    "Gender": "Male",
+    "Senior Citizen": "No",
+    "Partner": "Yes",
+    "Dependents": "Yes",
+    "Tenure Months": 0,
+    "Phone Service": "Yes",
+    "Multiple Lines": "Yes",
+    "Internet Service": "Fiber optic",
+    "Online Security": "Yes",
+    "Online Backup": "Yes",
+    "Device Protection": "Yes",
+    "Tech Support": "Yes",
+    "Streaming TV": "Yes",
+    "Streaming Movies": "Yes",
+    "Contract": "One year",
+    "Paperless Billing": "Yes",
+    "Payment Method": "Electronic check",
+    "Monthly Charges": 105.5,
+    "Total Charges": 2686.05,
+    "CLTV": 5822
+}
+
 FEATURES_RESPONSE_EXAMPLE = {
     "total_features": len(TABULAR_RAW_FEATURES),
     "feature_names": TABULAR_RAW_FEATURES,
@@ -58,8 +82,8 @@ class PredictRequest(BaseModel):
         ...,
         description="Dicionário com features RAW do cliente (derivadas são calculadas automaticamente)",
         json_schema_extra={
-            "example": TABULAR_RAW_FEATURES_EXAMPLE,
-            "examples": [TABULAR_RAW_FEATURES_EXAMPLE],
+            "example": TABULAR_RAW_FEATURES_EXAMPLE_CHURNER,
+            "examples": [TABULAR_RAW_FEATURES_EXAMPLE_CHURNER],
         },
     )
 
