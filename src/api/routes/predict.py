@@ -88,6 +88,7 @@ def predict(
             df_features=df_model_ready,
             scaler=scaler,
             device=device,
+            feature_names=feature_names,
         )
 
         probabilidades_churn, classes = _run_step(

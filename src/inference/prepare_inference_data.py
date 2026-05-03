@@ -21,6 +21,7 @@ def prepare_inference_batch(
     df_features: pd.DataFrame,
     scaler,
     device: torch.device,
+    feature_names: list[str] | None = None,
     batch_size: int = 32,
 ) -> DataLoader:
     """
@@ -58,6 +59,9 @@ def prepare_inference_batch(
         x_scaled = scaler.transform(df_features)
         if hasattr(x_scaled, "toarray"):
             x_scaled = x_scaled.toarray()
+        if feature_names and "CLTV" in feature_names:
+            cltv_idx = feature_names.index("CLTV")
+            x_scaled = np.delete(x_scaled, cltv_idx, axis=1)
         zero_ratio = float((x_scaled == 0).sum().sum()) / float(x_scaled.size)
         if zero_ratio > 0.8:
             logger.warning(
@@ -82,9 +86,7 @@ def prepare_inference_batch(
             shuffle=False,
         )
 
-        logger.info(
-            f"✓ DataLoader criado com {len(inference_loader)} batch(es)"
-        )
+        logger.info(f"✓ DataLoader criado com {len(inference_loader)} batch(es)")
 
         return inference_loader
 

@@ -48,7 +48,7 @@ packages = ["src"]
 
 [tool.ruff]
 # line-length = 88
-target-version = "py313"
+target-version = "py312"
 src = ["src", "tests"]
 exclude = [
     ".git",
@@ -85,7 +85,7 @@ line-ending = "auto"
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py312"]
 skip-string-normalization = true
 include = ["src", "tests"]
 

@@ -65,7 +65,9 @@ def load_model_artifacts() -> ModelArtifacts:
         if preprocessing_artifact is not None:
             scaler = preprocessing_artifact["preprocessing_pipeline"]
             feature_names = preprocessing_artifact["feature_names"]
-            logger.info("✓ Tabular preprocessing pipeline carregado do bundle de treino")
+            logger.info(
+                "✓ Tabular preprocessing pipeline carregado do bundle de treino"
+            )
             logger.info(f"✓ Features carregadas: {len(feature_names)} features")
         else:
             preprocessing_artifact = try_load_preprocessing_pipeline()
@@ -86,7 +88,9 @@ def load_model_artifacts() -> ModelArtifacts:
                     feature_names = joblib.load(features_path)
                     logger.info(f"✓ Features carregadas: {len(feature_names)} features")
                 else:
-                    raise FileNotFoundError(f"Features não encontradas em: {features_path}")
+                    raise FileNotFoundError(
+                        f"Features não encontradas em: {features_path}"
+                    )
 
         # Carregar métricas do modelo
         if metrics_path.exists():
@@ -99,8 +103,9 @@ def load_model_artifacts() -> ModelArtifacts:
             logger.warning(f"Métricas não encontradas em: {metrics_path}")
 
         # Carregar modelo PyTorch
+        model_input_size = len([f for f in feature_names if f != "CLTV"])
         if model_path.exists():
-            model = MLPNetworkChurn(input_size=len(feature_names))
+            model = MLPNetworkChurn(input_size=model_input_size)
             model.load_state_dict(torch.load(model_path, map_location=device))
             model.to(device)
             model.eval()  # Modo de inferência
@@ -110,8 +115,10 @@ def load_model_artifacts() -> ModelArtifacts:
         else:
             legacy_model_path = MODELS_DIR / "mlp/churn_mlp_best_state_dict_v1.pth"
             if legacy_model_path.exists():
-                model = MLPNetworkChurn(input_size=len(feature_names))
-                model.load_state_dict(torch.load(legacy_model_path, map_location=device))
+                model = MLPNetworkChurn(input_size=model_input_size)
+                model.load_state_dict(
+                    torch.load(legacy_model_path, map_location=device)
+                )
                 model.to(device)
                 model.eval()
                 logger.info(f"✓ Modelo MLP legado carregado de: {legacy_model_path}")
@@ -142,4 +149,3 @@ def load_model_artifacts() -> ModelArtifacts:
         model_metrics=model_metrics,
         device=device,
     )
-

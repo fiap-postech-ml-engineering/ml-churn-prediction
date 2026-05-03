@@ -58,13 +58,13 @@ PREPROCESSING_PIPELINE_PATH = (
     MODELS_DIR / "preprocessing" / "churn_preprocessing_pipeline_v1.joblib"
 )
 TABULAR_PREPROCESSING_PIPELINE_PATH = (
-    MODELS_DIR / "preprocessing" / "churn_tabular_preprocessing_pipeline_v2.joblib"
+    MODELS_DIR / "preprocessing" / "churn_tabular_preprocessing_pipeline_v1.joblib"
 )
 TABULAR_MODEL_FEATURE_NAMES_PATH = (
-    MODELS_DIR / "mlp" / "churn_mlp_input_features_v2.joblib"
+    MODELS_DIR / "mlp" / "churn_mlp_input_features_v1.joblib"
 )
-TABULAR_MLP_MODEL_PATH = MODELS_DIR / "mlp" / "churn_mlp_best_state_dict_v2.pth"
-TABULAR_MLP_METRICS_PATH = MODELS_DIR / "mlp" / "churn_mlp_metrics_v2.json"
+TABULAR_MLP_MODEL_PATH = MODELS_DIR / "mlp" / "churn_mlp_best_state_dict_v1.pth"
+TABULAR_MLP_METRICS_PATH = MODELS_DIR / "mlp" / "churn_mlp_metrics_v1.json"
 SELECTED_FEATURES = [
     "Dependents",
     "Tenure Months",

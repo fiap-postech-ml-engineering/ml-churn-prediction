@@ -10,9 +10,7 @@ Desacelerar a perda de clientes da empresa através de métricas que direcionem 
 
 - **Weighted Recall:** A proporção de CLTV de churners recuperada com o modelo
 
-  $
-  \text{Weighted Recall} = \frac{\sum_{i \in TP} CLTV_i}{\sum_{i \in \text{churners reais}} CLTV_i}
-  $
+  $$\text{Weighted Recall} = \frac{\sum_{i \in TP} CLTV_i}{\sum_{i \in \text{churners reais}} CLTV_i}$$
 
 Além do Weighted Recall, também consideramos:
 
