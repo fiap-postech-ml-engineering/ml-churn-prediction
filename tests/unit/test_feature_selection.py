@@ -55,14 +55,14 @@ class TestSelectTabularRawFeatures:
     def test_select_features_raises_error_for_missing_columns(self):
         """Verifica se levanta erro quando faltam colunas necessárias."""
         df_incompleto = pd.DataFrame({"col1": [1, 2], "col2": [3, 4]})
-        
+
         with pytest.raises(ValueError, match="Missing critical raw inference features"):
             select_tabular_raw_features(df_incompleto)
 
     def test_select_features_raises_error_when_target_required_but_missing(self, sample_df):
         """Verifica se levanta erro quando target é obrigatório mas não existe."""
         df_sem_target = sample_df.drop(columns=["Churn Value"])
-        
+
         with pytest.raises(ValueError, match="Target column"):
             select_tabular_raw_features(df_sem_target, require_target=True)
 
@@ -70,6 +70,6 @@ class TestSelectTabularRawFeatures:
         """Verifica se funciona com colunas extras no dataframe."""
         sample_df["extra_column"] = [10, 20]
         result = select_tabular_raw_features(sample_df)
-        
+
         assert "extra_column" not in result.columns
         assert len(result.columns) == len(TABULAR_RAW_FEATURES)

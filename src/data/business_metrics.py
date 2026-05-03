@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def weighted_recall(y_true, y_pred, cltv):
     """
     y_true → array (n,) com labels reais (0/1)

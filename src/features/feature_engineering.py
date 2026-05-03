@@ -156,12 +156,12 @@ def apply_feature_engineering(
 
     if missing_needed or missing_service:
        raise KeyError(f"O Dataframe precisa desssas colunas para o tratamento: {needed_cols + service_cols}")
-    
+
     if not_numeric:
         raise TypeError(f"As seguintes colunas precisam ser numéricas para as operações matemáticas: {not_numeric}")
 
     # 1. Ajuste de Tenure (evitar divisão por zero)
-    # HACK O ideal seria criar uma coluna auxiliar para calcular o avg_ticket, 
+    # HACK O ideal seria criar uma coluna auxiliar para calcular o avg_ticket,
     # mas para evitar mudanças em outras partes do código, substituímos os zeros por 1 diretamente na coluna original.
     df['Tenure Months'] = df['Tenure Months'].replace(0, 1)
 

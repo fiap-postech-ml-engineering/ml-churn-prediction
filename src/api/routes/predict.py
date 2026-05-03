@@ -4,10 +4,10 @@ import pandas as pd
 from fastapi import APIRouter, Body, HTTPException
 
 from src.api.schemas import (
+    PREDICT_REQUEST_OPENAPI_EXAMPLE,
     ChurnPrediction,
     ChurnRequest,
     ChurnResponse,
-    PREDICT_REQUEST_OPENAPI_EXAMPLE,
 )
 from src.config.settings import APPROVAL_THRESHOLD
 from src.data.preprocessing import select_tabular_raw_features

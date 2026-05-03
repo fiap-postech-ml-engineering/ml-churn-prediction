@@ -4,15 +4,15 @@ import numpy as np
 import pytest
 
 from src.data.preprocessing_config import (
-    DEFAULT_PREPROCESSING_CONFIG,
     COLUMNS_TO_DROP,
+    DEFAULT_PREPROCESSING_CONFIG,
     DEFAULT_PREPROCESSING_PIPELINE_PATH,
-    PreprocessingConfig,
     TABULAR_PIPELINE_TYPE,
     TABULAR_TARGET_COLUMN,
     TARGET_COLUMN,
     TARGET_SOURCE_COLUMN,
     TOTAL_CHARGES_COLUMN,
+    PreprocessingConfig,
     ProcessedArray,
 )
 

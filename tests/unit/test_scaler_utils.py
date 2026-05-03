@@ -63,24 +63,24 @@ class TestTransformFeatures:
             "feature2": [10.0, 20.0, 30.0],
         })
         scaler = fit_scaler(x_train)
-        
+
         x_val = pd.DataFrame({
             "feature1": [2.0, 3.0],
             "feature2": [20.0, 30.0],
         })
-        
+
         x_test = pd.DataFrame({
             "feature1": [1.5, 2.5],
             "feature2": [15.0, 25.0],
         })
-        
+
         return scaler, x_train, x_val, x_test
 
     def test_transform_features_returns_three_arrays(self, scaler_and_data):
         """Verifica se a função retorna 3 arrays."""
         scaler, x_train, x_val, x_test = scaler_and_data
         result = transform_features(scaler, x_train, x_val, x_test)
-        
+
         assert len(result) == 3
         assert all(isinstance(r, np.ndarray) for r in result)
 
@@ -90,7 +90,7 @@ class TestTransformFeatures:
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
             scaler, x_train, x_val, x_test
         )
-        
+
         assert isinstance(x_train_scaled, np.ndarray)
         assert isinstance(x_val_scaled, np.ndarray)
         assert isinstance(x_test_scaled, np.ndarray)
@@ -101,7 +101,7 @@ class TestTransformFeatures:
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
             scaler, x_train, x_val, x_test
         )
-        
+
         assert x_train_scaled.shape == x_train.shape
         assert x_val_scaled.shape == x_val.shape
         assert x_test_scaled.shape == x_test.shape
@@ -112,7 +112,7 @@ class TestTransformFeatures:
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
             scaler, x_train, x_val, x_test
         )
-        
+
         # A média do treino deve ser próxima a zero
         assert np.allclose(x_train_scaled.mean(axis=0), 0, atol=1e-10)
 
@@ -122,7 +122,7 @@ class TestTransformFeatures:
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
             scaler, x_train, x_val, x_test
         )
-        
+
         # O desvio padrão do treino deve ser próximo a 1
         std = x_train_scaled.std(axis=0)
         assert np.allclose(std, 1, atol=1e-10)
@@ -133,7 +133,7 @@ class TestTransformFeatures:
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
             scaler, x_train, x_val, x_test
         )
-        
+
         # Val e teste devem manter sua forma após transformação
         assert x_val_scaled.shape == x_val.shape
         assert x_test_scaled.shape == x_test.shape
@@ -144,10 +144,10 @@ class TestTransformFeatures:
         """Verifica se funciona com uma linha de dados."""
         x_train = pd.DataFrame({"feature1": [1.0], "feature2": [10.0]})
         scaler = fit_scaler(x_train)
-        
+
         x_val = pd.DataFrame({"feature1": [2.0], "feature2": [20.0]})
         x_test = pd.DataFrame({"feature1": [1.5], "feature2": [15.0]})
-        
+
         result = transform_features(scaler, x_train, x_val, x_test)
         assert len(result) == 3
         assert all(r.shape[0] == 1 for r in result)
@@ -156,6 +156,6 @@ class TestTransformFeatures:
         """Verifica se a ordem das linhas é mantida."""
         scaler, x_train, x_val, x_test = scaler_and_data
         x_val_scaled = transform_features(scaler, x_train, x_val, x_test)[1]
-        
+
         # Todas as linhas devem estar presentes
         assert x_val_scaled.shape[0] == len(x_val)

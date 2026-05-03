@@ -5,31 +5,15 @@ Compatibilidade backward: importa todas as funções dos submódulos.
 """
 
 # Configurações
-from .preprocessing_config import (
-    DEFAULT_PREPROCESSING_CONFIG,
-    PreprocessingConfig,
-    TABULAR_PIPELINE_TYPE,
-    TABULAR_TARGET_COLUMN,
-    TARGET_COLUMN,
-    TARGET_SOURCE_COLUMN,
-    TOTAL_CHARGES_COLUMN,
-    COLUMNS_TO_DROP,
-    DEFAULT_PREPROCESSING_PIPELINE_PATH,
-)
+# Backward compatibility: ProcessedArray
+import numpy as np
 
-# Feature selection
-from .feature_selection import select_tabular_raw_features
-
-# Tabular pipeline
-from .tabular_pipeline import (
-    build_tabular_preprocessing_artifact,
-    build_tabular_preprocessing_pipeline,
-    fit_tabular_preprocessing_pipeline,
-    load_tabular_preprocessing_pipeline,
-    save_tabular_preprocessing_pipeline,
-    split_tabular_features_target,
-    transform_tabular_features,
-    try_load_tabular_preprocessing_pipeline,
+# Artifact utils
+from .artifact_utils import (
+    build_preprocessing_artifact,
+    load_preprocessing_pipeline,
+    save_preprocessing_pipeline,
+    try_load_preprocessing_pipeline,
 )
 
 # Data cleaning and validation
@@ -43,22 +27,38 @@ from .data_cleaning import (
 # Data split
 from .data_split import split_features_target, split_train_val_test
 
-# Scaler utils
-from .scaler_utils import fit_scaler, transform_features
+# Feature selection
+from .feature_selection import select_tabular_raw_features
 
 # MLP preparation
 from .mlp_preparation import prepare_mlp_data
-
-# Artifact utils
-from .artifact_utils import (
-    build_preprocessing_artifact,
-    load_preprocessing_pipeline,
-    save_preprocessing_pipeline,
-    try_load_preprocessing_pipeline,
+from .preprocessing_config import (
+    COLUMNS_TO_DROP,
+    DEFAULT_PREPROCESSING_CONFIG,
+    DEFAULT_PREPROCESSING_PIPELINE_PATH,
+    TABULAR_PIPELINE_TYPE,
+    TABULAR_TARGET_COLUMN,
+    TARGET_COLUMN,
+    TARGET_SOURCE_COLUMN,
+    TOTAL_CHARGES_COLUMN,
+    PreprocessingConfig,
 )
 
-# Backward compatibility: ProcessedArray
-import numpy as np
+# Scaler utils
+from .scaler_utils import fit_scaler, transform_features
+
+# Tabular pipeline
+from .tabular_pipeline import (
+    build_tabular_preprocessing_artifact,
+    build_tabular_preprocessing_pipeline,
+    fit_tabular_preprocessing_pipeline,
+    load_tabular_preprocessing_pipeline,
+    save_tabular_preprocessing_pipeline,
+    split_tabular_features_target,
+    transform_tabular_features,
+    try_load_tabular_preprocessing_pipeline,
+)
+
 ProcessedArray = np.ndarray
 
 __all__ = [

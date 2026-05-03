@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import numpy as np
+
 from src.config import settings
 
 
@@ -35,5 +37,4 @@ TABULAR_TARGET_COLUMN = settings.TARGET_COLUMN
 TABULAR_PIPELINE_TYPE = "tabular_mlp_preprocessing"
 
 # Backward compatibility: ProcessedArray
-import numpy as np
 ProcessedArray = np.ndarray

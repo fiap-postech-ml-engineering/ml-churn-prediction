@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 
 from src.config.settings import TABULAR_RAW_FEATURES
 
-
 TABULAR_RAW_FEATURES_EXAMPLE = {
     "Latitude": 34.425581,
     "Longitude": -119.813765,

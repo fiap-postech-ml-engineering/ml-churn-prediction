@@ -34,7 +34,7 @@ class TestCleanDataframeForModeling:
             "Churn": [0, 1, 0]
         })
         result = clean_dataframe_for_modeling(df)
-        
+
         assert pd.api.types.is_numeric_dtype(result["Total Charges"])
         assert pd.isna(result.iloc[2]["Total Charges"])
 
@@ -42,7 +42,7 @@ class TestCleanDataframeForModeling:
         """Verifica se a coluna de target é renomeada corretamente."""
         df = pd.DataFrame({"customerID": [1, 2], "Churn": [0, 1]})
         result = clean_dataframe_for_modeling(df)
-        
+
         assert "Churn" in result.columns
 
 
@@ -56,7 +56,7 @@ class TestValidateNumericFeatures:
             "col2": [3, 4],
             "col3": [True, False]
         })
-        
+
         # Não deve levantar exceção
         validate_numeric_features(df)
 
@@ -66,7 +66,7 @@ class TestValidateNumericFeatures:
             "col1": [1.0, 2.0],
             "col2": ["a", "b"]
         })
-        
+
         with pytest.raises(ValueError, match="Non-numeric columns found"):
             validate_numeric_features(df)
 
@@ -76,7 +76,7 @@ class TestValidateNumericFeatures:
             "col1": [1, 2],
             "col2": ["string", 3]
         })
-        
+
         with pytest.raises(ValueError, match="Non-numeric columns found"):
             validate_numeric_features(df)
 
@@ -87,41 +87,41 @@ class TestValidateTargetForStratification:
     def test_validate_target_passes_for_valid_target(self):
         """Verifica se valida positivamente target válido."""
         y = pd.Series([0, 1, 0, 1, 0, 1])
-        
+
         # Não deve levantar exceção
         validate_target_for_stratification(y)
 
     def test_validate_target_raises_for_missing_values(self):
         """Verifica se levanta erro para valores faltantes."""
         y = pd.Series([0, 1, None, 1, 0, 1])
-        
+
         with pytest.raises(ValueError, match="missing values"):
             validate_target_for_stratification(y)
 
     def test_validate_target_raises_for_empty_series(self):
         """Verifica se levanta erro para série vazia."""
         y = pd.Series([], dtype=int)
-        
+
         with pytest.raises(ValueError, match="empty"):
             validate_target_for_stratification(y)
 
     def test_validate_target_raises_when_class_has_less_than_2_samples(self):
         """Verifica se levanta erro quando uma classe tem < 2 amostras."""
         y = pd.Series([0, 1, 1, 1, 1])
-        
+
         with pytest.raises(ValueError, match="at least 2 samples"):
             validate_target_for_stratification(y)
 
     def test_validate_target_passes_with_balanced_classes(self):
         """Verifica se valida com classes balanceadas."""
         y = pd.Series([0] * 50 + [1] * 50)
-        
+
         validate_target_for_stratification(y)
 
     def test_validate_target_passes_with_imbalanced_classes(self):
         """Verifica se valida com classes desbalanceadas mas válidas."""
         y = pd.Series([0] * 10 + [1] * 90)
-        
+
         validate_target_for_stratification(y)
 
 

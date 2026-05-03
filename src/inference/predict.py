@@ -8,8 +8,7 @@ import logging
 import joblib
 import torch
 
-from src.config.settings import MODELS_DIR
-from src.config.settings import TABULAR_MLP_MODEL_PATH
+from src.config.settings import MODELS_DIR, TABULAR_MLP_MODEL_PATH
 from src.data.preprocessing import (
     try_load_preprocessing_pipeline,
     try_load_tabular_preprocessing_pipeline,
