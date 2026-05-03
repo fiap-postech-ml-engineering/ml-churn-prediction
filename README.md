@@ -1,60 +1,63 @@
 # ML Churn Prediction
 
-Projeto do Tech Challenge focado em previsão de churn para clientes de telecom.
-O contrato oficial do projeto é o pipeline v2 unificado, usado tanto no treino
+Projeto do Tech Challenge focado em previsão de churn para clientes de telecom. O contrato oficial do projeto é o pipeline, usado tanto no treino
 quanto na inferência.
+
+---
+Badges.....
+---
+
+## Requisitos
+
+- Python 3.12
+- `uv` instalado para gerenciamento das dependencias
+
+## Setup
+Realize o clone do repositório com
+
+```bash
+git clone https://github.com/fiap-postech-ml-engineering/ml-churn-prediction
+
+cd ml-churn-prediction
+```
+Crie o ambiente virtual
+```bash
+uv venv
+```
+Para acessar o ambiente virtual
+
+```bash
+Para Windows 		-> .venv\Scripts\activate
+Para Linux / macOS 	-> source .venv/bin/activate
+```
+Instale as dependências com 
+```
+uv sync
+```
+Ou se quiser as dependencias de desenvolvimento (incluindo testes, lint e formatação):
+```bash
+uv pip install -e .[dev]
+```
 
 ## Visão geral
 
-O fluxo final do projeto é:
+O fluxo do projeto é:
 
-1. carregar o dataset bruto
-2. aplicar o pipeline v2 de feature engineering + preprocessing
-3. treinar a MLP com PyTorch
-4. salvar os artefatos v2
-5. servir predições pela API FastAPI
+1. Carregar o dataset bruto
+2. Aplicar o pipeline de feature engineering + preprocessing
+3. Treinar a MLP com PyTorch
+4. Salvar os artefatos
+5. Servir predições pela API FastAPI
 
 ## Estrutura do projeto
 
 - `src/`: código-fonte do pipeline, treino, inferência e API
 - `data/raw/`: dataset bruto original
-- `data/processed/`: datasets processados e gerados pelo pipeline v2
+- `data/processed/`: datasets processados e gerados pelo pipeline
 - `models/`: pesos, pipeline e artefatos versionados
 - `tests/`: testes automatizados
 - `docs/`: Model Card, plano de monitoramento e demais documentos finais
 - `notebooks/`: exploração e validação histórica do projeto
-
-## Requisitos
-
-- Python 3.12
-- `pip` ou ambiente virtual equivalente
-- Dependências instaladas via `pip install -e ".[dev]"`
-
-## Setup
-
-```bash
-git clone https://github.com/fiap-postech-ml-engineering/ml-churn-prediction
-cd ml-churn-prediction
-python -m venv .venv
-```
-
-Windows:
-
-```powershell
-.venv\Scripts\activate
-```
-
-Linux / macOS:
-
-```bash
-source .venv/bin/activate
-```
-
-Instalação completa:
-
-```bash
-pip install -e ".[dev]"
-```
 
 ## Executar a API
 
@@ -66,7 +69,6 @@ Endpoints principais:
 
 - `GET /health`
 - `POST /predict`
-- `GET /features`
 - `GET /docs`
 
 ## Treinar novamente
@@ -145,3 +147,8 @@ Exemplo de payload:
 
 O treino v2 registra parâmetros, métricas e artefatos essenciais no MLflow local.
 O tracking fica em `mlruns/`.
+
+## Pontos de melhoria
+-
+-
+-

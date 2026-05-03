@@ -1,10 +1,11 @@
-## 1. Carregar o CSV
-### **`src.data.load_data.load_csv_data()`**
+# Contexto
+Este documento tem como intuito organizar as etapas necessárias para a produtização dos estudos realizados dentro dos notebooks.
+---
 
+## 1. Carregar o CSV
 - Verifica shape para validar carregamento correto
 
 ## 2. Selecionar features
-### **`src.features.select_features.select_model_features()`**
 
 - Dependents
 - Tenure Months
@@ -25,7 +26,6 @@
 - Churn Value -> [TARGET]
      
 ## 3. Tipar features
-### **`src.features.type_features.cast_feature_types()`**
 
 | Feature | Tipo |
 |---------|------|
@@ -49,17 +49,14 @@
 | Payment Method | string |
 
 ## 4. Tratamento de Missing Values
-### **`src.features.missing_values.clean_missing_values()`**
 
 - Padronizar valores faltantes
 
 ## 5. One Hot Encoding
-### **`src.features.apply_one_hot_encoding.apply_one_hot_encoding()`**
 
 - Aplicar no dataset com as features já selecionadas
 
 ## 6. Feature Engineering
-### **`src.features.feature_engineering.apply_feature_engineering()`**
 
 ### 6.1. Ajuste de Tenure
 - Replace: 0 → 1 (Evita divisão por 0)
@@ -86,60 +83,35 @@
 ### 6.5. Segmentação de Clientes
 - Nova feature: `is_new_customer` (Tenure Months < 6)
 
-## 7. Selecionar 30% das features (ANOVA F-Value) (12 no notebook)
-### NÃO VAMOS APLICAR NO MLP, PODE DESCONSIDERAR
-
-> ⚠️ Critério: Poder discriminativo entre churners e não-churners
-
-| # | Feature | Tipo |
-|----|---------|------|
-| 1 | Tenure Months | int64 |
-| 2 | Contract_Two year | int64 |
-| 3 | fiber_price_impact | float64 |
-| 4 | Total Charges | float64 |
-| 5 | Dependents_Yes | int64 |
-| 6 | Internet Service_Fiber optic | int64 |
-| 7 | Payment Method_Electronic check | int64 |
-| 8 | is_new_customer | int64 |
-| 9 | Online Security_No internet service | int64 |
-| 10 | Streaming Movies_No internet service | int64 |
-| 11 | Online Backup_No internet service | int64 |
-| 12 | Device Protection_No internet service | int64 |
-
-## 8. Separar dataset em treino, teste e validação (ESTRATIFICADO)
+## 7. Separar dataset em treino, teste e validação (ESTRATIFICADO)
 ### NÃO PRECISAMOS PARA A PREDIÇÃO
 - Primeira divisão: 80% treino_full | 20% teste
 - Segunda divisão: 60% treino | 20% validação (do treino_full)
 - Calcula `pos_weight` para usar com loss function (BCEWithLogitsLoss)
 
-## 9. Normalizar dados com StandardScaler
-### **`SEM FUNÇÃO DEFINIDA`**
+## 8. Normalizar dados com StandardScaler
 - Fit somente no `x_train`
 - Transform no `x_val` e `x_test`
 
-## 10. Tensorizar dados com o pytorch
-### **`SEM FUNÇÃO DEFINIDA`**
+## 9. Tensorizar dados com o pytorch
 - Todos os subsets de dados, depois do scaler
 
-## 11. Cria os dataloaders
-### **`SEM FUNÇÃO DEFINIDA`**
+## 10. Cria os dataloaders
 - Cria o TensorDataset com os subsets x e y
 - Cria os dataloaders com o batch definido no settings.py e shuffle = True no subset de treino
 
-## 12. Predict
-### **`SEM FUNÇÃO DEFINIDA`**
+## 11. Predict
 - Colocar o modelo em modo de inferência
 - Inferir sem gradiente com `with torch.no_grad():`
 - Fazer foward pass nos dados
 - Converter logit em probabilidade com sigmoid `probs = torch.sigmoid(logits).cpu().numpy()`
 
-## 13. Carrega arquitetura do MLP
+## 12. Carrega arquitetura do MLP
 ## SOMENTE PARA REFERENCIA, NÃO PRECISAMOS IMPLEMENTAR NA API
-### **`SEM FUNÇÃO DEFINIDA`**
 `classe MLPNetworkChurn em src.models.mlp_model.py`
 
 ```
-INPUT (12 features)
+INPUT (x features)
   ↓
 Dense(256) + BatchNorm + ReLU + Dropout(0.3)
   ↓
@@ -157,4 +129,4 @@ Dense(1) → LOGIT (sem ativação, pois usaremos BCEWithLogitsLoss)
 | **Optimizer** | Adam(lr=1e-4) |
 | **Loss Function** | BCEWithLogitsLoss(pos_weight) |
 | **Max Epochs** | 200 |
-| **Batch Size** | 32 |d
+| **Batch Size** | 32 |

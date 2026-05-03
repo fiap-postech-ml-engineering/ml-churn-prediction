@@ -1,9 +1,13 @@
+# Contexto
+Este documento foi criado na etapa de prototipagem do MLP e visava centralizar o direcionamento para o time todo, com isso, alguns pontos podem estar desatualizados devido ao crescimento do projeto
+---
+
 # Plano Detalhado para 03_training.ipynb
 
 ## Objetivo
 Implementar um MLP em PyTorch para previsão de churn, incluindo:
 - Definição da arquitetura de rede neural (4 camadas ocultas + BatchNorm + Dropout)
-- Loop de treinamento com validação estratificada e early stopping baseado em ROC-AUC
+- Loop de treinamento com validação estratificada e early stopping baseado em PR-AUC
 - Batching eficiente usando DataLoaders do PyTorch
 - Log de métricas no MLflow e comparação com baseline de Logistic Regression
 
@@ -21,13 +25,13 @@ Implementar um MLP em PyTorch para previsão de churn, incluindo:
   - Razão: garantir reprodutibilidade em splits, inicialização de pesos e shuffling.
 - Detectar device: `cuda` ou `cpu`
   - Razão: usar GPU quando disponível para treinamento mais rápido.
-- Configurar experimento MLflow: `mlflow.set_experiment("stg_notebook_training_V.1")`
+- Configurar experimento MLflow: `mlflow.set_experiment("notebook_training_mlp")`
   - Razão: centralizar logs e facilitar comparativo com baselines.
 
 ### 1.2 Carregar dados pré-processados
 - Ler `data/processed/telco_customer_churn_eda_pre-processed_encoded.csv`
 - Identificar coluna target (`target` ou equivalente)
-- Separar `X` e `y`
+- Separar `x` e `y`
 - Checar shape e distribuição de classes (`value_counts`, proporção)
   - Razão: entender desbalanceamento antes de definir pos_weight/oversampling.
 - Converter `X` para `float32`, `y` para `float32`
