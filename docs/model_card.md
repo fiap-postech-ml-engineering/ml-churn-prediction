@@ -3,17 +3,12 @@
 - **Nome** - Churn Prediction Model
 - **Data de treinamento** - Maio/2026
 - **Versão do modelo** - 1.0.0
-- **Tipo de modelo** - MLP em PyTorch
+- **Tipo de modelo** - Classificação binária com MLP em PyTorch
+- **Pipeline** - Preprocessing e feature engineering via sklearn unificado
 
 - **Para quais casos o modelo foi projetado**
     - Previsão de possíveis churners com base em dados financeiros e serviços contratados
     - Suporte a ações de retenção focadas em clientes com alto CLTV e risco de churn
-
-## 🤖 Tipo de modelo
-
-- Regressão binária com MLP em PyTorch
-- Preprocessing e feature engineering via pipeline sklearn unificado
-- Saída: probabilidade de churn e classe binária por threshold
 
 ## 🎯 Saída
 
@@ -46,14 +41,14 @@ Para a avaliação do modelo adotamos as seguintes métricas, com foco principal
 
 ## ⚖️ Threshold escolhido e trade-off de custo
 
-Para o nosso caso, temos a seguinte interpreação dos resultados:
+Para o nosso caso, temos a seguinte interpretação dos resultados:
 
 | **Classe** | **Interpretação** |
 |------------------|---------------------|
 | **Falso negativo** | cliente de churn não identificado e possivelmente perdido |
 | **Falso positivo** | cliente sem churn priorizado em campanha de retenção |
 | **Verdadeiro positivo** | cliente de churn identificado e possível retenção |
-| **Verdadeiro negativo** | cliente sem churn não priorizado, o que é aceitável
+| **Verdadeiro negativo** | cliente sem churn não priorizado, o que é aceitável |
 
 Especificamente para o nosso caso, em Telecomunicações, entendemos que é muito mais vantajoso abordar um cliente que não tem risco de churn _(Falso positivo)_ do que perder um cliente de alto valor _(Falso negativo)_, o que nos levou a priorizar o **Recall** _`(dos clientes que realmente vão churnar, quantos o modelo conseguiu capturar)`_ em troca de um **Precision** mais baixo _`(dos clientes que o modelo sinalizou como churn, quantos realmente vão churnar)`_.
 
@@ -69,47 +64,11 @@ Com isso, chegamos a um **threshold de 0.45**, onde maximizamos a recuperação 
 | `Threshold 0.60` | 0.72 | 0.70 | 0.70 | 0.74 | 0.59 |
 | `Threshold 0.65` | 0.68 | 0.70 | 0.68 | 0.70 | 0.64 |
 
-Para resultados mais conservadores, podemos aumentar o threshold em troca da diminuição do Weighted Recall e aumento do Precision, 
+Para resultados mais conservadores, podemos aumentar o threshold em troca da diminuição do Weighted Recall e aumento do Precision.
 
 # 🗂️ Dataset utilizado
 
-O dataset utilizado foi o [Telco customer churn: IBM dataset](https://www.kaggle.com/datasets/yeanzc/telco-customer-churn-ibm-dataset) que contém informações de clientes de uma empresa de telecomunicações, incluindo dados demográficos, serviços contratados, dados financeiros e se o cliente churnou ou não.
-
-As features presentes no dataset puro são:
-
-- **CustomerID:** Um ID único que identifica cada cliente.
-- **Count:** Um valor usado em relatórios/dashboards para somar o número de clientes em um conjunto filtrado.
-- **Country:** País de residência principal do cliente.
-- **State:** Estado de residência principal do cliente.
-- **City:** Cidade de residência principal do cliente.
-- **Zip Code:** CEP da residência principal do cliente.
-- **Lat Long:** Combinação de latitude e longitude da residência principal do cliente.
-- **Latitude:** Latitude da residência principal do cliente.
-- **Longitude:** Longitude da residência principal do cliente.
-- **Gender:** Gênero do cliente: Masculino, Feminino.
-- **Senior Citizen:** Indica se o cliente tem 65 anos ou mais: Sim, Não.
-- **Partner:** Indica se o cliente tem parceiro(a): Sim, Não.
-- **Dependents:** Indica se o cliente vive com dependentes: Sim, Não. Dependentes podem ser filhos, pais, avós etc.
-- **Tenure Months:** Total de meses em que o cliente permaneceu na empresa até o fim do trimestre de referência.
-- **Phone Service:** Indica se o cliente assina serviço de telefone residencial com a empresa: Sim, Não.
-- **Multiple Lines:** Indica se o cliente assina múltiplas linhas telefônicas: Sim, Não.
-- **Internet Service:** Indica se o cliente assina serviço de internet: Não, DSL, Fibra Óptica, Cabo.
-- **Online Security:** Indica se o cliente assina serviço adicional de segurança online: Sim, Não.
-- **Online Backup:** Indica se o cliente assina serviço adicional de backup online: Sim, Não.
-- **Device Protection:** Indica se o cliente assina plano adicional de proteção de dispositivo para equipamentos de internet: Sim, Não.
-- **Tech Support:** Indica se o cliente assina plano adicional de suporte técnico com menor tempo de espera: Sim, Não.
-- **Streaming TV:** Indica se o cliente usa internet para assistir TV por streaming de terceiros: Sim, Não. A empresa não cobra taxa adicional por esse serviço.
-- **Streaming Movies:** Indica se o cliente usa internet para assistir filmes por streaming de terceiros: Sim, Não. A empresa não cobra taxa adicional por esse serviço.
-- **Contract:** Tipo de contrato atual do cliente: Mensal, Um Ano, Dois Anos.
-- **Paperless Billing:** Indica se o cliente optou por fatura digital: Sim, Não.
-- **Payment Method:** Forma de pagamento da fatura: Débito em Conta, Cartão de Crédito, Cheque por Correio.
-- **Monthly Charge:** Valor total mensal atual cobrado pelos serviços contratados.
-- **Total Charges:** Valor total acumulado cobrado do cliente até o fim do trimestre de referência.
-- **Churn Label:** Sim = cliente saiu da empresa neste trimestre. Não = cliente permaneceu. Diretamente relacionado a Churn Value.
-- **Churn Value:** 1 = cliente saiu da empresa neste trimestre. 0 = cliente permaneceu. Diretamente relacionado a Churn Label.
-- **Churn Score:** Valor de 0 a 100 calculado pelo IBM SPSS Modeler. O modelo considera múltiplos fatores associados ao churn. Quanto maior o score, maior a probabilidade de churn.
-- **CLTV:** Customer Lifetime Value. Um CLTV previsto é calculado com fórmulas corporativas e dados existentes. Quanto maior o valor, mais valioso é o cliente. Clientes de alto valor devem ser monitorados para churn.
-- **Churn Reason:** Motivo específico de saída do cliente. Diretamente relacionado à categoria de churn.
+O dataset utilizado foi o [Telco customer churn: IBM dataset](https://www.kaggle.com/datasets/yeanzc/telco-customer-churn-ibm-dataset), contendo ~7.000 registros de clientes de uma empresa de telecomunicações americana, com dados demográficos, serviços contratados, dados financeiros e indicador de churn. A descrição completa das features originais está disponível na documentação do Kaggle.
 
 Para o nosso estudo mantivemos apenas as features mais relevantes, sendo elas:
 - **Dependents**
@@ -138,7 +97,7 @@ E adicionando/modificando algumas features, como:
 
 # 🤔 O por que da escolha do MLP
 
-A escolha do MLP foi definida após uma analise comparativa com o modelo de Regressão Logística (O melhor modelo dentre os baselines), onde o MLP apresentou uma performance superior entregando um ganho de em Recall e Weighted Recall, mantendo o mesmo PR AUC
+A escolha do MLP foi definida após uma análise comparativa com o modelo de Regressão Logística (O melhor modelo dentre os baselines), onde o MLP apresentou uma performance superior entregando um ganho em Recall e Weighted Recall, mantendo o mesmo PR AUC.
 
 | Métrica | MLP PyTorch | Logistic Regression | Diferença |
 |---------|---|---|---|
@@ -153,15 +112,15 @@ A escolha do MLP foi definida após uma analise comparativa com o modelo de Regr
 | **Accuracy** | 0.73 | 0.74 | -0.01 |
 | **F1 Score** | 0.63 | 0.62 | +0.01 |
 
-O MLP se mostra vantajoso para esse caso em epecífico já que esse resultado foi atingido sem grandes testes de hiperparâmetros, o que indica que o modelo tem um potencial de melhoria ainda maior, enquanto a Regressão Logística já se mostrou mais limitada mesmo com ajustes de regularização e feature engineering.
+O MLP se mostra vantajoso para esse caso em específico já que esse resultado foi atingido sem grandes testes de hiperparâmetros, o que indica que o modelo tem um potencial de melhoria ainda maior, enquanto a Regressão Logística já se mostrou mais limitada mesmo com ajustes de regularização e feature engineering.
 
-Testes de arquitetura diferentes com outros otimizadores e funções de perda podem maximizar os resultados ainda mais
+Testes de arquitetura diferentes com outros otimizadores e funções de perda podem maximizar os resultados ainda mais.
 
 ## 🏗️ Arquitetura utilizada
 
 A arquitetura utilizada segue o seguinte direcionamento:
 ```
-35 features
+36 features
     ↓
   Dense(256) + BatchNorm + ReLU + Dropout(0.3)
     ↓
@@ -187,18 +146,30 @@ A arquitetura utilizada segue o seguinte direcionamento:
 
 # ⚠️ Limitações
 
-- O modelo depende da qualidade e completude das features RAW enviadas para inferência.
-- O comportamento pode degradar se a distribuição de dados em produção mudar significativamente.
+- O modelo depende da qualidade e completude das features RAW enviadas para inferência, sendo algumas mais críticas do que outras, como:
+    - Tenure Months
+    - Total Charges
+    - Monthly Charges
+    - Internet Service
+    - Online Security
+    - Online Backup
+    - Device Protection
+    - Tech Support
+    - Streaming TV
+    - Streaming Movies
+- O dataset de treino contém ~7.000 registros de uma empresa de telecom americana — generalização para outros mercados, perfis demográficos ou estruturas de serviço distintas não foi validada.
+- Ainda não foi implementado um mecanismo de monitoramento de drift em produção.
 - O modelo não substitui regra de negócio; ele apenas prioriza casos com maior risco.
 
 ## 🧭 Vieses e cuidados
 
-- O dataset inclui variáveis sensíveis ou proxy de segmentação, como `Senior Citizen`, `Gender` e `Partner`.
-- Essas variáveis são usadas apenas como preditores estatísticos, não como regra operacional isolada.
-- Decisões de retenção devem ser revisadas por contexto comercial.
+- O dataset inclui variáveis sensíveis como `Senior Citizen`, `Gender` e `Partner`. Essas variáveis têm poder preditivo estatístico no dataset de treino, mas seu uso direto em critérios de retenção pode introduzir discriminação — decisões de campanha devem passar por revisão comercial.
+- O dataset é de origem americana (IBM/Kaggle). Padrões de comportamento de churn podem diferir em outros países por fatores culturais, regulatórios ou de estrutura de mercado — o modelo não deve ser aplicado a outros contextos sem revalidação.
 
 ## 🚨 Cenários de falha
 
-- Payload incompleto ou com colunas RAW faltantes
-- Mudança forte de distribuição entre treino e produção
-- Clientes com perfis muito raros fora da base histórica
+- **Payload incompleto** — features críticas ausentes são detectadas pela validação do feature contract antes da inferência; a API retorna 422 com descrição do campo faltante.
+- **Drift de distribuição** — sem alertas automatizados, a degradação do modelo pode passar despercebida. Sinal de alerta: proporção de predições positivas divergindo do baseline de treino (~26.5% de churners).
+- **Recalibração de threshold necessária** — se o perfil de clientes mudar, o threshold atual pode gerar recall insuficiente ou volume excessivo de falsos positivos, exigindo novo tuning no validation set.
+- **Clientes novos (Tenure < 6 meses)** — essa faixa está sub-representada na base de treino e é a mais volátil para churn. Probabilidades geradas para esse grupo devem ser interpretadas com cautela.
+- **Perfis fora da distribuição de treino** — clientes com combinações de features muito raras (ex: alto CLTV + contrato mensal + todos os serviços ativos) podem receber probabilidades pouco confiáveis.
