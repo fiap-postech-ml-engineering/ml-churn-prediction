@@ -6,23 +6,23 @@ Neste documento trouxemos um levantamento de informações focado nos conceitos 
 
 Desacelerar a perda de clientes da empresa através de métricas que direcionem a atenção dos stakeholders para clientes com padrões e comportamentos que indicam um possível cancelamento (Churn)
 
-## Métrica que consideraremos para a resolução do problema
+## Métrica do negócio que consideraremos para a resolução do problema
 
-- **Churn:** Quantidade de clientes que tiveram o cancelamento efetivado através de solicitação própria, comparado com a base total
+- **Weighted Recall:** A proporção de CLTV de churners recuperada com o modelo
+
   $
-  churn = \frac{clientes\ que\ cancelaram}{total\ de\ clientes}
+  \text{Weighted Recall} = \frac{\sum_{i \in TP} CLTV_i}{\sum_{i \in \text{churners reais}} CLTV_i}
   $
 
 ## Qual a métrica de negócio esperamos ser afetada?
 
-**Faturamento do trimestre.** Queremos diminuir o impacto dos cancelamentos no faturamento final trazendo mais previsibilidade para o negócio
+**CLTV** - Queremos recuperar a maior quantidade de valor de CLTV possível
 
 ## O que queremos atingir
 
-Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar clientes com maior risco de cancelamento esperamos reduzir o churn do trimestre em **10 p.p**.
-
-- **Top 20%:** Clientes com maior risco
-- **65%:** Percentual de churners reais capturados dentro desse Top 20%
+Esperamos atingir uma recuperação de +80% do CLTV total dos churners nos testes, exemplo:
+- De uma lista de 1000 churners, temos um CLTV somado de R$100k
+- O objetivo é recuperar em valor de CLTV o equivalente a R$80k desses churners, independente da quantidade de churners 
 
 ## Recursos necessários
 
@@ -31,3 +31,8 @@ Com um modelo com **Recall no Top 20% de pelo menos 65%** para priorizar cliente
 - **Infraestrutura** em nuvem para CI/CD/CT do modelo e hospedagem da API onde os dados vão ser servidos
 
 ## Dados e variáveis relevantes
+- **CLTV:** - O quanto o cliente vale para a empresa em todo o seu ciclo de vida
+- **Tenure Months** - Total de meses em que a pessoa é cliente da empresa
+- **Monthly Charge** - Valor mensal cobrado do cliente somando todos os serviçoes
+- **Total Charges** - Valor total acumulado já cobrado ao cliente
+- **Aderência aos Serviços** - Quantos serviços o cliente tem contratado e quais são eles?

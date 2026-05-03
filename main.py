@@ -1,10 +1,3 @@
-"""
-Entry point para rodar a API com uvicorn.
-
-Uso:
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
-"""
-
 from src.api.app import app
 
 __all__ = ["app"]

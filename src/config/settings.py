@@ -145,7 +145,7 @@ TABULAR_DERIVED_FEATURES = [
     "is_new_customer",
 ]
 FEATURE_TYPE_STRICT = os.getenv("FEATURE_TYPE_STRICT", "true").lower() == "true"
-APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.5"))
+APPROVAL_THRESHOLD = float(os.getenv("APPROVAL_THRESHOLD", "0.45"))
 MODEL_VERSION = os.getenv("MODEL_VERSION", "0.1.0")
 
 # Configurações de logging
