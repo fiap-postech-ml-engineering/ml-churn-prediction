@@ -10,14 +10,14 @@ from .settings import (
     DRIFT_LOG_PATH,
     ENVIRONMENT,
     LATENCY_WARN_MS,
-    LOG_LEVEL,
     LOG_FORMAT,
-    REQUEST_ID_HEADER,
-    SERVICE_NAME,
+    LOG_LEVEL,
     LOGS_DIR,
     MODEL_VERSION,
     MODELS_DIR,
     RANDOM_SEED,
+    REQUEST_ID_HEADER,
+    SERVICE_NAME,
 )
 
 __all__ = [

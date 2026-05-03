@@ -53,7 +53,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         result = prepare_inference_batch(sample_dataframe, mock_scaler, mock_device)
         assert isinstance(result, DataLoader)
 
@@ -77,7 +77,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         prepare_inference_batch(sample_dataframe, mock_scaler, mock_device)
         mock_scaler.transform.assert_called_once_with(sample_dataframe)
 
@@ -105,7 +105,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         # Mock scaler que retorna matriz esparsa
         mock_scaler = MagicMock()
         sparse_matrix = MagicMock()
@@ -125,7 +125,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         # Configurar scaler para retornar muitos zeros
         mock_scaler.transform.return_value = np.zeros((5, 2))
 
@@ -144,7 +144,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         prepare_inference_batch(sample_dataframe, mock_scaler, mock_device)
 
         assert mock_logger.info.call_count >= 3  # Pelo menos 3 chamadas de log
@@ -157,7 +157,7 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         batch_size = 2
         result = prepare_inference_batch(sample_dataframe, mock_scaler, mock_device, batch_size=batch_size)
         assert result.batch_size == batch_size
@@ -171,12 +171,12 @@ class TestPrepareInferenceBatch:
         mock_from_numpy.return_value = mock_tensor
         mock_tensor.float.return_value = mock_tensor
         mock_tensor.to.return_value = mock_tensor
-        
+
         prepare_inference_batch(sample_dataframe, mock_scaler, mock_device)
-        
+
         mock_dataloader_class.assert_called_once()
         args, kwargs = mock_dataloader_class.call_args
-        assert kwargs.get('shuffle') == False
+        assert not kwargs.get('shuffle')
 
     @patch("src.inference.prepare_inference_data.logger")
     def test_prepare_inference_batch_handles_exceptions(self, mock_logger, sample_dataframe, mock_scaler, mock_device):
@@ -197,7 +197,7 @@ class TestRunInference:
         batch1_tensor = MagicMock()
         batch1_tensor.to.return_value = batch1_tensor
         batch1 = [batch1_tensor]
-        
+
         batch2_tensor = MagicMock()
         batch2_tensor.to.return_value = batch2_tensor
         batch2 = [batch2_tensor]
@@ -215,7 +215,7 @@ class TestRunInference:
         output1.to.return_value = output1
         output2 = MagicMock()
         output2.to.return_value = output2
-        
+
         model.return_value = output1
         model.side_effect = [output1, output2]
         return model
@@ -232,7 +232,7 @@ class TestRunInference:
         """Verifica se retorna tupla de arrays numpy."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         probas, classes = run_inference(mock_dataloader, mock_model, mock_device)
 
         assert isinstance(probas, np.ndarray)
@@ -259,7 +259,7 @@ class TestRunInference:
         """Verifica se usa o threshold correto para classificação."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         threshold = 0.7
         probas, classes = run_inference(mock_dataloader, mock_model, mock_device, approval_threshold=threshold)
 
@@ -272,7 +272,7 @@ class TestRunInference:
         """Verifica se o modelo é colocado em modo eval."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         run_inference(mock_dataloader, mock_model, mock_device)
 
         mock_model.eval.assert_called_once()
@@ -293,7 +293,7 @@ class TestRunInference:
         """Verifica se registra mensagens de log."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         run_inference(mock_dataloader, mock_model, mock_device)
 
         assert mock_logger.info.call_count >= 2  # Pelo menos 2 chamadas
@@ -303,7 +303,7 @@ class TestRunInference:
         """Verifica funcionamento com uma única amostra."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6]])
-        
+
         # DataLoader com uma única amostra - mock do método .to()
         batch_tensor = MagicMock()
         batch_tensor.to.return_value = batch_tensor
@@ -332,7 +332,7 @@ class TestRunInference:
         batch = [batch_tensor]
         dataloader = MagicMock(spec=DataLoader)
         dataloader.__iter__.return_value = [batch]
-        
+
         mock_model = MagicMock()
         mock_model.side_effect = Exception("Model prediction error")
 
@@ -344,7 +344,7 @@ class TestRunInference:
         """Verifica se probabilidades estão no range correto [0,1]."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         probas, classes = run_inference(mock_dataloader, mock_model, mock_device)
 
         assert np.all(probas >= 0.0)
@@ -355,7 +355,7 @@ class TestRunInference:
         """Verifica se classes são apenas 0 ou 1."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         probas, classes = run_inference(mock_dataloader, mock_model, mock_device)
 
         assert np.all(np.isin(classes, [0, 1]))
@@ -365,7 +365,7 @@ class TestRunInference:
         """Verifica se threshold padrão é 0.5."""
         # Mock sigmoid return
         mock_sigmoid.return_value = torch.tensor([[0.6], [0.4]])
-        
+
         probas, classes = run_inference(mock_dataloader, mock_model, mock_device)
 
         expected_classes = (probas >= 0.5).astype(int)

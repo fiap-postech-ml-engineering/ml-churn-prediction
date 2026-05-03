@@ -3,7 +3,6 @@ import pandas as pd
 from src.data.preprocessing_config import (
     DEFAULT_PREPROCESSING_CONFIG,
     PreprocessingConfig,
-    TOTAL_CHARGES_COLUMN,
 )
 
 

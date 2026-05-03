@@ -3,8 +3,8 @@ from sklearn.model_selection import train_test_split
 
 from src.data.preprocessing_config import (
     DEFAULT_PREPROCESSING_CONFIG,
-    PreprocessingConfig,
     TARGET_COLUMN,
+    PreprocessingConfig,
 )
 
 
@@ -54,7 +54,10 @@ def split_train_val_test(
     val_size = cfg.val_size if val_size is None else val_size
     seed = cfg.random_seed if seed is None else seed
 
-    from src.data.data_cleaning import validate_split_sizes, validate_target_for_stratification
+    from src.data.data_cleaning import (
+        validate_split_sizes,
+        validate_target_for_stratification,
+    )
 
     validate_split_sizes(test_size=test_size, val_size=val_size)
 

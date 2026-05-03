@@ -14,19 +14,19 @@ from src.data.artifact_utils import (
     save_preprocessing_pipeline,
     try_load_preprocessing_pipeline,
 )
-from src.data.preprocessing_config import PreprocessingConfig, TARGET_COLUMN
+from src.data.preprocessing_config import TARGET_COLUMN, PreprocessingConfig
 
 
 @pytest.fixture
 def sample_scaler():
     """Cria um StandardScaler ajustado."""
     import numpy as np
-    
+
     x_train = pd.DataFrame({
         "feature1": np.random.randn(100),
         "feature2": np.random.randn(100),
     })
-    
+
     scaler = StandardScaler()
     scaler.fit(x_train)
     return scaler
@@ -47,7 +47,7 @@ class TestBuildPreprocessingArtifact:
             scaler=sample_scaler,
             feature_names=sample_feature_names
         )
-        
+
         assert isinstance(artifact, dict)
 
     def test_build_artifact_has_required_keys(self, sample_scaler, sample_feature_names):
@@ -56,7 +56,7 @@ class TestBuildPreprocessingArtifact:
             scaler=sample_scaler,
             feature_names=sample_feature_names
         )
-        
+
         required_keys = {
             "pipeline_type",
             "scaler",
@@ -74,7 +74,7 @@ class TestBuildPreprocessingArtifact:
             scaler=sample_scaler,
             feature_names=sample_feature_names
         )
-        
+
         assert artifact["pipeline_type"] == "mlp_preprocessing"
 
     def test_build_artifact_feature_names_match(self, sample_scaler, sample_feature_names):
@@ -83,7 +83,7 @@ class TestBuildPreprocessingArtifact:
             scaler=sample_scaler,
             feature_names=sample_feature_names
         )
-        
+
         assert artifact["feature_names"] == sample_feature_names
 
     def test_build_artifact_scaler_is_preserved(self, sample_scaler, sample_feature_names):
@@ -92,7 +92,7 @@ class TestBuildPreprocessingArtifact:
             scaler=sample_scaler,
             feature_names=sample_feature_names
         )
-        
+
         assert artifact["scaler"] is sample_scaler
 
     def test_build_artifact_raises_error_for_empty_features(self, sample_scaler):
@@ -111,7 +111,7 @@ class TestBuildPreprocessingArtifact:
             test_size=0.2,
             val_size=0.15
         )
-        
+
         artifact = build_preprocessing_artifact(
             scaler=sample_scaler,
             feature_names=sample_feature_names,
@@ -121,7 +121,7 @@ class TestBuildPreprocessingArtifact:
             val_size=0.15,
             config=custom_config
         )
-        
+
         assert artifact["target_col"] == "custom_target"
         assert artifact["seed"] == 123
 
@@ -133,13 +133,13 @@ class TestSavePreprocessingPipeline:
         """Verifica se a função cria um arquivo."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             saved_path = save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             assert output_path.exists()
             assert saved_path == output_path
 
@@ -147,13 +147,13 @@ class TestSavePreprocessingPipeline:
         """Verifica se cria diretórios se necessário."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "subdir" / "pipeline.joblib"
-            
-            saved_path = save_preprocessing_pipeline(
+
+            save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             assert output_path.exists()
             assert output_path.parent.exists()
 
@@ -161,13 +161,13 @@ class TestSavePreprocessingPipeline:
         """Verifica se o arquivo salvo pode ser carregado."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             loaded_artifact = joblib.load(output_path)
             assert isinstance(loaded_artifact, dict)
             assert loaded_artifact["feature_names"] == sample_feature_names
@@ -180,13 +180,13 @@ class TestLoadPreprocessingPipeline:
         """Verifica se a função retorna um dicionário."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             loaded = load_preprocessing_pipeline(input_path=output_path)
             assert isinstance(loaded, dict)
 
@@ -194,15 +194,15 @@ class TestLoadPreprocessingPipeline:
         """Verifica se o artefato carregado possui as chaves necessárias."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             loaded = load_preprocessing_pipeline(input_path=output_path)
-            
+
             required_keys = {
                 "pipeline_type",
                 "scaler",
@@ -218,7 +218,7 @@ class TestLoadPreprocessingPipeline:
         """Verifica se levanta erro para arquivo inexistente."""
         with tempfile.TemporaryDirectory() as tmpdir:
             missing_path = Path(tmpdir) / "nonexistent.joblib"
-            
+
             with pytest.raises(FileNotFoundError):
                 load_preprocessing_pipeline(input_path=missing_path)
 
@@ -226,10 +226,10 @@ class TestLoadPreprocessingPipeline:
         """Verifica se levanta erro para arquivo inválido."""
         with tempfile.TemporaryDirectory() as tmpdir:
             invalid_path = Path(tmpdir) / "invalid.joblib"
-            
+
             # Salva um objeto que não é um dicionário
             joblib.dump("not a dict", invalid_path)
-            
+
             with pytest.raises(ValueError, match="invalid"):
                 load_preprocessing_pipeline(input_path=invalid_path)
 
@@ -237,10 +237,10 @@ class TestLoadPreprocessingPipeline:
         """Verifica se levanta erro quando faltam chaves necessárias."""
         with tempfile.TemporaryDirectory() as tmpdir:
             invalid_path = Path(tmpdir) / "invalid.joblib"
-            
+
             # Salva um dicionário com chaves incompletas
             joblib.dump({"pipeline_type": "mlp_preprocessing"}, invalid_path)
-            
+
             with pytest.raises(ValueError, match="Missing keys"):
                 load_preprocessing_pipeline(input_path=invalid_path)
 
@@ -252,13 +252,13 @@ class TestTryLoadPreprocessingPipeline:
         """Verifica se retorna dicionário quando arquivo existe."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             loaded = try_load_preprocessing_pipeline(input_path=output_path)
             assert isinstance(loaded, dict)
 
@@ -266,7 +266,7 @@ class TestTryLoadPreprocessingPipeline:
         """Verifica se retorna None quando arquivo não existe."""
         with tempfile.TemporaryDirectory() as tmpdir:
             missing_path = Path(tmpdir) / "nonexistent.joblib"
-            
+
             loaded = try_load_preprocessing_pipeline(input_path=missing_path)
             assert loaded is None
 
@@ -284,17 +284,17 @@ class TestRoundTrip:
         """Verifica se save/load preserva os dados."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_path = Path(tmpdir) / "pipeline.joblib"
-            
+
             # Save
             save_preprocessing_pipeline(
                 scaler=sample_scaler,
                 feature_names=sample_feature_names,
                 output_path=output_path
             )
-            
+
             # Load
             loaded = load_preprocessing_pipeline(input_path=output_path)
-            
+
             # Verify
             assert loaded["feature_names"] == sample_feature_names
             assert loaded["pipeline_type"] == "mlp_preprocessing"

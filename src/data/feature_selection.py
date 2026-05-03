@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.config.settings import TABULAR_RAW_FEATURES, TARGET_COLUMN, TARGET_COLUMN
+from src.config.settings import TABULAR_RAW_FEATURES, TARGET_COLUMN
 
 
 def select_tabular_raw_features(

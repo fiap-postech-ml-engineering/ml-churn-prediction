@@ -1,3 +1,4 @@
+from src.api.app import app
 from src.api.schemas import (
     ChurnPrediction,
     ChurnRequest,
@@ -5,7 +6,6 @@ from src.api.schemas import (
     PredictRequest,
     PredictResponse,
 )
-from src.api.app import app
 from src.config.settings import TABULAR_RAW_FEATURES
 
 

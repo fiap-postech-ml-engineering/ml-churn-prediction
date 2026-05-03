@@ -1,14 +1,15 @@
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-from src.data.data_cleaning import clean_dataframe_for_modeling, validate_numeric_features
+from src.data.data_cleaning import (
+    clean_dataframe_for_modeling,
+    validate_numeric_features,
+)
 from src.data.data_split import split_features_target, split_train_val_test
 from src.data.preprocessing_config import (
     DEFAULT_PREPROCESSING_CONFIG,
     PreprocessingConfig,
     ProcessedArray,
-    TARGET_COLUMN,
 )
 from src.data.scaler_utils import fit_scaler, transform_features
 

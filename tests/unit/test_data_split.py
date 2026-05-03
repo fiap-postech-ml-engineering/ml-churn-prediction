@@ -4,7 +4,10 @@ import pandas as pd
 import pytest
 
 from src.data.data_split import split_features_target, split_train_val_test
-from src.data.preprocessing_config import DEFAULT_PREPROCESSING_CONFIG, PreprocessingConfig
+from src.data.preprocessing_config import (
+    DEFAULT_PREPROCESSING_CONFIG,
+    PreprocessingConfig,
+)
 
 
 class TestSplitFeaturesTarget:
@@ -52,7 +55,7 @@ class TestSplitFeaturesTarget:
     def test_split_features_target_raises_error_for_missing_target(self, sample_df):
         """Verifica se levanta erro quando target está ausente."""
         df_sem_target = sample_df.drop(columns=["Churn Value"])
-        
+
         with pytest.raises(ValueError, match="Target column"):
             split_features_target(df_sem_target)
 
@@ -60,7 +63,7 @@ class TestSplitFeaturesTarget:
         """Verifica comportamento com coluna target customizada."""
         df = sample_df.rename(columns={"Churn Value": "custom_target"})
         x, y = split_features_target(df, target_col="custom_target")
-        
+
         assert "custom_target" not in x.columns
         assert len(y) == len(sample_df)
 
@@ -88,7 +91,7 @@ class TestSplitTrainValTest:
         """Verifica se retorna DataFrames e Series."""
         x, y = sample_data
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(x, y)
-        
+
         assert isinstance(x_train, pd.DataFrame)
         assert isinstance(x_val, pd.DataFrame)
         assert isinstance(x_test, pd.DataFrame)
@@ -100,7 +103,7 @@ class TestSplitTrainValTest:
         """Verifica se o número total de linhas é preservado."""
         x, y = sample_data
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(x, y)
-        
+
         total_rows = len(x_train) + len(x_val) + len(x_test)
         assert total_rows == len(x)
 
@@ -111,7 +114,7 @@ class TestSplitTrainValTest:
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(
             x, y, test_size=test_size
         )
-        
+
         expected_test_count = int(len(x) * test_size)
         assert len(x_test) == expected_test_count
 
@@ -123,7 +126,7 @@ class TestSplitTrainValTest:
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(
             x, y, test_size=test_size, val_size=val_size
         )
-        
+
         train_size = 1.0 - test_size
         expected_val_count = int(len(x) * train_size * val_size / (1.0 - test_size))
         assert len(x_val) == expected_val_count
@@ -134,7 +137,7 @@ class TestSplitTrainValTest:
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(
             x, y, seed=42
         )
-        
+
         # Verifica se todas as classes estão presentes em cada split
         for split_y in [y_train, y_val, y_test]:
             assert len(split_y.unique()) >= 1
@@ -146,24 +149,24 @@ class TestSplitTrainValTest:
         x_train, x_val, x_test, y_train, y_val, y_test = split_train_val_test(
             x, y, config=custom_config
         )
-        
+
         total_rows = len(x_train) + len(x_val) + len(x_test)
         assert total_rows == len(x)
 
     def test_split_raises_error_for_invalid_split_sizes(self, sample_data):
         """Verifica se levanta erro para tamanhos inválidos."""
         x, y = sample_data
-        
+
         with pytest.raises(ValueError):
             split_train_val_test(x, y, test_size=0.0, val_size=0.5)
 
     def test_split_deterministic_with_seed(self, sample_data):
         """Verifica se o split é determinístico com seed."""
         x, y = sample_data
-        
+
         result1 = split_train_val_test(x, y, seed=42)
         result2 = split_train_val_test(x, y, seed=42)
-        
+
         # Verifica se os índices são iguais
         assert result1[0].index.equals(result2[0].index)
         assert result1[1].index.equals(result2[1].index)

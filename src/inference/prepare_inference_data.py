@@ -55,25 +55,25 @@ def prepare_inference_batch(
         logger.info(f"📊 Preparando batch para inferência: {df_features.shape}")
 
         # 1. Transformar dados usando o pipeline de preprocessing fitado
-        X_scaled = scaler.transform(df_features)
-        if hasattr(X_scaled, "toarray"):
-            X_scaled = X_scaled.toarray()
-        zero_ratio = float((X_scaled == 0).sum().sum()) / float(X_scaled.size)
+        x_scaled = scaler.transform(df_features)
+        if hasattr(x_scaled, "toarray"):
+            x_scaled = x_scaled.toarray()
+        zero_ratio = float((x_scaled == 0).sum().sum()) / float(x_scaled.size)
         if zero_ratio > 0.8:
             logger.warning(
                 "⚠️ Alta proporção de zeros nas features pós-preprocessing: %.2f%%",
                 zero_ratio * 100,
             )
         logger.info(
-            f"✓ Dados transformados | mean={X_scaled.mean():.4f}, std={X_scaled.std():.4f}"
+            f"✓ Dados transformados | mean={x_scaled.mean():.4f}, std={x_scaled.std():.4f}"
         )
 
         # 2. Converter para tensor PyTorch
-        X_tensor = torch.from_numpy(X_scaled).float().to(device)
-        logger.info(f"✓ Tensor criado: {X_tensor.shape} | Device: {device}")
+        x_tensor = torch.from_numpy(x_scaled).float().to(device)
+        logger.info(f"✓ Tensor criado: {x_tensor.shape} | Device: {device}")
 
         # 3. Criar TensorDataset
-        inference_dataset = TensorDataset(X_tensor)
+        inference_dataset = TensorDataset(x_tensor)
 
         # 4. Criar DataLoader (sem shuffle para inferência)
         inference_loader = DataLoader(
@@ -128,10 +128,10 @@ def run_inference(
 
         with torch.no_grad():
             for batch in inference_loader:
-                X_batch = batch[0].to(device)
+                x_batch = batch[0].to(device)
 
                 # Predição - modelo retorna logits
-                logits = model(X_batch)
+                logits = model(x_batch)
 
                 # Converter logits para probabilidades usando sigmoid
                 proba = torch.sigmoid(logits).cpu().numpy()
