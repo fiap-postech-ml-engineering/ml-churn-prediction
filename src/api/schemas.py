@@ -65,24 +65,6 @@ class PredictRequest(BaseModel):
     )
 
 
-class FeaturesResponse(BaseModel):
-    """Contrato RAW oficial exposto pelo endpoint /features."""
-
-    total_features: int = Field(
-        ..., description="Quantidade total de features RAW oficiais v2"
-    )
-    feature_names: list[str] = Field(
-        ...,
-        description="Lista ordenada de features RAW oficiais v2",
-        json_schema_extra={"example": TABULAR_RAW_FEATURES},
-    )
-    descricao: str = Field(..., description="Orientação de uso do contrato raw")
-
-    model_config = {
-        "json_schema_extra": {"example": FEATURES_RESPONSE_EXAMPLE}
-    }
-
-
 class ChurnPrediction(BaseModel):
     """
     Resultado da Classificação de Churn.
