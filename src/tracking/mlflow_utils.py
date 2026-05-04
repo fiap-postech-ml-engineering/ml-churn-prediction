@@ -30,28 +30,45 @@ def _safe_git(cmd: list[str]) -> str:
 
 def configure_mlflow_tracking(
     experiment_name: str,
-    db_path: str | Path,
+    backend: str = "local",
+    db_path: str | Path | None = None,
     experiment_tags: dict[str, str] | None = None,
     artifact_root_path: str | Path | None = None,
+    tracking_uri: str | None = None,
 ) -> str:
     """Configure MLflow backend and optionally persist experiment-level tags.
 
     Args:
         experiment_name: Logical MLflow experiment name.
-        db_path: Filesystem path to the MLflow file store (backend_store_uri).
-        Uses file:// for directory-based storage instead of SQLite.
+        backend: "local" (file-based) ou "databricks"
+        db_path: Filesystem path to the MLflow file store (backend_store_uri). Only for local.
+        tracking_uri: Databricks host URL (ex: https://xyz.cloud.databricks.com). Only for databricks.
         experiment_tags: Optional key-value tags to set on the experiment.
-        artifact_root_path: Optional filesystem path for experiment artifacts.
+        artifact_root_path: Optional filesystem path for experiment artifacts (local only).
 
     Returns:
         The tracking URI configured for MLflow in the current process.
     """
-    # Use file-based store (directory) instead of SQLite for better portability
+    
+    if backend == "databricks":
+        # Usa perfil 'community' já configurado no CLI
+        mlflow.set_tracking_uri("databricks://community")
+        
+        try:
+            mlflow.set_experiment(experiment_name)
+            print(f"✅ MLflow Databricks conectado")
+            print(f"✅ Experimento: {experiment_name}")
+        except Exception as e:
+            print(f"⚠️ Aviso: {e}")
+        
+        return mlflow.get_tracking_uri()
+    
+    # Local file-based store (backend padrão)
     store_path = Path(db_path)
     store_path.mkdir(parents=True, exist_ok=True)
-    tracking_uri = store_path.resolve().as_uri()
+    tracking_uri_local = store_path.resolve().as_uri()
 
-    mlflow.set_tracking_uri(tracking_uri)
+    mlflow.set_tracking_uri(tracking_uri_local)
     client = MlflowClient()
     experiment = client.get_experiment_by_name(experiment_name)
 
@@ -68,7 +85,7 @@ def configure_mlflow_tracking(
 
     mlflow.set_experiment(experiment_name)
 
-    return tracking_uri
+    return tracking_uri_local
 
 
 def build_default_run_tags(
