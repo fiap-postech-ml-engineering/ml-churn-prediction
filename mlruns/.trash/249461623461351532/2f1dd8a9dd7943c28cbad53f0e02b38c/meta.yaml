@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/2f1dd8a9dd7943c28cbad53f0e02b38c/artifacts
+deleted_time: 1777240970725
+end_time: null
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 2f1dd8a9dd7943c28cbad53f0e02b38c
+run_name: marvelous-cub-61
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777240517786
+status: 1
+tags: []
+user_id: gustavodellanhol

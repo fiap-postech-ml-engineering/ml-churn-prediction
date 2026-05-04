@@ -1,0 +1,1 @@
+LogisticRegression(C=np.float64(100.0), max_iter=2000, random_state=42)

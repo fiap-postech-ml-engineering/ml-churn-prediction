@@ -1,0 +1,14 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/models/mlflow_artifacts/fb147b01372a4d30a29411f667fe38e6/artifacts
+end_time: 1777850801075
+entry_point_name: ''
+experiment_id: '502741600197060969'
+lifecycle_stage: active
+run_id: fb147b01372a4d30a29411f667fe38e6
+run_name: mlp_threshold_test_0.40
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777850801046
+status: 3
+tags: []
+user_id: gustavodellanhol

@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/3a7fe4cb34c74852b6c06d8a0740d9c8/artifacts
+deleted_time: 1777369941057
+end_time: 1777309184804
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 3a7fe4cb34c74852b6c06d8a0740d9c8
+run_name: best_log_reg_tuned_threshold_0.3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777309177039
+status: 3
+tags: []
+user_id: gustavodellanhol

@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/14e963c95a024bc1913aa037ea4f4881/artifacts
+deleted_time: 1777240447747
+end_time: null
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 14e963c95a024bc1913aa037ea4f4881
+run_name: victorious-ant-889
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777240408832
+status: 1
+tags: []
+user_id: gustavodellanhol

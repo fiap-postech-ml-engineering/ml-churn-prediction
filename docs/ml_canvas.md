@@ -10,7 +10,7 @@ Desacelerar a perda de clientes da empresa através de métricas que direcionem 
 
 - **Weighted Recall:** A proporção de CLTV de churners recuperada com o modelo
 
-  $$\text{Weighted Recall} = \frac{\sum_{i \in TP} CLTV_i}{\sum_{i \in \text{churners reais}} CLTV_i}$$
+$$\text{Weighted Recall} = \frac{\sum_{i \in TP} CLTV_i}{\sum_{i \in \text{churners reais}} CLTV_i}$$
 
 Além do Weighted Recall, também consideramos:
 
@@ -49,9 +49,8 @@ As ações tomadas pelo time responsável pela retenção devem ser abordadas em
 - **Grupo controle**: clientes com risco _(Acima do threshold do modelo)_ → não recebem ação (holdout)
 
 Nessa análise, o KPI a ser considerado seria a **Share de churners**, dado por 
-$$
-\text{Share de Churners} = \frac{\text{Churners no grupo}}{\text{Total do grupo}}
-$$
+
+$$\text{Share de Churners} = \frac{\text{Churners no grupo}}{\text{Total do grupo}}$$
 
 Se o Share de churners do grupo prioritário (onde tomamos as ações de retenção) for menor do que o do grupo controle, temos a confirmação de que as ações tomadas a partir do modelo conseguiram reduzir o churn mantendo a maior parte do valor de CLTV.
 

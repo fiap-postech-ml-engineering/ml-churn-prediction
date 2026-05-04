@@ -1,0 +1,10 @@
+artifact_location: file:///home/gustavodellanhol/_projetos/ml-churn-prediction/mlruns/350795840977864775/models/m-a483de9d3eb04aaaad133de735c0ac41/artifacts
+creation_timestamp: 1777578500743
+experiment_id: '350795840977864775'
+last_updated_timestamp: 1777578507685
+model_id: m-a483de9d3eb04aaaad133de735c0ac41
+model_type: null
+name: sklearn_model
+source_run_id: 523b18cc0fe54f7181893858f4cf2ac9
+status: 2
+status_message: null

@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/models/mlflow_artifacts/e712c9dddf1743e8878b1b33e6022cd9/artifacts
+deleted_time: 1777579289477
+end_time: 1777578454759
+entry_point_name: ''
+experiment_id: '986550714157762119'
+lifecycle_stage: deleted
+run_id: e712c9dddf1743e8878b1b33e6022cd9
+run_name: Baseline_Dummy
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777578454603
+status: 3
+tags: []
+user_id: gustavodellanhol

@@ -1,0 +1,9 @@
+digest: 068a3268
+name: dataset
+profile: '{"features_shape": [1495, 13], "features_size": 19435, "features_nbytes":
+  155480}'
+schema: '{"mlflow_tensorspec": {"features": "[{\"type\": \"tensor\", \"tensor-spec\":
+  {\"dtype\": \"float64\", \"shape\": [-1, 13]}}]", "targets": null}}'
+source: '{"tags": {"mlflow.user": "gustavodellanhol", "mlflow.source.name": "02_baselines.ipynb",
+  "mlflow.source.type": "NOTEBOOK"}}'
+source_type: code

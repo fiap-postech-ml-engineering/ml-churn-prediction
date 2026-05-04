@@ -1,0 +1,7 @@
+artifact_location: /home/gustavodellanhol/_projetos/ml-churn-prediction/models/mlflow_artifacts
+creation_time: 1777547073164
+experiment_id: '502741600197060969'
+last_update_time: 1777547073164
+lifecycle_stage: active
+name: notebook_training_mlp
+workspace: default

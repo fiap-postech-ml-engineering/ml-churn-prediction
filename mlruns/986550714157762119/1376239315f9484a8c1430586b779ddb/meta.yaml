@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/models/mlflow_artifacts/1376239315f9484a8c1430586b779ddb/artifacts
+deleted_time: 1777667287373
+end_time: 1777666827239
+entry_point_name: ''
+experiment_id: '986550714157762119'
+lifecycle_stage: deleted
+run_id: 1376239315f9484a8c1430586b779ddb
+run_name: Baseline_DecisionTree
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777666827158
+status: 3
+tags: []
+user_id: gustavodellanhol

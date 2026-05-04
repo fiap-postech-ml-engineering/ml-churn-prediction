@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/890749f229cd43bb8bc32874694f1900/artifacts
+deleted_time: 1777239646009
+end_time: 1777047414289
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 890749f229cd43bb8bc32874694f1900
+run_name: intrigued-stoat-265
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777047399064
+status: 3
+tags: []
+user_id: gustavodellanhol

@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/ffbd001894d24bdca9a5b12d4a159d3b/artifacts
+deleted_time: 1777241285573
+end_time: null
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: ffbd001894d24bdca9a5b12d4a159d3b
+run_name: rumbling-hawk-383
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777241157822
+status: 1
+tags: []
+user_id: gustavodellanhol

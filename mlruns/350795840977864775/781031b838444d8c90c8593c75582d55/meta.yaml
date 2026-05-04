@@ -1,0 +1,15 @@
+artifact_uri: file:///home/gustavodellanhol/_projetos/ml-churn-prediction/mlruns/350795840977864775/781031b838444d8c90c8593c75582d55/artifacts
+deleted_time: 1777575296732
+end_time: 1777574233253
+entry_point_name: ''
+experiment_id: '350795840977864775'
+lifecycle_stage: deleted
+run_id: 781031b838444d8c90c8593c75582d55
+run_name: log_reg_cv_threshold_0.7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777574233239
+status: 3
+tags: []
+user_id: gustavodellanhol

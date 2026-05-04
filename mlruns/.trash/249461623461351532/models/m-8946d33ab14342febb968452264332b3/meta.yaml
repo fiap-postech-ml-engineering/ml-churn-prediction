@@ -1,0 +1,10 @@
+artifact_location: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/models/m-8946d33ab14342febb968452264332b3/artifacts
+creation_timestamp: 1777240186603
+experiment_id: '249461623461351532'
+last_updated_timestamp: 1777240191248
+model_id: m-8946d33ab14342febb968452264332b3
+model_type: null
+name: model
+source_run_id: 1b76d89ff57348e39a692cbd964d42d4
+status: 2
+status_message: null

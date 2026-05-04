@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/28118865d3b94d71b0d4ce5ccf096229/artifacts
+deleted_time: 1777242661715
+end_time: 1777241313338
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 28118865d3b94d71b0d4ce5ccf096229
+run_name: Baseline_SVM_Balanced
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777241309055
+status: 3
+tags: []
+user_id: gustavodellanhol

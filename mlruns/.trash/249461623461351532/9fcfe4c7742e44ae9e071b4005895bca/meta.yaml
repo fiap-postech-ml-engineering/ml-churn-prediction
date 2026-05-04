@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/9fcfe4c7742e44ae9e071b4005895bca/artifacts
+deleted_time: 1777307713996
+end_time: 1777307659160
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 9fcfe4c7742e44ae9e071b4005895bca
+run_name: dapper-donkey-532
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777307648768
+status: 3
+tags: []
+user_id: gustavodellanhol

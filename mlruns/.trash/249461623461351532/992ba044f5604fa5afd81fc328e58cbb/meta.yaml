@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/992ba044f5604fa5afd81fc328e58cbb/artifacts
+deleted_time: 1776525046564
+end_time: 1776524284049
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 992ba044f5604fa5afd81fc328e58cbb
+run_name: monumental-lark-598
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776524277322
+status: 3
+tags: []
+user_id: gustavodellanhol

@@ -1,0 +1,14 @@
+artifact_location: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts
+creation_time: 1776028102759
+experiment_id: '434385069395410016'
+last_update_time: 1776523455178
+lifecycle_stage: deleted
+name: stg_notebok_pytorch_training
+tags:
+  business_domain: telecom
+  dataset_name: telco_customer_churn
+  primary_metric: recall
+  problem_type: binary_classification
+  project: ml-churn-prediction
+  target: churn
+workspace: default

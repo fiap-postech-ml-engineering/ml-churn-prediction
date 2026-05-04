@@ -8,7 +8,7 @@ manual_offline_vs_api.py
 manual_predict_test.py
 
 # MLflow
-mlruns/
+# mlruns/
 notebooks/mlruns/
 models/mlflow_artifacts/
 

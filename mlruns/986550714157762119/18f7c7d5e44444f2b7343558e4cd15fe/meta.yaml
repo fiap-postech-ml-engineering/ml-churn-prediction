@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/models/mlflow_artifacts/18f7c7d5e44444f2b7343558e4cd15fe/artifacts
+deleted_time: 1777373359754
+end_time: 1777373180131
+entry_point_name: ''
+experiment_id: '986550714157762119'
+lifecycle_stage: deleted
+run_id: 18f7c7d5e44444f2b7343558e4cd15fe
+run_name: Baseline_RF_Balanced
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777373179408
+status: 3
+tags: []
+user_id: gustavodellanhol

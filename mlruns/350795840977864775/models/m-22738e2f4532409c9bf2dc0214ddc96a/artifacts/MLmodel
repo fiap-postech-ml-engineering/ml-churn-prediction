@@ -1,0 +1,23 @@
+artifact_path: file:///home/gustavodellanhol/_projetos/ml-churn-prediction/mlruns/350795840977864775/models/m-22738e2f4532409c9bf2dc0214ddc96a/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.5.2
+    skops_trusted_types: null
+mlflow_version: 3.10.0
+model_id: m-22738e2f4532409c9bf2dc0214ddc96a
+model_size_bytes: 1350
+model_uuid: m-22738e2f4532409c9bf2dc0214ddc96a
+prompts: null
+run_id: ea6b74b23ec0437896d0a1c5c66db2bb
+utc_time_created: '2026-04-30 18:56:47.129778'

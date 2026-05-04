@@ -1,0 +1,7 @@
+artifact_location: file:///home/gustavodellanhol/_projetos/ml-churn-prediction/mlruns/350795840977864775
+creation_time: 1777372155732
+experiment_id: '350795840977864775'
+last_update_time: 1777372155732
+lifecycle_stage: active
+name: notebook_training_cross-validation
+workspace: default

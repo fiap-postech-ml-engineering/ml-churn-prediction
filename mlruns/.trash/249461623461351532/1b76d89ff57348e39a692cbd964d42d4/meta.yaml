@@ -1,0 +1,15 @@
+artifact_uri: /home/gustavodellanhol/_projetos/ml-churn-prediction/notebooks/../models/mlflow_artifacts/1b76d89ff57348e39a692cbd964d42d4/artifacts
+deleted_time: 1777240494400
+end_time: 1777240191335
+entry_point_name: ''
+experiment_id: '249461623461351532'
+lifecycle_stage: deleted
+run_id: 1b76d89ff57348e39a692cbd964d42d4
+run_name: stately-ape-854
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1777240082095
+status: 3
+tags: []
+user_id: gustavodellanhol
