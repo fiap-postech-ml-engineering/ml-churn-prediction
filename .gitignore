@@ -1,4 +1,6 @@
 .claude
+.github/agents/
+.github/agent-template.md
 
 manual_case_buckets.py
 manual_metrics_check.py

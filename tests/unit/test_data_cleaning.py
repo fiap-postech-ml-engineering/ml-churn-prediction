@@ -29,10 +29,9 @@ class TestCleanDataframeForModeling:
 
     def test_clean_dataframe_handles_total_charges_coercion(self):
         """Verifica se Total Charges é coagido para numérico."""
-        df = pd.DataFrame({
-            "Total Charges": ["100.5", "200.5", "invalid"],
-            "Churn": [0, 1, 0]
-        })
+        df = pd.DataFrame(
+            {"Total Charges": ["100.5", "200.5", "invalid"], "Churn": [0, 1, 0]}
+        )
         result = clean_dataframe_for_modeling(df)
 
         assert pd.api.types.is_numeric_dtype(result["Total Charges"])
@@ -51,31 +50,21 @@ class TestValidateNumericFeatures:
 
     def test_validate_numeric_features_passes_for_numeric_data(self):
         """Verifica se valida positivamente dados numéricos."""
-        df = pd.DataFrame({
-            "col1": [1.0, 2.0],
-            "col2": [3, 4],
-            "col3": [True, False]
-        })
+        df = pd.DataFrame({"col1": [1.0, 2.0], "col2": [3, 4], "col3": [True, False]})
 
         # Não deve levantar exceção
         validate_numeric_features(df)
 
     def test_validate_numeric_features_raises_for_non_numeric(self):
         """Verifica se levanta erro para colunas não-numéricas."""
-        df = pd.DataFrame({
-            "col1": [1.0, 2.0],
-            "col2": ["a", "b"]
-        })
+        df = pd.DataFrame({"col1": [1.0, 2.0], "col2": ["a", "b"]})
 
         with pytest.raises(ValueError, match="Non-numeric columns found"):
             validate_numeric_features(df)
 
     def test_validate_numeric_features_raises_for_mixed_types(self):
         """Verifica se levanta erro com tipos mistos."""
-        df = pd.DataFrame({
-            "col1": [1, 2],
-            "col2": ["string", 3]
-        })
+        df = pd.DataFrame({"col1": [1, 2], "col2": ["string", 3]})
 
         with pytest.raises(ValueError, match="Non-numeric columns found"):
             validate_numeric_features(df)

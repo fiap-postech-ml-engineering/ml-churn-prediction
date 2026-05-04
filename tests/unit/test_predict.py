@@ -271,7 +271,9 @@ class TestLoadModelArtifacts:
         # Mock apenas scaler e features existem
         def exists_side_effect(path):
             path_str = str(path)
-            return "scaler" in path_str or "features" in path_str or "metrics" in path_str
+            return (
+                "scaler" in path_str or "features" in path_str or "metrics" in path_str
+            )
 
         with patch("pathlib.Path.exists", side_effect=exists_side_effect):
             artifacts = load_model_artifacts()

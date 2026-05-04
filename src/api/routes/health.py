@@ -21,7 +21,9 @@ router = APIRouter()
 
 
 @router.get("/health")
-def health_check(model=model, scaler=scaler, feature_names=feature_names, device=device):
+def health_check(
+    model=model, scaler=scaler, feature_names=feature_names, device=device
+):
     """
     Verifica a Saúde da API e Disponibilidade do Modelo.
 

@@ -20,10 +20,10 @@ def weighted_recall(y_true, y_pred, cltv):
     if cltv.ndim == 0 or cltv.shape[0] != y_true.shape[0]:
         return None
 
-    tp_mask     = (y_true == 1) & (y_pred == 1)
-    actual_pos  = (y_true == 1)
+    tp_mask = (y_true == 1) & (y_pred == 1)
+    actual_pos = y_true == 1
 
-    cltv_capturado   = cltv[tp_mask].sum()
+    cltv_capturado = cltv[tp_mask].sum()
     cltv_total_risco = cltv[actual_pos].sum()
 
     if cltv_total_risco == 0:

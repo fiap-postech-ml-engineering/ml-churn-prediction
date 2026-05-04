@@ -14,10 +14,12 @@ class TestFitScaler:
     @pytest.fixture
     def sample_data(self):
         """Cria dados de exemplo para fit do scaler."""
-        return pd.DataFrame({
-            "feature1": [1.0, 2.0, 3.0, 4.0, 5.0],
-            "feature2": [10.0, 20.0, 30.0, 40.0, 50.0],
-        })
+        return pd.DataFrame(
+            {
+                "feature1": [1.0, 2.0, 3.0, 4.0, 5.0],
+                "feature2": [10.0, 20.0, 30.0, 40.0, 50.0],
+            }
+        )
 
     def test_fit_scaler_returns_standard_scaler(self, sample_data):
         """Verifica se a função retorna um StandardScaler."""
@@ -44,10 +46,7 @@ class TestFitScaler:
 
     def test_fit_scaler_with_constant_column(self):
         """Verifica se funciona com coluna constante."""
-        df = pd.DataFrame({
-            "feature1": [5.0, 5.0, 5.0],
-            "feature2": [1.0, 2.0, 3.0]
-        })
+        df = pd.DataFrame({"feature1": [5.0, 5.0, 5.0], "feature2": [1.0, 2.0, 3.0]})
         scaler = fit_scaler(df)
         assert scaler.mean_[0] == 5.0
 
@@ -58,21 +57,27 @@ class TestTransformFeatures:
     @pytest.fixture
     def scaler_and_data(self):
         """Cria um scaler ajustado e dados para transformar."""
-        x_train = pd.DataFrame({
-            "feature1": [1.0, 2.0, 3.0],
-            "feature2": [10.0, 20.0, 30.0],
-        })
+        x_train = pd.DataFrame(
+            {
+                "feature1": [1.0, 2.0, 3.0],
+                "feature2": [10.0, 20.0, 30.0],
+            }
+        )
         scaler = fit_scaler(x_train)
 
-        x_val = pd.DataFrame({
-            "feature1": [2.0, 3.0],
-            "feature2": [20.0, 30.0],
-        })
+        x_val = pd.DataFrame(
+            {
+                "feature1": [2.0, 3.0],
+                "feature2": [20.0, 30.0],
+            }
+        )
 
-        x_test = pd.DataFrame({
-            "feature1": [1.5, 2.5],
-            "feature2": [15.0, 25.0],
-        })
+        x_test = pd.DataFrame(
+            {
+                "feature1": [1.5, 2.5],
+                "feature2": [15.0, 25.0],
+            }
+        )
 
         return scaler, x_train, x_val, x_test
 
@@ -127,7 +132,9 @@ class TestTransformFeatures:
         std = x_train_scaled.std(axis=0)
         assert np.allclose(std, 1, atol=1e-10)
 
-    def test_transform_features_different_datasets_different_scales(self, scaler_and_data):
+    def test_transform_features_different_datasets_different_scales(
+        self, scaler_and_data
+    ):
         """Verifica se val/test mantêm suas escalas após transformação."""
         scaler, x_train, x_val, x_test = scaler_and_data
         x_train_scaled, x_val_scaled, x_test_scaled = transform_features(
