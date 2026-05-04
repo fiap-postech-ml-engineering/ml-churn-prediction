@@ -22,6 +22,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from src.config.settings import (
     APPROVAL_THRESHOLD,
     BATCH_SIZE,
+    DATA_DIR,
     EARLY_STOPPING_PATIENCE,
     EXPERIMENT_NAME,
     EXPERIMENT_TAGS,
@@ -32,12 +33,11 @@ from src.config.settings import (
     MLP_DROPOUT_RATES,
     MLP_HIDDEN_DIMS,
     RANDOM_SEED,
+    TABULAR_MLP_METRICS_PATH,
     TABULAR_MLP_MODEL_PATH,
     TABULAR_MODEL_FEATURE_NAMES_PATH,
-    TABULAR_MLP_METRICS_PATH,
     TEST_SIZE,
     VALIDATION_SIZE,
-    DATA_DIR,
 )
 from src.data.business_metrics import weighted_recall
 from src.data.data_cleaning import clean_dataframe_for_modeling
@@ -145,9 +145,10 @@ def _tune_threshold(
     cltv_val: pd.Series,
 ) -> float:
     best_thr = float(APPROVAL_THRESHOLD)
-    best_wr = weighted_recall(
-        val_targets, (val_probs >= best_thr).astype(int), cltv_val
-    ) or 0.0
+    best_wr = (
+        weighted_recall(val_targets, (val_probs >= best_thr).astype(int), cltv_val)
+        or 0.0
+    )
 
     for thr in np.linspace(0.0, 1.0, 101):
         preds = (val_probs >= thr).astype(int)
@@ -186,7 +187,7 @@ def train() -> None:
         split_train_val_test(x, y, test_size=TEST_SIZE, val_size=VALIDATION_SIZE)
     )
 
-    cltv_train = _extract_cltv(x_train_df)
+    # cltv_train = _extract_cltv(x_train_df)
     cltv_val = _extract_cltv(x_val_df)
     cltv_test = _extract_cltv(x_test_df)
 

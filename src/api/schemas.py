@@ -27,7 +27,7 @@ TABULAR_RAW_FEATURES_EXAMPLE_CHURNER = {
     "Payment Method": "Credit card (automatic)",
     "Monthly Charges": 79.65,
     "Total Charges": 95.4,
-    "CLTV": 5432
+    "CLTV": 5432,
 }
 
 TABULAR_RAW_FEATURES_EXAMPLE_NON_CHURNER = {
@@ -52,7 +52,7 @@ TABULAR_RAW_FEATURES_EXAMPLE_NON_CHURNER = {
     "Payment Method": "Electronic check",
     "Monthly Charges": 105.5,
     "Total Charges": 2686.05,
-    "CLTV": 5822
+    "CLTV": 5822,
 }
 
 FEATURES_RESPONSE_EXAMPLE = {
