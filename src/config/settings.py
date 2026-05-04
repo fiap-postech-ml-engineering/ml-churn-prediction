@@ -15,18 +15,49 @@ BASE_DIR = Path(__file__).parent.parent.parent
 LOGS_DIR = BASE_DIR / "logs"
 MODELS_DIR = BASE_DIR / "models"
 DATA_DIR = BASE_DIR / "data"
-MLFLOW_TRACKING_PATH = BASE_DIR / "mlruns"
-MLFLOW_ARTIFACTS_PATH = BASE_DIR / "models" / "mlflow_artifacts"
 
-# Criar diretórios se não existirem
-LOGS_DIR.mkdir(exist_ok=True)
-MODELS_DIR.mkdir(exist_ok=True)
-DATA_DIR.mkdir(exist_ok=True)
-MLFLOW_TRACKING_PATH.mkdir(exist_ok=True)
-MLFLOW_ARTIFACTS_PATH.mkdir(exist_ok=True)
+# MLflow Backend Selection
+MLFLOW_BACKEND = os.getenv("MLFLOW_BACKEND", "local")  # "local" ou "databricks"
+
+if MLFLOW_BACKEND == "databricks":
+    # Databricks configuration
+    DATABRICKS_HOST = os.getenv("DATABRICKS_HOST")  # ex: https://xyz.cloud.databricks.com
+    DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+    
+ # Aviso se credenciais não estão configuradas
+    if not DATABRICKS_HOST or not DATABRICKS_TOKEN:
+        import warnings
+        warnings.warn("DATABRICKS_HOST ou DATABRICKS_TOKEN não configurados")
+    
+    MLFLOW_TRACKING_PATH = None  # Não usado em Databricks
+    MLFLOW_ARTIFACTS_PATH = None  # Não usado em Databricks
+else:
+    # Local file-based (padrão)
+    MLFLOW_TRACKING_PATH = BASE_DIR / "mlruns"
+    MLFLOW_ARTIFACTS_PATH = BASE_DIR / "models" / "mlflow_artifacts"
+    DATABRICKS_HOST = None
+    DATABRICKS_TOKEN = None
+
+# Criar diretórios se não existirem (apenas para local)
+if MLFLOW_BACKEND == "local":
+    LOGS_DIR.mkdir(exist_ok=True)
+    MODELS_DIR.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(exist_ok=True)
+    MLFLOW_TRACKING_PATH.mkdir(exist_ok=True)
+    MLFLOW_ARTIFACTS_PATH.mkdir(exist_ok=True)
+else:
+    LOGS_DIR.mkdir(exist_ok=True)
+    MODELS_DIR.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(exist_ok=True)
 
 # MLFlow Configurações
-EXPERIMENT_NAME = "ml-churn-prediction"
+if MLFLOW_BACKEND == "databricks":
+    # Caminho absoluto no workspace Databricks
+    EXPERIMENT_NAME = "/Shared/mlflow/ml-churn-prediction"
+else:
+    # Nome local
+    EXPERIMENT_NAME = "ml-churn-prediction"
+
 EXPERIMENT_TAGS = {
     "project": "ml-churn-prediction",
     "business_domain": "telecom",
