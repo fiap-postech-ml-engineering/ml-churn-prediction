@@ -4,6 +4,9 @@
 
 Projeto desenvolvido para o Tech Challenge 1 do curso de Machine Learning Engineering da FIAP focado na construção de um serviço end-to-end para previsão de churn usando uma MLP em Pytorch, sendo essa solução provisionada via API em FastAPI, com monitoramento de métricas e artefatos via MLFlow.
 
+Para um resumo rápido, também temos um [🎥Vídeo Explicativo em menos de 5 min](https://youtu.be/gOmqwpTSEcQ)
+
+---
 
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.135-009688?logo=fastapi&logoColor=white)
