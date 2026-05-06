@@ -227,6 +227,15 @@ Envie um `POST` para `http://localhost:8000/predict` com o payload abaixo:
 
 ## 📊 Tracking com o MLflow
 
+Para visualizar os experimentos use:
+```
+make init
+```
+Ou simplesmente
+```
+mlflow ui --backend-store-uri ./mlruns --port 8001
+```
+
 Decidimos manter o MLFlow localmente para esse projeto, utilizando a estrutura de diretórios, que foi a configuração que melhor se encaixou no nosso fluxo de trabalho. Nele encontramos atualmente 4 experimentos
 - **notebook_training_baselines**: Runs onde testamos diferentes modelos afim de definir o nosso baseline inicial
 - **notebook_training_cross_validation**: Runs onde testamos diferentes hiperparâmetros e validamos o desempenho do modelo baseline, definindo no final o melhor threshold de predição
